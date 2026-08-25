@@ -29,6 +29,9 @@ GET  /api/tools/get-vehicle-details/{vehicle_id}
 GET  /api/tools/check-vehicle-availability/{vehicle_id}
 GET  /api/tools/get-customer-history/{customer_id}
 GET  /api/tools/get-test-drive-slots?start_date=YYYY-MM-DD
+POST /api/tools/create-or-update-lead
+POST /api/tools/create-test-drive
+POST /api/tools/estimate-financing
 ```
 
 `search-inventory` returns only currently available database records and supports make, model,
@@ -39,6 +42,12 @@ local tests use the read-only CSV repository.
 Customer history returns the authoritative customer record with related CRM leads and appointments.
 Test-drive slots are derived from active salesperson shifts and exclude existing Requested,
 Confirmed, or Rescheduled appointments. Slot discovery is read-only and does not create a booking.
+
+Write tools use natural idempotency: an active customer lead is updated instead of duplicated,
+and a repeated booking for the same lead returns its existing appointment. Booking rechecks the
+vehicle, salesperson shift, and slot immediately before insert. Financing responses are estimates,
+use active database rules, and always return the lender-approval disclaimer. All API requests emit
+PII-safe structured audit logs and an `X-Request-ID` response header.
 
 `SUPABASE_PUBLISHABLE_KEY` is the public/client-safe key used for standard
 requests. `SUPABASE_SECRET_KEY` is privileged and must remain backend-only; do
