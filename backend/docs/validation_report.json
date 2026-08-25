@@ -1,0 +1,41 @@
+{
+  "result": "PASS",
+  "dataset_as_of": "2026-08-25",
+  "summary": {
+    "vehicles": 10000,
+    "features": 25,
+    "vehicle_feature_relationships": 108341,
+    "unique_makes": 10,
+    "unique_models": 41
+  },
+  "status_distribution": {
+    "Arriving Soon": 275,
+    "Available": 6746,
+    "Demo Vehicle": 181,
+    "In Service": 199,
+    "No Test Drive": 192,
+    "Pending Sale": 679,
+    "Reserved": 925,
+    "Sold": 803
+  },
+  "condition_distribution": {
+    "Certified Pre-Owned": 1613,
+    "New": 3577,
+    "Used": 4810
+  },
+  "make_distribution": {
+    "Chevrolet": 900,
+    "Ford": 1179,
+    "Honda": 1266,
+    "Hyundai": 1000,
+    "Kia": 910,
+    "Mazda": 807,
+    "Nissan": 922,
+    "Subaru": 815,
+    "Toyota": 1516,
+    "Volkswagen": 685
+  },
+  "errors": [],
+  "error_count": 0,
+  "warnings": []
+}

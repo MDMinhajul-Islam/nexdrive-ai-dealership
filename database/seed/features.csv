@@ -1,0 +1,26 @@
+feature_id,name,category
+FEAT-001,Adaptive Cruise Control,Safety & Driver Assistance
+FEAT-002,Blind Spot Monitoring,Safety & Driver Assistance
+FEAT-003,Lane Keep Assist,Safety & Driver Assistance
+FEAT-004,360-Degree Camera,Safety & Driver Assistance
+FEAT-005,Parking Sensors,Safety & Driver Assistance
+FEAT-006,Automatic Emergency Braking,Safety & Driver Assistance
+FEAT-007,Leather Seats,Comfort & Convenience
+FEAT-008,Heated Seats,Comfort & Convenience
+FEAT-009,Ventilated Seats,Comfort & Convenience
+FEAT-010,Panoramic Roof,Comfort & Convenience
+FEAT-011,Power Liftgate,Comfort & Convenience
+FEAT-012,Dual-Zone Climate Control,Comfort & Convenience
+FEAT-013,Apple CarPlay,Connectivity
+FEAT-014,Android Auto,Connectivity
+FEAT-015,Wireless Charging,Connectivity
+FEAT-016,Navigation,Connectivity
+FEAT-017,Premium Audio,Connectivity
+FEAT-018,Wi-Fi Hotspot,Connectivity
+FEAT-019,Third-Row Seating,Utility
+FEAT-020,All-Wheel Drive,Utility
+FEAT-021,Tow Package,Utility
+FEAT-022,Remote Start,Utility
+FEAT-023,Keyless Entry,Utility
+FEAT-024,Roof Rails,Utility
+FEAT-025,Bed Liner,Utility
