@@ -20,6 +20,11 @@ VALID_STATUSES = {
     "Available", "Reserved", "Sold", "Pending Sale", "In Service",
     "Arriving Soon", "Demo Vehicle", "No Test Drive",
 }
+FEATURE_MIN_YEAR = {
+    "FEAT-001": 2018, "FEAT-002": 2017, "FEAT-003": 2018,
+    "FEAT-004": 2018, "FEAT-006": 2017, "FEAT-013": 2017,
+    "FEAT-014": 2017, "FEAT-015": 2019, "FEAT-018": 2018,
+}
 
 
 def read_csv(path: Path) -> list[dict[str, str]]:
@@ -98,6 +103,8 @@ def validate(seed_dir: Path, expected_count: int) -> dict:
         if not model:
             errors.append(f"{prefix}: make/model is not in reference catalog")
         else:
+            if year < model.get("first_model_year", 2016):
+                errors.append(f"{prefix}: year predates model launch")
             if row["trim"] not in model["trims"]:
                 errors.append(f"{prefix}: trim does not match model")
             if row["body_type"] != model["body_type"]:
@@ -115,6 +122,13 @@ def validate(seed_dir: Path, expected_count: int) -> dict:
             errors.append(f"{prefix}: mileage outside supported range")
         if row["condition"] == "New" and mileage > 300:
             errors.append(f"{prefix}: new vehicle has excessive mileage")
+        if year > 2026 and not (
+            row["condition"] == "New"
+            and row["vehicle_status"] == "Arriving Soon"
+            and mileage <= 25
+            and row["test_drive_available"].lower() == "false"
+        ):
+            errors.append(f"{prefix}: future-year vehicle violates pre-arrival rules")
         if row["condition"] == "Certified Pre-Owned" and not (2020 <= year <= 2025 and mileage <= 75_000):
             errors.append(f"{prefix}: vehicle violates CPO age/mileage rules")
         if not 8_000 <= sale_price <= msrp <= 100_000:
@@ -133,6 +147,16 @@ def validate(seed_dir: Path, expected_count: int) -> dict:
             errors.append(f"{prefix}: third-row vehicle missing feature relationship")
         if row["drivetrain"] in {"AWD", "4WD"} and "FEAT-020" not in relationship_map[row["vehicle_id"]]:
             errors.append(f"{prefix}: AWD/4WD vehicle missing feature relationship")
+        assigned_features = relationship_map[row["vehicle_id"]]
+        for feature_id, minimum_year in FEATURE_MIN_YEAR.items():
+            if feature_id in assigned_features and year < minimum_year:
+                errors.append(f"{prefix}: {feature_id} predates supported feature year")
+        if "FEAT-019" in assigned_features and seating < 7:
+            errors.append(f"{prefix}: third-row feature conflicts with seating capacity")
+        if "FEAT-020" in assigned_features and row["drivetrain"] not in {"AWD", "4WD"}:
+            errors.append(f"{prefix}: AWD feature conflicts with drivetrain")
+        if "FEAT-025" in assigned_features and row["body_type"] != "Truck":
+            errors.append(f"{prefix}: bed-liner feature assigned to non-truck")
 
         status_counts[row["vehicle_status"]] += 1
         condition_counts[row["condition"]] += 1

@@ -35,6 +35,11 @@ STATUS_WEIGHTS = {
     "No Test Drive": 2,
 }
 CONDITION_WEIGHTS = {"New": 36, "Used": 48, "Certified Pre-Owned": 16}
+FEATURE_MIN_YEAR = {
+    "FEAT-001": 2018, "FEAT-002": 2017, "FEAT-003": 2018,
+    "FEAT-004": 2018, "FEAT-006": 2017, "FEAT-013": 2017,
+    "FEAT-014": 2017, "FEAT-015": 2019, "FEAT-018": 2018,
+}
 
 VEHICLE_FIELDS = [
     "vehicle_id", "vin", "stock_number", "make", "model", "year", "trim",
@@ -64,17 +69,27 @@ def synthetic_vin(index: int, seed: int) -> str:
     return "".join(chars)
 
 
-def choose_condition_year_mileage(rng: random.Random) -> tuple[str, int, int]:
+def choose_condition_year_mileage(rng: random.Random, first_model_year: int) -> tuple[str, int, int]:
     condition = weighted_choice(rng, CONDITION_WEIGHTS)
     if condition == "New":
-        year = rng.choices([2025, 2026, 2027], weights=[18, 68, 14], k=1)[0]
-        mileage = rng.randint(3, 220)
+        years = [year for year in [2025, 2026, 2027] if year >= first_model_year]
+        weights = [[20, 79, 1][[2025, 2026, 2027].index(year)] for year in years]
+        year = rng.choices(years, weights=weights, k=1)[0]
+        mileage = rng.randint(3, 25 if year > DATASET_YEAR else 220)
     elif condition == "Certified Pre-Owned":
-        year = rng.choices([2020, 2021, 2022, 2023, 2024, 2025], weights=[5, 10, 17, 24, 27, 17], k=1)[0]
+        all_years = [2020, 2021, 2022, 2023, 2024, 2025]
+        all_weights = [5, 10, 17, 24, 27, 17]
+        years = [year for year in all_years if year >= first_model_year]
+        weights = [all_weights[all_years.index(year)] for year in years]
+        year = rng.choices(years, weights=weights, k=1)[0]
         age = max(1, DATASET_YEAR - year)
         mileage = int(max(2500, min(75000, rng.gauss(age * 9500, 3500))))
     else:
-        year = rng.choices(list(range(2016, 2026)), weights=[2, 3, 5, 7, 9, 12, 14, 17, 17, 14], k=1)[0]
+        all_years = list(range(2016, 2026))
+        all_weights = [2, 3, 5, 7, 9, 12, 14, 17, 17, 14]
+        years = [year for year in all_years if year >= first_model_year]
+        weights = [all_weights[all_years.index(year)] for year in years]
+        year = rng.choices(years, weights=weights, k=1)[0]
         age = max(1, DATASET_YEAR - year)
         mileage = int(max(1500, min(165000, rng.gauss(age * 11800, 6500))))
     return condition, year, mileage
@@ -157,12 +172,13 @@ def feature_ids_for_vehicle(
     }
     age_penalty = min(0.30, max(0, DATASET_YEAR - year) * 0.035)
     for feature_id, by_trim in probabilities.items():
-        if rng.random() < max(0, by_trim[trim_index] - age_penalty):
+        if year >= FEATURE_MIN_YEAR.get(feature_id, 2016) and rng.random() < max(0, by_trim[trim_index] - age_penalty):
             selected.add(feature_id)
     baseline_pool = [
-        "FEAT-001", "FEAT-002", "FEAT-003", "FEAT-005", "FEAT-006",
-        "FEAT-012", "FEAT-013", "FEAT-014", "FEAT-018", "FEAT-022",
+        "FEAT-001", "FEAT-002", "FEAT-003", "FEAT-005", "FEAT-006", "FEAT-008",
+        "FEAT-012", "FEAT-013", "FEAT-014", "FEAT-018", "FEAT-022", "FEAT-023",
     ]
+    baseline_pool = [feature_id for feature_id in baseline_pool if year >= FEATURE_MIN_YEAR.get(feature_id, 2016)]
     while len(selected) < 4:
         selected.add(rng.choice(baseline_pool))
     return sorted(selected)
@@ -183,14 +199,16 @@ def generate(count: int, seed: int, output_dir: Path) -> None:
         model = rng.choice(make["models"])
         trim_index = rng.choices([0, 1, 2], weights=[42, 38, 20], k=1)[0]
         trim = model["trims"][trim_index]
-        condition, year, mileage = choose_condition_year_mileage(rng)
+        condition, year, mileage = choose_condition_year_mileage(
+            rng, model.get("first_model_year", 2016)
+        )
         fuel = rng.choice(model["fuels"])
         drivetrain = rng.choice(model["drivetrains"])
         exterior, interior = choose_colors(rng, colors, trim_index)
         msrp, sale_price = calculate_prices(
             rng, model, trim_index, fuel, drivetrain, condition, year, mileage
         )
-        status = weighted_choice(rng, STATUS_WEIGHTS)
+        status = "Arriving Soon" if year > DATASET_YEAR else weighted_choice(rng, STATUS_WEIGHTS)
         test_drive = status in {"Available", "Demo Vehicle"}
         warranty = (
             "Manufacturer Warranty"

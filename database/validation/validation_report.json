@@ -4,36 +4,36 @@
   "summary": {
     "vehicles": 10000,
     "features": 25,
-    "vehicle_feature_relationships": 108341,
+    "vehicle_feature_relationships": 109662,
     "unique_makes": 10,
     "unique_models": 41
   },
   "status_distribution": {
-    "Arriving Soon": 275,
-    "Available": 6746,
-    "Demo Vehicle": 181,
-    "In Service": 199,
-    "No Test Drive": 192,
-    "Pending Sale": 679,
-    "Reserved": 925,
+    "Arriving Soon": 324,
+    "Available": 6689,
+    "Demo Vehicle": 206,
+    "In Service": 190,
+    "No Test Drive": 205,
+    "Pending Sale": 703,
+    "Reserved": 880,
     "Sold": 803
   },
   "condition_distribution": {
-    "Certified Pre-Owned": 1613,
-    "New": 3577,
-    "Used": 4810
+    "Certified Pre-Owned": 1626,
+    "New": 3621,
+    "Used": 4753
   },
   "make_distribution": {
-    "Chevrolet": 900,
-    "Ford": 1179,
-    "Honda": 1266,
-    "Hyundai": 1000,
-    "Kia": 910,
-    "Mazda": 807,
-    "Nissan": 922,
-    "Subaru": 815,
-    "Toyota": 1516,
-    "Volkswagen": 685
+    "Chevrolet": 889,
+    "Ford": 1232,
+    "Honda": 1305,
+    "Hyundai": 991,
+    "Kia": 853,
+    "Mazda": 779,
+    "Nissan": 957,
+    "Subaru": 783,
+    "Toyota": 1548,
+    "Volkswagen": 663
   },
   "errors": [],
   "error_count": 0,
