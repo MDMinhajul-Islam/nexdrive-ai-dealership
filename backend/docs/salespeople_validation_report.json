@@ -1,0 +1,38 @@
+{
+  "result": "PASS",
+  "dataset_as_of": "2026-08-25",
+  "summary": {
+    "salespeople": 10,
+    "active": 9,
+    "inactive": 1,
+    "unique_salesperson_ids": 10,
+    "unique_synthetic_emails": 10,
+    "unique_synthetic_phones": 10
+  },
+  "active_day_coverage": {
+    "Monday": 5,
+    "Tuesday": 6,
+    "Wednesday": 7,
+    "Thursday": 8,
+    "Friday": 8,
+    "Saturday": 6,
+    "Sunday": 3
+  },
+  "specialization_distribution": {
+    "EV/Hybrid Specialist": 2,
+    "Financing-Focused": 1,
+    "General Sales": 1,
+    "SUV Specialist": 2,
+    "Truck Specialist": 2,
+    "Used/CPO Specialist": 2
+  },
+  "language_distribution": {
+    "English": 10,
+    "Hindi": 2,
+    "Spanish": 3,
+    "Urdu": 1
+  },
+  "errors": [],
+  "error_count": 0,
+  "warnings": []
+}

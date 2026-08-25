@@ -1,0 +1,11 @@
+salesperson_id,name,synthetic_email,synthetic_phone,languages,specialization,working_days,shift_start,shift_end,active
+SP-001,Jordan Ellis,salesperson001@nexdrive.example,+1-555-020-0001,{English},SUV Specialist,"{Monday,Tuesday,Wednesday,Thursday,Friday}",08:30,17:00,true
+SP-002,Maya Brooks,salesperson002@nexdrive.example,+1-555-020-0002,"{English,Spanish}",Truck Specialist,"{Tuesday,Wednesday,Thursday,Friday,Saturday}",09:00,18:00,true
+SP-003,Ethan Patel,salesperson003@nexdrive.example,+1-555-020-0003,"{English,Hindi}",EV/Hybrid Specialist,"{Monday,Tuesday,Wednesday,Thursday,Friday}",09:30,18:30,true
+SP-004,Sofia Ramirez,salesperson004@nexdrive.example,+1-555-020-0004,"{English,Spanish}",Used/CPO Specialist,"{Wednesday,Thursday,Friday,Saturday,Sunday}",10:00,19:00,true
+SP-005,Caleb Morgan,salesperson005@nexdrive.example,+1-555-020-0005,{English},Financing-Focused,"{Monday,Tuesday,Wednesday,Thursday,Friday,Saturday}",09:00,18:00,true
+SP-006,Aisha Khan,salesperson006@nexdrive.example,+1-555-020-0006,"{English,Urdu}",SUV Specialist,"{Tuesday,Wednesday,Thursday,Friday,Saturday}",10:00,19:00,true
+SP-007,Diego Torres,salesperson007@nexdrive.example,+1-555-020-0007,"{English,Spanish}",General Sales,"{Saturday,Sunday}",09:00,18:00,true
+SP-008,Chloe Bennett,salesperson008@nexdrive.example,+1-555-020-0008,{English},EV/Hybrid Specialist,"{Thursday,Friday,Saturday,Sunday,Monday}",10:00,19:00,true
+SP-009,Noah Reed,salesperson009@nexdrive.example,+1-555-020-0009,{English},Truck Specialist,"{Monday,Tuesday,Wednesday,Thursday,Friday}",08:30,17:00,false
+SP-010,Priya Shah,salesperson010@nexdrive.example,+1-555-020-0010,"{English,Hindi}",Used/CPO Specialist,"{Monday,Tuesday,Wednesday,Thursday,Friday}",09:00,18:00,true
