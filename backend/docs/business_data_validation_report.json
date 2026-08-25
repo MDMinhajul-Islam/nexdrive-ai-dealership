@@ -1,0 +1,17 @@
+{
+  "result": "PASS",
+  "dataset_as_of": "2026-08-25",
+  "record_counts": {
+    "vehicles": 10000,
+    "customers": 5000,
+    "salespeople": 10,
+    "leads": 4000,
+    "appointments": 1500,
+    "trade_ins": 40,
+    "financing_options": 12
+  },
+  "relationship_errors": 0,
+  "errors": [],
+  "error_count": 0,
+  "warnings": []
+}

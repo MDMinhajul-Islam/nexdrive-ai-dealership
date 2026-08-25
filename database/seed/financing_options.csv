@@ -1,0 +1,13 @@
+financing_rule_id,vehicle_condition,term_months,apr_min,apr_max,minimum_down_payment_percent,maximum_vehicle_age_years,active,disclaimer
+FIN-001,New,36,4.49,6.49,5,1,true,"Estimate only. Final terms, rate, and eligibility depend on lender approval."
+FIN-002,New,48,4.79,6.79,5,1,true,"Estimate only. Final terms, rate, and eligibility depend on lender approval."
+FIN-003,New,60,5.19,7.29,8,1,true,"Estimate only. Final terms, rate, and eligibility depend on lender approval."
+FIN-004,New,72,5.79,7.99,10,1,true,"Estimate only. Final terms, rate, and eligibility depend on lender approval."
+FIN-005,Certified Pre-Owned,36,5.49,7.99,8,6,true,"Estimate only. Final terms, rate, and eligibility depend on lender approval."
+FIN-006,Certified Pre-Owned,48,5.89,8.39,8,6,true,"Estimate only. Final terms, rate, and eligibility depend on lender approval."
+FIN-007,Certified Pre-Owned,60,6.39,8.99,10,6,true,"Estimate only. Final terms, rate, and eligibility depend on lender approval."
+FIN-008,Certified Pre-Owned,72,6.99,9.69,12,5,true,"Estimate only. Final terms, rate, and eligibility depend on lender approval."
+FIN-009,Used,36,6.49,10.49,10,10,true,"Estimate only. Final terms, rate, and eligibility depend on lender approval."
+FIN-010,Used,48,6.99,10.99,10,9,true,"Estimate only. Final terms, rate, and eligibility depend on lender approval."
+FIN-011,Used,60,7.49,11.49,12,8,true,"Estimate only. Final terms, rate, and eligibility depend on lender approval."
+FIN-012,Used,72,8.19,12.19,15,6,true,"Estimate only. Final terms, rate, and eligibility depend on lender approval."

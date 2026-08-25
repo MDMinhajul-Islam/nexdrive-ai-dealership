@@ -1,0 +1,19 @@
+{
+  "result": "PASS",
+  "dataset_as_of": "2026-08-25",
+  "summary": {
+    "trade_ins": 40,
+    "paid_off": 18,
+    "positive_equity": 19,
+    "negative_equity": 3
+  },
+  "condition_distribution": {
+    "Excellent": 4,
+    "Fair": 12,
+    "Good": 21,
+    "Poor": 3
+  },
+  "errors": [],
+  "error_count": 0,
+  "warnings": []
+}

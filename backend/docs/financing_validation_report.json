@@ -1,0 +1,16 @@
+{
+  "result": "PASS",
+  "dataset_as_of": "2026-08-25",
+  "summary": {
+    "financing_rules": 12,
+    "active_rules": 12
+  },
+  "condition_distribution": {
+    "Certified Pre-Owned": 4,
+    "New": 4,
+    "Used": 4
+  },
+  "errors": [],
+  "error_count": 0,
+  "warnings": []
+}
