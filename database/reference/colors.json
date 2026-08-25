@@ -1,0 +1,14 @@
+{
+  "exterior": {
+    "neutral": ["Crystal Black", "Pearl White", "Silver Metallic", "Magnetic Gray"],
+    "warm": ["Radiant Red", "Soul Red", "Burnished Bronze"],
+    "cool": ["Deep Blue Pearl", "Atlantic Blue", "Forest Green"],
+    "premium": ["Midnight Black", "Platinum White Pearl", "Machine Gray", "Champagne Silver"]
+  },
+  "interior": {
+    "cloth": ["Black Cloth", "Gray Cloth", "Beige Cloth"],
+    "leatherette": ["Black Leatherette", "Gray Leatherette", "Saddle Leatherette"],
+    "leather": ["Black Leather", "Parchment Leather", "Saddle Brown Leather", "Red Leather"]
+  }
+}
+

@@ -1,0 +1,67 @@
+{
+  "catalog_version": "1.0",
+  "market": "Plano, Texas, USA",
+  "makes": [
+    {"make":"Toyota","weight":15,"models":[
+      {"model":"Corolla","body_type":"Sedan","base_msrp":23200,"seating":5,"fuels":["Gasoline","Hybrid"],"drivetrains":["FWD"],"trims":["LE","SE","XSE"]},
+      {"model":"Camry","body_type":"Sedan","base_msrp":28900,"seating":5,"fuels":["Hybrid"],"drivetrains":["FWD","AWD"],"trims":["LE","SE","XLE"]},
+      {"model":"RAV4","body_type":"SUV","base_msrp":31000,"seating":5,"fuels":["Gasoline","Hybrid"],"drivetrains":["FWD","AWD"],"trims":["LE","XLE","Limited"]},
+      {"model":"Highlander","body_type":"SUV","base_msrp":41000,"seating":7,"fuels":["Gasoline","Hybrid"],"drivetrains":["FWD","AWD"],"trims":["LE","XLE","Platinum"]},
+      {"model":"Tacoma","body_type":"Truck","base_msrp":34500,"seating":5,"fuels":["Gasoline"],"drivetrains":["RWD","4WD"],"trims":["SR5","TRD Sport","Limited"]}
+    ]},
+    {"make":"Honda","weight":13,"models":[
+      {"model":"Civic","body_type":"Sedan","base_msrp":24800,"seating":5,"fuels":["Gasoline","Hybrid"],"drivetrains":["FWD"],"trims":["LX","Sport","Touring"]},
+      {"model":"Accord","body_type":"Sedan","base_msrp":29300,"seating":5,"fuels":["Gasoline","Hybrid"],"drivetrains":["FWD"],"trims":["LX","EX","Touring"]},
+      {"model":"CR-V","body_type":"SUV","base_msrp":32100,"seating":5,"fuels":["Gasoline","Hybrid"],"drivetrains":["FWD","AWD"],"trims":["LX","EX-L","Sport Touring"]},
+      {"model":"Pilot","body_type":"SUV","base_msrp":41500,"seating":8,"fuels":["Gasoline"],"drivetrains":["FWD","AWD"],"trims":["Sport","Touring","Elite"]}
+    ]},
+    {"make":"Ford","weight":12,"models":[
+      {"model":"Escape","body_type":"SUV","base_msrp":29800,"seating":5,"fuels":["Gasoline","Hybrid","Plug-in Hybrid"],"drivetrains":["FWD","AWD"],"trims":["Active","ST-Line","Platinum"]},
+      {"model":"Explorer","body_type":"SUV","base_msrp":40200,"seating":7,"fuels":["Gasoline"],"drivetrains":["RWD","AWD"],"trims":["Active","ST-Line","Platinum"]},
+      {"model":"F-150","body_type":"Truck","base_msrp":38500,"seating":5,"fuels":["Gasoline","Hybrid"],"drivetrains":["RWD","4WD"],"trims":["XL","XLT","Lariat"]},
+      {"model":"Mustang Mach-E","body_type":"SUV","base_msrp":42100,"seating":5,"fuels":["Electric"],"drivetrains":["RWD","AWD"],"trims":["Select","Premium","GT"]}
+    ]},
+    {"make":"Hyundai","weight":10,"models":[
+      {"model":"Elantra","body_type":"Sedan","base_msrp":22900,"seating":5,"fuels":["Gasoline","Hybrid"],"drivetrains":["FWD"],"trims":["SE","SEL","Limited"]},
+      {"model":"Tucson","body_type":"SUV","base_msrp":30200,"seating":5,"fuels":["Gasoline","Hybrid","Plug-in Hybrid"],"drivetrains":["FWD","AWD"],"trims":["SE","SEL","Limited"]},
+      {"model":"Santa Fe","body_type":"SUV","base_msrp":36500,"seating":7,"fuels":["Gasoline","Hybrid"],"drivetrains":["FWD","AWD"],"trims":["SE","XRT","Calligraphy"]},
+      {"model":"IONIQ 5","body_type":"SUV","base_msrp":43800,"seating":5,"fuels":["Electric"],"drivetrains":["RWD","AWD"],"trims":["SE","SEL","Limited"]}
+    ]},
+    {"make":"Kia","weight":9,"models":[
+      {"model":"K4","body_type":"Sedan","base_msrp":23200,"seating":5,"fuels":["Gasoline"],"drivetrains":["FWD"],"trims":["LX","EX","GT-Line"]},
+      {"model":"Sportage","body_type":"SUV","base_msrp":29400,"seating":5,"fuels":["Gasoline","Hybrid","Plug-in Hybrid"],"drivetrains":["FWD","AWD"],"trims":["LX","EX","SX Prestige"]},
+      {"model":"Telluride","body_type":"SUV","base_msrp":37000,"seating":8,"fuels":["Gasoline"],"drivetrains":["FWD","AWD"],"trims":["LX","EX","SX Prestige"]},
+      {"model":"EV6","body_type":"SUV","base_msrp":43600,"seating":5,"fuels":["Electric"],"drivetrains":["RWD","AWD"],"trims":["Light","Wind","GT-Line"]}
+    ]},
+    {"make":"Nissan","weight":9,"models":[
+      {"model":"Sentra","body_type":"Sedan","base_msrp":22200,"seating":5,"fuels":["Gasoline"],"drivetrains":["FWD"],"trims":["S","SV","SR"]},
+      {"model":"Altima","body_type":"Sedan","base_msrp":28200,"seating":5,"fuels":["Gasoline"],"drivetrains":["FWD","AWD"],"trims":["S","SV","SL"]},
+      {"model":"Rogue","body_type":"SUV","base_msrp":30000,"seating":5,"fuels":["Gasoline"],"drivetrains":["FWD","AWD"],"trims":["S","SV","Platinum"]},
+      {"model":"Ariya","body_type":"SUV","base_msrp":40200,"seating":5,"fuels":["Electric"],"drivetrains":["FWD","AWD"],"trims":["Engage","Evolve+","Platinum+"]}
+    ]},
+    {"make":"Chevrolet","weight":9,"models":[
+      {"model":"Equinox","body_type":"SUV","base_msrp":29500,"seating":5,"fuels":["Gasoline"],"drivetrains":["FWD","AWD"],"trims":["LT","RS","Activ"]},
+      {"model":"Traverse","body_type":"SUV","base_msrp":41500,"seating":7,"fuels":["Gasoline"],"drivetrains":["FWD","AWD"],"trims":["LT","Z71","RS"]},
+      {"model":"Silverado 1500","body_type":"Truck","base_msrp":39200,"seating":5,"fuels":["Gasoline","Diesel"],"drivetrains":["RWD","4WD"],"trims":["WT","LT","High Country"]},
+      {"model":"Blazer EV","body_type":"SUV","base_msrp":46800,"seating":5,"fuels":["Electric"],"drivetrains":["FWD","AWD"],"trims":["LT","RS","SS"]}
+    ]},
+    {"make":"Mazda","weight":8,"models":[
+      {"model":"Mazda3","body_type":"Sedan","base_msrp":25100,"seating":5,"fuels":["Gasoline"],"drivetrains":["FWD","AWD"],"trims":["Select Sport","Preferred","Turbo Premium Plus"]},
+      {"model":"CX-30","body_type":"SUV","base_msrp":26500,"seating":5,"fuels":["Gasoline"],"drivetrains":["AWD"],"trims":["Select Sport","Preferred","Turbo Premium Plus"]},
+      {"model":"CX-50","body_type":"SUV","base_msrp":31700,"seating":5,"fuels":["Gasoline","Hybrid"],"drivetrains":["AWD"],"trims":["Select","Premium","Turbo Meridian"]},
+      {"model":"CX-90","body_type":"SUV","base_msrp":39000,"seating":8,"fuels":["Gasoline","Plug-in Hybrid"],"drivetrains":["AWD"],"trims":["Preferred","Premium Plus","Turbo S"]}
+    ]},
+    {"make":"Subaru","weight":8,"models":[
+      {"model":"Impreza","body_type":"Hatchback","base_msrp":24600,"seating":5,"fuels":["Gasoline"],"drivetrains":["AWD"],"trims":["Base","Sport","RS"]},
+      {"model":"Crosstrek","body_type":"SUV","base_msrp":27200,"seating":5,"fuels":["Gasoline","Hybrid"],"drivetrains":["AWD"],"trims":["Premium","Sport","Wilderness"]},
+      {"model":"Forester","body_type":"SUV","base_msrp":30500,"seating":5,"fuels":["Gasoline","Hybrid"],"drivetrains":["AWD"],"trims":["Premium","Sport","Touring"]},
+      {"model":"Ascent","body_type":"SUV","base_msrp":40200,"seating":8,"fuels":["Gasoline"],"drivetrains":["AWD"],"trims":["Premium","Onyx Edition","Touring"]}
+    ]},
+    {"make":"Volkswagen","weight":7,"models":[
+      {"model":"Jetta","body_type":"Sedan","base_msrp":23000,"seating":5,"fuels":["Gasoline"],"drivetrains":["FWD"],"trims":["S","Sport","SEL"]},
+      {"model":"Taos","body_type":"SUV","base_msrp":27000,"seating":5,"fuels":["Gasoline"],"drivetrains":["FWD","AWD"],"trims":["S","SE","SEL"]},
+      {"model":"Tiguan","body_type":"SUV","base_msrp":30500,"seating":7,"fuels":["Gasoline"],"drivetrains":["FWD","AWD"],"trims":["S","SE","SEL R-Line"]},
+      {"model":"ID.4","body_type":"SUV","base_msrp":41500,"seating":5,"fuels":["Electric"],"drivetrains":["RWD","AWD"],"trims":["Standard","Pro","Pro S"]}
+    ]}
+  ]
+}
