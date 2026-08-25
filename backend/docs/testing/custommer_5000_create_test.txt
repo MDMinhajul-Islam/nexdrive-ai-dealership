@@ -1,0 +1,295 @@
+PS C:\Users\Asus\OneDrive\Documents\ChatGPT\nexdrive-ai-dealership> # 1. Row count
+>> (Import-Csv database/seed/customers.csv).Count
+5000
+PS C:\Users\Asus\OneDrive\Documents\ChatGPT\nexdrive-ai-dealership> # 2. Duplicate IDs
+>> (Import-Csv database/seed/customers.csv |
+>> Group-Object customer_id |
+>> Where-Object {$_.Count -gt 1}).Count
+0
+PS C:\Users\Asus\OneDrive\Documents\ChatGPT\nexdrive-ai-dealership> # 3. Duplicate phones
+>> (Import-Csv database/seed/customers.csv |
+>> Group-Object synthetic_phone |
+>> Where-Object {$_.Count -gt 1}).Count
+0
+PS C:\Users\Asus\OneDrive\Documents\ChatGPT\nexdrive-ai-dealership> Import-Csv database/seed/customers.csv |
+>> Where-Object {
+>>     [decimal]$_.budget_min -lt 0 -or
+>>     [decimal]$_.budget_max -lt 0 -or
+>>     [decimal]$_.budget_min -gt [decimal]$_.budget_max
+>> } |
+>> Select-Object customer_id,budget_min,budget_max
+PS C:\Users\Asus\OneDrive\Documents\ChatGPT\nexdrive-ai-dealership> Import-Csv database/seed/customers.csv |
+>> Where-Object {
+>>     [int]$_.family_size -lt 1 -or
+>>     [int]$_.family_size -gt 10
+>> } |
+>> Select-Object customer_id,family_size
+PS C:\Users\Asus\OneDrive\Documents\ChatGPT\nexdrive-ai-dealership> Import-Csv database/seed/customers.csv |
+>> Where-Object {
+>>     $_.financing_needed -eq "false" -and
+>>     [decimal]$_.estimated_down_payment -gt 0
+>> } |
+>> Select-Object customer_id,financing_needed,estimated_down_payment
+PS C:\Users\Asus\OneDrive\Documents\ChatGPT\nexdrive-ai-dealership> Import-Csv database/seed/customers.csv |
+>> Group-Object trade_in |
+>> Select-Object Name,Count |
+>> Format-Table
+
+Name  Count
+----  -----
+false  3371
+true   1629
+
+
+PS C:\Users\Asus\OneDrive\Documents\ChatGPT\nexdrive-ai-dealership> Import-Csv database/seed/customers.csv |
+>> Group-Object purchase_timeline |
+>> Sort-Object Count -Descending |
+>> Select-Object Name,Count |
+>> Format-Table
+
+Name           Count
+----           -----
+Within 30 Days  1617
+1-3 Months      1321
+Researching      772
+Within 7 Days    661
+3-6 Months       629
+
+
+PS C:\Users\Asus\OneDrive\Documents\ChatGPT\nexdrive-ai-dealership> Import-Csv database/seed/customers.csv |
+>> Group-Object lead_source |
+>> Sort-Object Count -Descending |
+>> Select-Object Name,Count |
+>> Format-Table
+
+Name                Count
+----                -----
+Website              1362
+Inbound Call          891
+Paid Search           711
+Referral              579
+Social Media          515
+Walk-In               500
+Vehicle Marketplace   442
+
+
+PS C:\Users\Asus\OneDrive\Documents\ChatGPT\nexdrive-ai-dealership> Import-Csv database/seed/customers.csv |
+>> Group-Object city |
+>> Sort-Object Count -Descending |
+>> Select-Object Name,Count |
+>> Format-Table
+
+Name       Count
+----       -----
+Plano       1946
+Frisco       802
+Dallas       759
+McKinney     572
+Allen        356
+Carrollton   287
+Richardson   278
+
+
+PS C:\Users\Asus\OneDrive\Documents\ChatGPT\nexdrive-ai-dealership> Import-Csv database/seed/customers.csv |
+>> Group-Object preferred_vehicle_type |
+>> Sort-Object Count -Descending |
+>> Select-Object Name,Count |
+>> Format-Table
+
+Name      Count
+----      -----
+SUV        2689
+Sedan      1324
+Truck       642
+Hatchback   345
+
+
+PS C:\Users\Asus\OneDrive\Documents\ChatGPT\nexdrive-ai-dealership> Import-Csv database/seed/customers.csv |
+>> Group-Object preferred_brand |
+>> Sort-Object Count -Descending |
+>> Select-Object Name,Count |
+>> Format-Table
+
+Name          Count
+----          -----
+Toyota          634
+Honda           583
+Ford            551
+No Preference   493
+Chevrolet       476
+Hyundai         421
+Kia             417
+Nissan          384
+Mazda           360
+Subaru          353
+Volkswagen      328
+
+
+PS C:\Users\Asus\OneDrive\Documents\ChatGPT\nexdrive-ai-dealership> Import-Csv database/seed/customers.csv |
+>> Where-Object {
+>>     [decimal]$_.budget_max -lt 15000
+>> } |
+>> Select-Object -First 20 customer_id,preferred_vehicle_type,budget_min,budget_max,family_size,purchase_timeline
+
+
+customer_id            : CUST-000018
+preferred_vehicle_type : Truck
+budget_min             : 7000
+budget_max             : 10000
+family_size            : 3
+purchase_timeline      : Researching
+
+customer_id            : CUST-000065
+preferred_vehicle_type : SUV
+budget_min             : 10000
+budget_max             : 12500
+family_size            : 4
+purchase_timeline      : Within 7 Days
+
+customer_id            : CUST-000107
+preferred_vehicle_type : SUV
+budget_min             : 9500
+budget_max             : 12500
+family_size            : 1
+purchase_timeline      : Researching
+
+customer_id            : CUST-000132
+preferred_vehicle_type : Sedan
+budget_min             : 6000
+budget_max             : 9000
+family_size            : 1
+purchase_timeline      : Researching
+
+customer_id            : CUST-000171
+preferred_vehicle_type : Truck
+budget_min             : 10500
+budget_max             : 13500
+family_size            : 6
+purchase_timeline      : Within 7 Days
+
+customer_id            : CUST-000175
+preferred_vehicle_type : SUV
+budget_min             : 10000
+budget_max             : 14000
+family_size            : 2
+purchase_timeline      : Within 7 Days
+
+customer_id            : CUST-000196
+preferred_vehicle_type : SUV
+budget_min             : 5500
+budget_max             : 11500
+family_size            : 6
+purchase_timeline      : Within 7 Days
+
+customer_id            : CUST-000213
+preferred_vehicle_type : Sedan
+budget_min             : 9000
+budget_max             : 14500
+family_size            : 3
+purchase_timeline      : Researching
+
+customer_id            : CUST-000238
+preferred_vehicle_type : Truck
+budget_min             : 6000
+budget_max             : 8500
+family_size            : 2
+purchase_timeline      : Researching
+
+customer_id            : CUST-000276
+preferred_vehicle_type : Sedan
+budget_min             : 5500
+budget_max             : 10000
+family_size            : 2
+purchase_timeline      : Within 30 Days
+
+customer_id            : CUST-000282
+preferred_vehicle_type : Sedan
+budget_min             : 8000
+budget_max             : 12000
+family_size            : 2
+purchase_timeline      : Within 7 Days
+
+customer_id            : CUST-000296
+preferred_vehicle_type : Hatchback
+budget_min             : 5500
+budget_max             : 10000
+family_size            : 2
+purchase_timeline      : Researching
+
+customer_id            : CUST-000301
+preferred_vehicle_type : SUV
+budget_min             : 6500
+budget_max             : 12500
+family_size            : 2
+purchase_timeline      : Researching
+
+customer_id            : CUST-000319
+preferred_vehicle_type : SUV
+budget_min             : 7000
+budget_max             : 12000
+family_size            : 4
+purchase_timeline      : Researching
+
+customer_id            : CUST-000370
+preferred_vehicle_type : Sedan
+budget_min             : 5500
+budget_max             : 9500
+family_size            : 5
+purchase_timeline      : Researching
+
+customer_id            : CUST-000394
+preferred_vehicle_type : Truck
+budget_min             : 3000
+budget_max             : 8000
+family_size            : 1
+purchase_timeline      : Within 30 Days
+
+customer_id            : CUST-000409
+preferred_vehicle_type : Sedan
+budget_min             : 11000
+budget_max             : 14000
+family_size            : 2
+purchase_timeline      : Researching
+
+customer_id            : CUST-000488
+preferred_vehicle_type : SUV
+budget_min             : 3000
+budget_max             : 8000
+family_size            : 2
+purchase_timeline      : Researching
+
+customer_id            : CUST-000497
+preferred_vehicle_type : Sedan
+budget_min             : 6000
+budget_max             : 12000
+family_size            : 6
+purchase_timeline      : Within 7 Days
+
+customer_id            : CUST-000498
+preferred_vehicle_type : Sedan
+budget_min             : 5000
+budget_max             : 10000
+family_size            : 4
+purchase_timeline      : Researching
+
+
+
+PS C:\Users\Asus\OneDrive\Documents\ChatGPT\nexdrive-ai-dealership> Import-Csv database/seed/customers.csv |
+>> Select-Object -First 10 customer_id,synthetic_phone,synthetic_email |
+>> Format-Table
+
+customer_id synthetic_phone synthetic_email                
+----------- --------------- ---------------                
+CUST-000001 +1-555-010-0001 customer000001@nexdrive.example
+CUST-000002 +1-555-010-0002 customer000002@nexdrive.example
+CUST-000003 +1-555-010-0003 customer000003@nexdrive.example
+CUST-000004 +1-555-010-0004 customer000004@nexdrive.example
+CUST-000005 +1-555-010-0005 customer000005@nexdrive.example
+CUST-000006 +1-555-010-0006 customer000006@nexdrive.example
+CUST-000007 +1-555-010-0007 customer000007@nexdrive.example
+CUST-000008 +1-555-010-0008 customer000008@nexdrive.example
+CUST-000009 +1-555-010-0009 customer000009@nexdrive.example
+CUST-000010 +1-555-010-0010 customer000010@nexdrive.example
+
+
+PS C:\Users\Asus\OneDrive\Documents\ChatGPT\nexdrive-ai-dealership> 
