@@ -31,6 +31,18 @@ python backend/scripts/validate_customers.py
 The customer generator writes `database/seed/customers.csv`. All phone numbers use a clearly
 synthetic 555 namespace and all email addresses use the reserved `.example` domain.
 
+## Milestone 3: Salespeople dataset
+
+Generate and validate the 10-person synthetic dealership roster:
+
+```powershell
+python backend/scripts/generate_salespeople.py
+python backend/scripts/validate_salespeople.py
+```
+
+The roster is written to `database/seed/salespeople.csv` with queryable PostgreSQL array
+literals for languages and working days.
+
 Use `--seed` and `--count` to create a reproducible alternative dataset. Run either script with `--help` for all options.
 
 ## Repository layout
