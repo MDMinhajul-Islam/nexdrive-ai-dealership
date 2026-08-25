@@ -1,0 +1,6 @@
+{
+  "disclaimer": "Estimates only. Final terms depend on lender approval.",
+  "terms_months": [36, 48, 60, 72],
+  "minimum_down_payment_percent": 10,
+  "maximum_used_vehicle_age_years": 10
+}
