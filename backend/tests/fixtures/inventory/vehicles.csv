@@ -1,0 +1,3 @@
+vehicle_id,vin,stock_number,make,model,year,trim,body_type,condition,mileage,exterior_color,interior_color,fuel_type,transmission,drivetrain,seating_capacity,msrp,sale_price,vehicle_status,test_drive_available,warranty,certification,dealership_location
+VEH-000001,NXD2LW9SL100W5WKZ,NX-000001,Toyota,RAV4,2022,XLE,SUV,Used,31000,Silver Metallic,Black Cloth,Gasoline,Automatic,AWD,5,34000,28900,Available,true,90-Day Dealer Limited Warranty,None,Plano Flagship
+VEH-000002,NXD2LW9SL100W5WKY,NX-000002,Toyota,RAV4,2022,XLE,SUV,Used,31000,Silver Metallic,Black Cloth,Gasoline,Automatic,AWD,5,34000,27500,Sold,false,90-Day Dealer Limited Warranty,None,Plano Flagship
