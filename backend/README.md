@@ -30,6 +30,7 @@ Run scripts from the repository root so commands are consistent:
 ```bash
 python backend/scripts/generate_vehicles.py
 python backend/scripts/generate_customers.py
+python backend/scripts/validate_customers.py
 python backend/scripts/generate_business_data.py
 python backend/scripts/validate_data.py
 ```

@@ -1,0 +1,52 @@
+{
+  "result": "PASS",
+  "dataset_as_of": "2026-08-25",
+  "summary": {
+    "customers": 5000,
+    "unique_customer_ids": 5000,
+    "unique_synthetic_phones": 5000,
+    "unique_synthetic_emails": 5000,
+    "financing_needed": 3368,
+    "trade_ins": 1629
+  },
+  "buyer_profile_distribution": {
+    "Edge Case": 401,
+    "Hot": 921,
+    "Research": 1571,
+    "Warm": 2107
+  },
+  "purchase_timeline_distribution": {
+    "1-3 Months": 1321,
+    "3-6 Months": 629,
+    "Researching": 772,
+    "Within 30 Days": 1617,
+    "Within 7 Days": 661
+  },
+  "vehicle_type_distribution": {
+    "Hatchback": 345,
+    "SUV": 2689,
+    "Sedan": 1324,
+    "Truck": 642
+  },
+  "city_distribution": {
+    "Allen": 356,
+    "Carrollton": 287,
+    "Dallas": 759,
+    "Frisco": 802,
+    "McKinney": 572,
+    "Plano": 1946,
+    "Richardson": 278
+  },
+  "lead_source_distribution": {
+    "Inbound Call": 891,
+    "Paid Search": 711,
+    "Referral": 579,
+    "Social Media": 515,
+    "Vehicle Marketplace": 442,
+    "Walk-In": 500,
+    "Website": 1362
+  },
+  "errors": [],
+  "error_count": 0,
+  "warnings": []
+}

@@ -19,6 +19,18 @@ The generator writes:
 - `database/seed/features.csv`
 - `database/seed/vehicle_features.csv`
 
+## Milestone 2: Customer dataset
+
+Generate and validate 5,000 privacy-safe synthetic customer profiles:
+
+```powershell
+python backend/scripts/generate_customers.py
+python backend/scripts/validate_customers.py
+```
+
+The customer generator writes `database/seed/customers.csv`. All phone numbers use a clearly
+synthetic 555 namespace and all email addresses use the reserved `.example` domain.
+
 Use `--seed` and `--count` to create a reproducible alternative dataset. Run either script with `--help` for all options.
 
 ## Repository layout
