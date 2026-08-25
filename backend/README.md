@@ -19,6 +19,21 @@ Open `http://127.0.0.1:8000/docs` for the API documentation or call
 `GET /health` for the health check. Add Supabase credentials to `.env` before
 using database-backed features.
 
+## Read-only inventory tools
+
+The first Retell-ready tools are exposed as typed endpoints:
+
+```text
+POST /api/tools/search-inventory
+GET  /api/tools/get-vehicle-details/{vehicle_id}
+GET  /api/tools/check-vehicle-availability/{vehicle_id}
+```
+
+`search-inventory` returns only currently available database records and supports make, model,
+body type, condition, price, year, mileage, drivetrain, fuel, seating, and normalized feature
+filters. Routes depend on an inventory repository abstraction: production uses Supabase, while
+local tests use the read-only CSV repository.
+
 `SUPABASE_PUBLISHABLE_KEY` is the public/client-safe key used for standard
 requests. `SUPABASE_SECRET_KEY` is privileged and must remain backend-only; do
 not include it in frontend configuration or API responses.
