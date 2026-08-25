@@ -33,6 +33,8 @@ python backend/scripts/generate_customers.py
 python backend/scripts/validate_customers.py
 python backend/scripts/generate_salespeople.py
 python backend/scripts/validate_salespeople.py
+python backend/scripts/generate_leads.py
+python backend/scripts/validate_leads.py
 python backend/scripts/generate_business_data.py
 python backend/scripts/validate_data.py
 ```

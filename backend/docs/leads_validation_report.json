@@ -1,0 +1,51 @@
+{
+  "result": "PASS",
+  "dataset_as_of": "2026-08-25",
+  "summary": {
+    "leads": 4000,
+    "unique_lead_ids": 4000,
+    "unique_customer_relationships": 4000,
+    "vehicle_interests": 3477,
+    "unavailable_vehicle_interests": 89
+  },
+  "status_distribution": {
+    "Contacted": 572,
+    "Discovery": 743,
+    "Financing": 87,
+    "Lost": 212,
+    "Negotiation": 256,
+    "New": 388,
+    "Qualified": 744,
+    "Test Drive": 386,
+    "Vehicle Recommended": 522,
+    "Won": 90
+  },
+  "temperature_distribution": {
+    "Cold": 1005,
+    "Hot": 787,
+    "Warm": 2208
+  },
+  "salesperson_load": {
+    "SP-001": 920,
+    "SP-002": 519,
+    "SP-003": 130,
+    "SP-004": 127,
+    "SP-005": 598,
+    "SP-006": 925,
+    "SP-007": 511,
+    "SP-008": 140,
+    "SP-010": 130
+  },
+  "source_distribution": {
+    "Inbound Call": 694,
+    "Paid Search": 571,
+    "Referral": 457,
+    "Social Media": 410,
+    "Vehicle Marketplace": 358,
+    "Walk-In": 411,
+    "Website": 1099
+  },
+  "errors": [],
+  "error_count": 0,
+  "warnings": []
+}
