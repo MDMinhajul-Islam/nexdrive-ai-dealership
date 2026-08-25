@@ -43,6 +43,18 @@ python backend/scripts/validate_salespeople.py
 The roster is written to `database/seed/salespeople.csv` with queryable PostgreSQL array
 literals for languages and working days.
 
+## Milestone 4: Leads dataset
+
+Generate and validate 4,000 relational CRM leads:
+
+```powershell
+python backend/scripts/generate_leads.py
+python backend/scripts/validate_leads.py
+```
+
+Leads reference existing customers, active salespeople, and matching inventory. Lead scores are
+computed deterministically from captured business signals.
+
 Use `--seed` and `--count` to create a reproducible alternative dataset. Run either script with `--help` for all options.
 
 ## Repository layout
