@@ -1,0 +1,32 @@
+{
+  "result": "PASS",
+  "dataset_as_of": "2026-08-25",
+  "summary": {
+    "appointments": 1500,
+    "future_appointments": 652,
+    "unique_slots": 1500
+  },
+  "status_distribution": {
+    "Cancelled": 183,
+    "Completed": 549,
+    "Confirmed": 369,
+    "No Show": 116,
+    "Requested": 180,
+    "Rescheduled": 103
+  },
+  "type_distribution": {
+    "Financing Consultation": 185,
+    "Test Drive": 1018,
+    "Trade-In Appraisal": 120,
+    "Virtual Consultation": 177
+  },
+  "created_by_distribution": {
+    "Customer Service": 251,
+    "Salesperson": 388,
+    "Voice Agent": 470,
+    "Website": 391
+  },
+  "errors": [],
+  "error_count": 0,
+  "warnings": []
+}

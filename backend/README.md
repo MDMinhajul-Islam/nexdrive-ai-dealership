@@ -35,6 +35,13 @@ python backend/scripts/generate_salespeople.py
 python backend/scripts/validate_salespeople.py
 python backend/scripts/generate_leads.py
 python backend/scripts/validate_leads.py
+python backend/scripts/generate_appointments.py
+python backend/scripts/validate_appointments.py
+python backend/scripts/generate_trade_ins.py
+python backend/scripts/validate_trade_ins.py
+python backend/scripts/generate_financing.py
+python backend/scripts/validate_financing.py
+python backend/scripts/validate_business_data.py
 python backend/scripts/generate_business_data.py
 python backend/scripts/validate_data.py
 ```
