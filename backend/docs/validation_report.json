@@ -4,36 +4,150 @@
   "summary": {
     "vehicles": 10000,
     "features": 25,
-    "vehicle_feature_relationships": 108341,
+    "vehicle_feature_relationships": 91868,
     "unique_makes": 10,
-    "unique_models": 41
+    "unique_models": 41,
+    "most_common_sale_price_count": 32
   },
   "status_distribution": {
-    "Arriving Soon": 275,
-    "Available": 6746,
-    "Demo Vehicle": 181,
-    "In Service": 199,
-    "No Test Drive": 192,
-    "Pending Sale": 679,
-    "Reserved": 925,
-    "Sold": 803
+    "Arriving Soon": 342,
+    "Available": 6669,
+    "Demo Vehicle": 193,
+    "In Service": 206,
+    "No Test Drive": 201,
+    "Pending Sale": 692,
+    "Reserved": 923,
+    "Sold": 774
   },
   "condition_distribution": {
-    "Certified Pre-Owned": 1613,
-    "New": 3577,
-    "Used": 4810
+    "Certified Pre-Owned": 1557,
+    "New": 3622,
+    "Used": 4821
   },
   "make_distribution": {
-    "Chevrolet": 900,
-    "Ford": 1179,
-    "Honda": 1266,
-    "Hyundai": 1000,
-    "Kia": 910,
-    "Mazda": 807,
-    "Nissan": 922,
-    "Subaru": 815,
-    "Toyota": 1516,
-    "Volkswagen": 685
+    "Chevrolet": 825,
+    "Ford": 1168,
+    "Honda": 1280,
+    "Hyundai": 1025,
+    "Kia": 912,
+    "Mazda": 835,
+    "Nissan": 892,
+    "Subaru": 791,
+    "Toyota": 1528,
+    "Volkswagen": 744
+  },
+  "feature_distribution": {
+    "Keyless Entry": {
+      "count": 8765,
+      "percent": 87.65
+    },
+    "Apple CarPlay": {
+      "count": 8552,
+      "percent": 85.52
+    },
+    "Android Auto": {
+      "count": 8009,
+      "percent": 80.09
+    },
+    "Automatic Emergency Braking": {
+      "count": 5761,
+      "percent": 57.61
+    },
+    "Blind Spot Monitoring": {
+      "count": 4992,
+      "percent": 49.92
+    },
+    "Parking Sensors": {
+      "count": 4952,
+      "percent": 49.52
+    },
+    "Lane Keep Assist": {
+      "count": 4459,
+      "percent": 44.59
+    },
+    "Dual-Zone Climate Control": {
+      "count": 4358,
+      "percent": 43.58
+    },
+    "All-Wheel Drive": {
+      "count": 4341,
+      "percent": 43.41
+    },
+    "Adaptive Cruise Control": {
+      "count": 4129,
+      "percent": 41.29
+    },
+    "Remote Start": {
+      "count": 4036,
+      "percent": 40.36
+    },
+    "Roof Rails": {
+      "count": 3820,
+      "percent": 38.2
+    },
+    "Heated Seats": {
+      "count": 3510,
+      "percent": 35.1
+    },
+    "Power Liftgate": {
+      "count": 3015,
+      "percent": 30.15
+    },
+    "Wireless Charging": {
+      "count": 2685,
+      "percent": 26.85
+    },
+    "Leather Seats": {
+      "count": 2458,
+      "percent": 24.58
+    },
+    "Wi-Fi Hotspot": {
+      "count": 2443,
+      "percent": 24.43
+    },
+    "Third-Row Seating": {
+      "count": 2207,
+      "percent": 22.07
+    },
+    "Navigation": {
+      "count": 2042,
+      "percent": 20.42
+    },
+    "Panoramic Roof": {
+      "count": 1693,
+      "percent": 16.93
+    },
+    "Premium Audio": {
+      "count": 1557,
+      "percent": 15.57
+    },
+    "360-Degree Camera": {
+      "count": 1420,
+      "percent": 14.2
+    },
+    "Ventilated Seats": {
+      "count": 1185,
+      "percent": 11.85
+    },
+    "Tow Package": {
+      "count": 1070,
+      "percent": 10.7
+    },
+    "Bed Liner": {
+      "count": 409,
+      "percent": 4.09
+    }
+  },
+  "semantic_validation": {
+    "invalid_model_year_combinations": 0,
+    "future_year_rule_violations": 0,
+    "feature_year_violations": 0,
+    "third_row_incompatibilities": 0,
+    "awd_feature_drivetrain_mismatches": 0,
+    "non_truck_bed_liners": 0,
+    "ineligible_tow_packages": 0,
+    "incompatible_power_liftgates": 0,
+    "pricing_pile_up_violations": 0
   },
   "errors": [],
   "error_count": 0,

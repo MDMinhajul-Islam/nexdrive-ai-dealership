@@ -35,6 +35,16 @@ STATUS_WEIGHTS = {
     "No Test Drive": 2,
 }
 CONDITION_WEIGHTS = {"New": 36, "Used": 48, "Certified Pre-Owned": 16}
+FEATURE_MIN_YEAR = {
+    "FEAT-001": 2018, "FEAT-002": 2017, "FEAT-003": 2018,
+    "FEAT-004": 2018, "FEAT-006": 2017, "FEAT-013": 2017,
+    "FEAT-014": 2017, "FEAT-015": 2019, "FEAT-018": 2018,
+}
+LARGE_SUVS = {
+    "Highlander", "Pilot", "Explorer", "Santa Fe", "Telluride",
+    "Traverse", "CX-90", "Ascent", "Tiguan",
+}
+TOW_CAPABLE_CROSSOVERS = {"RAV4", "CR-V", "Escape", "Tucson", "Sportage", "Rogue", "CX-50", "Forester"}
 
 VEHICLE_FIELDS = [
     "vehicle_id", "vin", "stock_number", "make", "model", "year", "trim",
@@ -64,17 +74,27 @@ def synthetic_vin(index: int, seed: int) -> str:
     return "".join(chars)
 
 
-def choose_condition_year_mileage(rng: random.Random) -> tuple[str, int, int]:
+def choose_condition_year_mileage(rng: random.Random, first_model_year: int) -> tuple[str, int, int]:
     condition = weighted_choice(rng, CONDITION_WEIGHTS)
     if condition == "New":
-        year = rng.choices([2025, 2026, 2027], weights=[18, 68, 14], k=1)[0]
-        mileage = rng.randint(3, 220)
+        years = [year for year in [2025, 2026, 2027] if year >= first_model_year]
+        weights = [[20, 79, 1][[2025, 2026, 2027].index(year)] for year in years]
+        year = rng.choices(years, weights=weights, k=1)[0]
+        mileage = rng.randint(3, 25 if year > DATASET_YEAR else 220)
     elif condition == "Certified Pre-Owned":
-        year = rng.choices([2020, 2021, 2022, 2023, 2024, 2025], weights=[5, 10, 17, 24, 27, 17], k=1)[0]
+        all_years = [2020, 2021, 2022, 2023, 2024, 2025]
+        all_weights = [5, 10, 17, 24, 27, 17]
+        years = [year for year in all_years if year >= first_model_year]
+        weights = [all_weights[all_years.index(year)] for year in years]
+        year = rng.choices(years, weights=weights, k=1)[0]
         age = max(1, DATASET_YEAR - year)
         mileage = int(max(2500, min(75000, rng.gauss(age * 9500, 3500))))
     else:
-        year = rng.choices(list(range(2016, 2026)), weights=[2, 3, 5, 7, 9, 12, 14, 17, 17, 14], k=1)[0]
+        all_years = list(range(2016, 2026))
+        all_weights = [2, 3, 5, 7, 9, 12, 14, 17, 17, 14]
+        years = [year for year in all_years if year >= first_model_year]
+        weights = [all_weights[all_years.index(year)] for year in years]
+        year = rng.choices(years, weights=weights, k=1)[0]
         age = max(1, DATASET_YEAR - year)
         mileage = int(max(1500, min(165000, rng.gauss(age * 11800, 6500))))
     return condition, year, mileage
@@ -116,7 +136,9 @@ def calculate_prices(
         mileage_factor = max(0.68, 1 - max(0, mileage - age * 9000) / 300000)
         cpo_bonus = 1.055 if condition == "Certified Pre-Owned" else 1.0
         sale_factor = depreciation * mileage_factor * cpo_bonus * rng.uniform(0.97, 1.03)
-    sale_price = round(max(8500, msrp * sale_factor) / 50) * 50
+    # A model-relative, jittered wholesale floor avoids an obvious pile-up at one price.
+    price_floor = max(5500, model["base_msrp"] * rng.uniform(0.24, 0.32))
+    sale_price = round(max(price_floor, msrp * sale_factor) / 50) * 50
     return int(msrp), int(min(msrp, sale_price))
 
 
@@ -127,44 +149,73 @@ def feature_ids_for_vehicle(
     year: int,
     drivetrain: str,
 ) -> list[str]:
-    selected = {"FEAT-023"}
-    if year >= 2019:
-        selected.update({"FEAT-013", "FEAT-014"})
-    if year >= 2021:
-        selected.add("FEAT-006")
-    if drivetrain in {"AWD", "4WD"}:
+    selected: set[str] = set()
+    model_name = model["model"]
+    body_type = model["body_type"]
+
+    def maybe(feature_id: str, probability: float) -> None:
+        if year >= FEATURE_MIN_YEAR.get(feature_id, 2016) and rng.random() < max(0.0, min(1.0, probability)):
+            selected.add(feature_id)
+
+    # Facts and configuration-linked features are deterministic.
+    if drivetrain == "AWD":
         selected.add("FEAT-020")
     if model["seating"] >= 7:
         selected.add("FEAT-019")
-    if model["body_type"] == "Truck":
-        selected.add("FEAT-025")
-        if trim_index > 0 or rng.random() < 0.45:
-            selected.add("FEAT-021")
-    if model["body_type"] in {"SUV", "Hatchback"}:
-        selected.add("FEAT-024")
-        if rng.random() < 0.72:
-            selected.add("FEAT-011")
 
-    probabilities = {
-        "FEAT-001": (0.20, 0.58, 0.92), "FEAT-002": (0.42, 0.78, 0.97),
-        "FEAT-003": (0.35, 0.73, 0.95), "FEAT-004": (0.02, 0.18, 0.72),
-        "FEAT-005": (0.22, 0.68, 0.96), "FEAT-007": (0.02, 0.32, 0.91),
-        "FEAT-008": (0.08, 0.62, 0.95), "FEAT-009": (0.01, 0.10, 0.66),
-        "FEAT-010": (0.02, 0.24, 0.70), "FEAT-012": (0.20, 0.70, 0.96),
-        "FEAT-015": (0.08, 0.48, 0.86), "FEAT-016": (0.05, 0.30, 0.82),
-        "FEAT-017": (0.02, 0.18, 0.75), "FEAT-018": (0.10, 0.44, 0.80),
-        "FEAT-022": (0.22, 0.66, 0.92),
+    # Connectivity adoption grows by year; CarPlay and Android Auto are not coupled.
+    connectivity_base = 0.15 if year <= 2017 else 0.48 if year <= 2019 else 0.72 if year <= 2021 else 0.89
+    maybe("FEAT-013", connectivity_base + trim_index * 0.015)
+    maybe("FEAT-014", connectivity_base - 0.05 + trim_index * 0.015)
+    keyless_probability = 0.58 if year <= 2019 else 0.80 if year <= 2022 else 0.92
+    maybe("FEAT-023", keyless_probability + trim_index * 0.01)
+
+    # Utility features require a compatible body/model before trim probability applies.
+    roof_rail_probability = {
+        "SUV": (0.42, 0.62, 0.80),
+        "Hatchback": (0.08, 0.16, 0.25),
+        "Sedan": (0.01, 0.03, 0.06),
+        "Truck": (0.01, 0.04, 0.08),
+    }[body_type][trim_index]
+    maybe("FEAT-024", roof_rail_probability)
+    if body_type == "Truck":
+        maybe("FEAT-025", (0.42, 0.58, 0.72)[trim_index])
+        maybe("FEAT-021", (0.42, 0.58, 0.70)[trim_index])
+    elif model_name in LARGE_SUVS:
+        maybe("FEAT-021", (0.12, 0.25, 0.38)[trim_index])
+    elif model_name in TOW_CAPABLE_CROSSOVERS:
+        maybe("FEAT-021", (0.03, 0.09, 0.16)[trim_index])
+    if body_type == "SUV":
+        maybe("FEAT-011", (0.18, 0.58, 0.90)[trim_index])
+    elif body_type == "Hatchback":
+        maybe("FEAT-011", (0.02, 0.07, 0.15)[trim_index])
+
+    # Year and trim jointly drive safety equipment instead of global random rates.
+    safety_year_factor = 0.35 if year <= 2017 else 0.60 if year <= 2020 else 0.82 if year <= 2022 else 1.00
+    safety_probabilities = {
+        "FEAT-001": (0.15, 0.55, 0.90), "FEAT-002": (0.25, 0.65, 0.95),
+        "FEAT-003": (0.20, 0.60, 0.92), "FEAT-004": (0.01, 0.12, 0.55),
+        "FEAT-005": (0.25, 0.65, 0.90), "FEAT-006": (0.35, 0.75, 0.98),
     }
-    age_penalty = min(0.30, max(0, DATASET_YEAR - year) * 0.035)
-    for feature_id, by_trim in probabilities.items():
-        if rng.random() < max(0, by_trim[trim_index] - age_penalty):
-            selected.add(feature_id)
-    baseline_pool = [
-        "FEAT-001", "FEAT-002", "FEAT-003", "FEAT-005", "FEAT-006",
-        "FEAT-012", "FEAT-013", "FEAT-014", "FEAT-018", "FEAT-022",
-    ]
-    while len(selected) < 4:
-        selected.add(rng.choice(baseline_pool))
+    for feature_id, by_trim in safety_probabilities.items():
+        maybe(feature_id, by_trim[trim_index] * safety_year_factor)
+
+    # Shared trim context creates realistic correlations without identical packages.
+    comfort_probabilities = {
+        "FEAT-007": (0.02, 0.30, 0.82), "FEAT-008": (0.08, 0.52, 0.90),
+        "FEAT-009": (0.01, 0.09, 0.58), "FEAT-010": (0.02, 0.22, 0.64),
+        "FEAT-012": (0.18, 0.62, 0.91), "FEAT-015": (0.06, 0.38, 0.78),
+        "FEAT-016": (0.04, 0.25, 0.72), "FEAT-017": (0.02, 0.16, 0.65),
+        "FEAT-018": (0.08, 0.34, 0.68), "FEAT-022": (0.18, 0.56, 0.86),
+    }
+    age_penalty = min(0.22, max(0, DATASET_YEAR - year) * 0.025)
+    for feature_id, by_trim in comfort_probabilities.items():
+        maybe(feature_id, by_trim[trim_index] - age_penalty)
+
+    # Avoid featureless rows while keeping the floor low enough not to distort frequencies.
+    plausible_baseline = ["FEAT-005", "FEAT-008", "FEAT-012", "FEAT-022", "FEAT-023"]
+    while len(selected) < 2:
+        selected.add(rng.choice(plausible_baseline))
     return sorted(selected)
 
 
@@ -183,14 +234,16 @@ def generate(count: int, seed: int, output_dir: Path) -> None:
         model = rng.choice(make["models"])
         trim_index = rng.choices([0, 1, 2], weights=[42, 38, 20], k=1)[0]
         trim = model["trims"][trim_index]
-        condition, year, mileage = choose_condition_year_mileage(rng)
+        condition, year, mileage = choose_condition_year_mileage(
+            rng, model.get("first_model_year", 2016)
+        )
         fuel = rng.choice(model["fuels"])
         drivetrain = rng.choice(model["drivetrains"])
         exterior, interior = choose_colors(rng, colors, trim_index)
         msrp, sale_price = calculate_prices(
             rng, model, trim_index, fuel, drivetrain, condition, year, mileage
         )
-        status = weighted_choice(rng, STATUS_WEIGHTS)
+        status = "Arriving Soon" if year > DATASET_YEAR else weighted_choice(rng, STATUS_WEIGHTS)
         test_drive = status in {"Available", "Demo Vehicle"}
         warranty = (
             "Manufacturer Warranty"

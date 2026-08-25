@@ -20,6 +20,16 @@ VALID_STATUSES = {
     "Available", "Reserved", "Sold", "Pending Sale", "In Service",
     "Arriving Soon", "Demo Vehicle", "No Test Drive",
 }
+FEATURE_MIN_YEAR = {
+    "FEAT-001": 2018, "FEAT-002": 2017, "FEAT-003": 2018,
+    "FEAT-004": 2018, "FEAT-006": 2017, "FEAT-013": 2017,
+    "FEAT-014": 2017, "FEAT-015": 2019, "FEAT-018": 2018,
+}
+LARGE_SUVS = {
+    "Highlander", "Pilot", "Explorer", "Santa Fe", "Telluride",
+    "Traverse", "CX-90", "Ascent", "Tiguan",
+}
+TOW_CAPABLE_CROSSOVERS = {"RAV4", "CR-V", "Escape", "Tucson", "Sportage", "Rogue", "CX-50", "Forester"}
 
 
 def read_csv(path: Path) -> list[dict[str, str]]:
@@ -40,6 +50,17 @@ def catalog_index() -> dict[tuple[str, str], dict]:
 def validate(seed_dir: Path, expected_count: int) -> dict:
     errors: list[str] = []
     warnings: list[str] = []
+    semantic_checks = {
+        "invalid_model_year_combinations": 0,
+        "future_year_rule_violations": 0,
+        "feature_year_violations": 0,
+        "third_row_incompatibilities": 0,
+        "awd_feature_drivetrain_mismatches": 0,
+        "non_truck_bed_liners": 0,
+        "ineligible_tow_packages": 0,
+        "incompatible_power_liftgates": 0,
+        "pricing_pile_up_violations": 0,
+    }
     vehicles = read_csv(seed_dir / "vehicles.csv")
     features = read_csv(seed_dir / "features.csv")
     relationships = read_csv(seed_dir / "vehicle_features.csv")
@@ -59,6 +80,8 @@ def validate(seed_dir: Path, expected_count: int) -> dict:
 
     vehicle_ids = {row["vehicle_id"] for row in vehicles}
     feature_ids = {row["feature_id"] for row in features}
+    feature_names = {row["feature_id"]: row["name"] for row in features}
+    feature_counts: Counter[str] = Counter(row["feature_id"] for row in relationships)
     relation_count: Counter[str] = Counter()
 
     for row_number, row in enumerate(relationships, start=2):
@@ -71,6 +94,7 @@ def validate(seed_dir: Path, expected_count: int) -> dict:
     status_counts: Counter[str] = Counter()
     condition_counts: Counter[str] = Counter()
     make_counts: Counter[str] = Counter()
+    sale_price_counts: Counter[int] = Counter()
     relationship_map: defaultdict[str, set[str]] = defaultdict(set)
     for vehicle_id, feature_id in relationship_pairs:
         relationship_map[vehicle_id].add(feature_id)
@@ -98,6 +122,9 @@ def validate(seed_dir: Path, expected_count: int) -> dict:
         if not model:
             errors.append(f"{prefix}: make/model is not in reference catalog")
         else:
+            if year < model.get("first_model_year", 2016):
+                semantic_checks["invalid_model_year_combinations"] += 1
+                errors.append(f"{prefix}: year predates model launch")
             if row["trim"] not in model["trims"]:
                 errors.append(f"{prefix}: trim does not match model")
             if row["body_type"] != model["body_type"]:
@@ -115,9 +142,17 @@ def validate(seed_dir: Path, expected_count: int) -> dict:
             errors.append(f"{prefix}: mileage outside supported range")
         if row["condition"] == "New" and mileage > 300:
             errors.append(f"{prefix}: new vehicle has excessive mileage")
+        if year > 2026 and not (
+            row["condition"] == "New"
+            and row["vehicle_status"] == "Arriving Soon"
+            and mileage <= 25
+            and row["test_drive_available"].lower() == "false"
+        ):
+            semantic_checks["future_year_rule_violations"] += 1
+            errors.append(f"{prefix}: future-year vehicle violates pre-arrival rules")
         if row["condition"] == "Certified Pre-Owned" and not (2020 <= year <= 2025 and mileage <= 75_000):
             errors.append(f"{prefix}: vehicle violates CPO age/mileage rules")
-        if not 8_000 <= sale_price <= msrp <= 100_000:
+        if not 5_500 <= sale_price <= msrp <= 100_000:
             errors.append(f"{prefix}: impossible price relationship")
         if row["vehicle_status"] not in VALID_STATUSES:
             errors.append(f"{prefix}: unknown inventory status")
@@ -127,16 +162,43 @@ def validate(seed_dir: Path, expected_count: int) -> dict:
             errors.append(f"{prefix}: test-drive flag conflicts with inventory status")
         if row["condition"] == "Certified Pre-Owned" and row["certification"] == "None":
             errors.append(f"{prefix}: CPO vehicle is missing certification")
-        if relation_count[row["vehicle_id"]] < 4:
-            errors.append(f"{prefix}: fewer than four queryable features")
+        if relation_count[row["vehicle_id"]] < 2:
+            errors.append(f"{prefix}: fewer than two queryable features")
         if seating >= 7 and "FEAT-019" not in relationship_map[row["vehicle_id"]]:
+            semantic_checks["third_row_incompatibilities"] += 1
             errors.append(f"{prefix}: third-row vehicle missing feature relationship")
-        if row["drivetrain"] in {"AWD", "4WD"} and "FEAT-020" not in relationship_map[row["vehicle_id"]]:
-            errors.append(f"{prefix}: AWD/4WD vehicle missing feature relationship")
+        if row["drivetrain"] == "AWD" and "FEAT-020" not in relationship_map[row["vehicle_id"]]:
+            semantic_checks["awd_feature_drivetrain_mismatches"] += 1
+            errors.append(f"{prefix}: AWD vehicle missing feature relationship")
+        assigned_features = relationship_map[row["vehicle_id"]]
+        for feature_id, minimum_year in FEATURE_MIN_YEAR.items():
+            if feature_id in assigned_features and year < minimum_year:
+                semantic_checks["feature_year_violations"] += 1
+                errors.append(f"{prefix}: {feature_id} predates supported feature year")
+        if "FEAT-019" in assigned_features and seating < 7:
+            semantic_checks["third_row_incompatibilities"] += 1
+            errors.append(f"{prefix}: third-row feature conflicts with seating capacity")
+        if "FEAT-020" in assigned_features and row["drivetrain"] != "AWD":
+            semantic_checks["awd_feature_drivetrain_mismatches"] += 1
+            errors.append(f"{prefix}: AWD feature conflicts with drivetrain")
+        if "FEAT-025" in assigned_features and row["body_type"] != "Truck":
+            semantic_checks["non_truck_bed_liners"] += 1
+            errors.append(f"{prefix}: bed-liner feature assigned to non-truck")
+        if "FEAT-021" in assigned_features and not (
+            row["body_type"] == "Truck"
+            or row["model"] in LARGE_SUVS
+            or row["model"] in TOW_CAPABLE_CROSSOVERS
+        ):
+            semantic_checks["ineligible_tow_packages"] += 1
+            errors.append(f"{prefix}: tow package assigned to ineligible model")
+        if "FEAT-011" in assigned_features and row["body_type"] not in {"SUV", "Hatchback"}:
+            semantic_checks["incompatible_power_liftgates"] += 1
+            errors.append(f"{prefix}: power liftgate assigned to incompatible body type")
 
         status_counts[row["vehicle_status"]] += 1
         condition_counts[row["condition"]] += 1
         make_counts[row["make"]] += 1
+        sale_price_counts[sale_price] += 1
 
     if vehicles:
         available_pct = status_counts["Available"] / len(vehicles) * 100
@@ -150,6 +212,13 @@ def validate(seed_dir: Path, expected_count: int) -> dict:
             errors.append(f"Arriving/Service/Demo/No-Test-Drive mix is {edge_pct:.2f}%, expected 5-10%")
     if len(make_counts) < 10:
         warnings.append(f"Only {len(make_counts)} makes represented")
+    if vehicles and sale_price_counts:
+        most_common_price, price_count = sale_price_counts.most_common(1)[0]
+        if price_count / len(vehicles) > 0.02:
+            semantic_checks["pricing_pile_up_violations"] += 1
+            errors.append(
+                f"Pricing pile-up: {price_count} vehicles share sale price ${most_common_price:,}"
+            )
 
     return {
         "result": "PASS" if not errors else "FAIL",
@@ -160,10 +229,19 @@ def validate(seed_dir: Path, expected_count: int) -> dict:
             "vehicle_feature_relationships": len(relationships),
             "unique_makes": len(make_counts),
             "unique_models": len({(v["make"], v["model"]) for v in vehicles}),
+            "most_common_sale_price_count": sale_price_counts.most_common(1)[0][1] if sale_price_counts else 0,
         },
         "status_distribution": dict(sorted(status_counts.items())),
         "condition_distribution": dict(sorted(condition_counts.items())),
         "make_distribution": dict(sorted(make_counts.items())),
+        "feature_distribution": {
+            feature_names[feature_id]: {
+                "count": feature_counts[feature_id],
+                "percent": round(feature_counts[feature_id] / len(vehicles) * 100, 2) if vehicles else 0,
+            }
+            for feature_id in sorted(feature_ids, key=lambda item: feature_counts[item], reverse=True)
+        },
+        "semantic_validation": semantic_checks,
         "errors": errors[:100],
         "error_count": len(errors),
         "warnings": warnings,
