@@ -1,0 +1,30 @@
+{
+  "features": [
+    {"feature_id":"FEAT-001","name":"Adaptive Cruise Control","category":"Safety & Driver Assistance"},
+    {"feature_id":"FEAT-002","name":"Blind Spot Monitoring","category":"Safety & Driver Assistance"},
+    {"feature_id":"FEAT-003","name":"Lane Keep Assist","category":"Safety & Driver Assistance"},
+    {"feature_id":"FEAT-004","name":"360-Degree Camera","category":"Safety & Driver Assistance"},
+    {"feature_id":"FEAT-005","name":"Parking Sensors","category":"Safety & Driver Assistance"},
+    {"feature_id":"FEAT-006","name":"Automatic Emergency Braking","category":"Safety & Driver Assistance"},
+    {"feature_id":"FEAT-007","name":"Leather Seats","category":"Comfort & Convenience"},
+    {"feature_id":"FEAT-008","name":"Heated Seats","category":"Comfort & Convenience"},
+    {"feature_id":"FEAT-009","name":"Ventilated Seats","category":"Comfort & Convenience"},
+    {"feature_id":"FEAT-010","name":"Panoramic Roof","category":"Comfort & Convenience"},
+    {"feature_id":"FEAT-011","name":"Power Liftgate","category":"Comfort & Convenience"},
+    {"feature_id":"FEAT-012","name":"Dual-Zone Climate Control","category":"Comfort & Convenience"},
+    {"feature_id":"FEAT-013","name":"Apple CarPlay","category":"Connectivity"},
+    {"feature_id":"FEAT-014","name":"Android Auto","category":"Connectivity"},
+    {"feature_id":"FEAT-015","name":"Wireless Charging","category":"Connectivity"},
+    {"feature_id":"FEAT-016","name":"Navigation","category":"Connectivity"},
+    {"feature_id":"FEAT-017","name":"Premium Audio","category":"Connectivity"},
+    {"feature_id":"FEAT-018","name":"Wi-Fi Hotspot","category":"Connectivity"},
+    {"feature_id":"FEAT-019","name":"Third-Row Seating","category":"Utility"},
+    {"feature_id":"FEAT-020","name":"All-Wheel Drive","category":"Utility"},
+    {"feature_id":"FEAT-021","name":"Tow Package","category":"Utility"},
+    {"feature_id":"FEAT-022","name":"Remote Start","category":"Utility"},
+    {"feature_id":"FEAT-023","name":"Keyless Entry","category":"Utility"},
+    {"feature_id":"FEAT-024","name":"Roof Rails","category":"Utility"},
+    {"feature_id":"FEAT-025","name":"Bed Liner","category":"Utility"}
+  ]
+}
+
