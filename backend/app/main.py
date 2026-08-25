@@ -3,6 +3,7 @@
 from fastapi import FastAPI
 
 from app.routes.health import router as health_router
+from app.routes.vehicles import router as vehicles_router
 
 
 app = FastAPI(
@@ -11,6 +12,7 @@ app = FastAPI(
     description="Backend API for NexDrive dealership workflows.",
 )
 app.include_router(health_router)
+app.include_router(vehicles_router)
 
 
 @app.get("/", tags=["system"])

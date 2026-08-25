@@ -33,6 +33,14 @@ A successful check returns `{"status":"ok","database":"connected","source":"supa
 The endpoint queries at most one `vehicles` row and returns HTTP 503 with a
 sanitized response if configuration or connectivity fails.
 
+Retrieve authoritative vehicle details and normalized feature names with:
+
+```text
+GET http://127.0.0.1:8000/api/vehicles/VEH-000001
+```
+
+Unknown valid-format IDs return HTTP 404, while malformed IDs return HTTP 422.
+
 ## Data scripts
 
 Run scripts from the repository root so commands are consistent:
