@@ -27,12 +27,18 @@ The first Retell-ready tools are exposed as typed endpoints:
 POST /api/tools/search-inventory
 GET  /api/tools/get-vehicle-details/{vehicle_id}
 GET  /api/tools/check-vehicle-availability/{vehicle_id}
+GET  /api/tools/get-customer-history/{customer_id}
+GET  /api/tools/get-test-drive-slots?start_date=YYYY-MM-DD
 ```
 
 `search-inventory` returns only currently available database records and supports make, model,
 body type, condition, price, year, mileage, drivetrain, fuel, seating, and normalized feature
 filters. Routes depend on an inventory repository abstraction: production uses Supabase, while
 local tests use the read-only CSV repository.
+
+Customer history returns the authoritative customer record with related CRM leads and appointments.
+Test-drive slots are derived from active salesperson shifts and exclude existing Requested,
+Confirmed, or Rescheduled appointments. Slot discovery is read-only and does not create a booking.
 
 `SUPABASE_PUBLISHABLE_KEY` is the public/client-safe key used for standard
 requests. `SUPABASE_SECRET_KEY` is privileged and must remain backend-only; do
