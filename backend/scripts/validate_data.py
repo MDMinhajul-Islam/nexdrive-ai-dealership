@@ -12,7 +12,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_SEED_DIR = ROOT / "database" / "seed"
-DEFAULT_REPORT = ROOT / "database" / "validation" / "validation_report.json"
+DEFAULT_REPORT = ROOT / "backend" / "docs" / "validation_report.json"
 VIN_RE = re.compile(r"^NXD[A-HJ-NPR-Z0-9]{14}$")
 ID_RE = re.compile(r"^VEH-\d{6}$")
 STOCK_RE = re.compile(r"^NX-\d{6}$")

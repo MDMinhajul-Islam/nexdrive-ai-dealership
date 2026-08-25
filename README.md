@@ -2,15 +2,15 @@
 
 Production-style AI car dealership demo with synthetic dealership data, Supabase, Retell AI, and tool-driven business workflows.
 
-The current milestone focuses only on a realistic, relational inventory dataset for the fictional NexDrive Motors dealership group in Plano, Texas. Frontend, backend, and voice-agent implementations are intentionally deferred.
+The repository includes a realistic relational inventory dataset and a FastAPI backend scaffold for the fictional NexDrive Motors dealership group in Plano, Texas.
 
 ## Milestone 1: Vehicle dataset
 
 Generate 10,000 deterministic synthetic vehicles and normalized feature relationships:
 
 ```powershell
-python database/generators/generate_vehicles.py
-python database/validation/validate_vehicles.py
+python backend/scripts/generate_vehicles.py
+python backend/scripts/validate_data.py
 ```
 
 The generator writes:
@@ -24,12 +24,11 @@ Use `--seed` and `--count` to create a reproducible alternative dataset. Run eit
 ## Repository layout
 
 - `database/reference`: controlled vehicle, feature, color, and financing reference data
-- `database/generators`: deterministic synthetic-data generators
-- `database/validation`: data-quality and relationship checks
 - `database/schema`: Supabase/PostgreSQL schema migrations
 - `database/seed`: generated CSV artifacts
-- `backend`, `frontend`, `retell`: placeholders for future milestones
-- `docs`: architecture, ERD, testing, and screenshots
+- `backend/app`: FastAPI application, routes, services, schemas, and utilities
+- `backend/scripts`: deterministic data generators and validation tools
+- `backend/docs`: backend architecture, ERD, testing, reports, and screenshots
+- `frontend`, `retell`: placeholders for future milestones
 
 All people, contact details, vehicle identifiers, and business records in this project must be synthetic.
-
