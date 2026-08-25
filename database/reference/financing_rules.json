@@ -1,6 +1,19 @@
 {
-  "disclaimer": "Estimates only. Final terms depend on lender approval.",
-  "terms_months": [36, 48, 60, 72],
-  "minimum_down_payment_percent": 10,
-  "maximum_used_vehicle_age_years": 10
+  "version": "1.0",
+  "currency": "USD",
+  "disclaimer": "Estimate only. Final terms, rate, and eligibility depend on lender approval.",
+  "rules": [
+    {"financing_rule_id":"FIN-001","vehicle_condition":"New","term_months":36,"apr_min":4.49,"apr_max":6.49,"minimum_down_payment_percent":5,"maximum_vehicle_age_years":1,"active":true},
+    {"financing_rule_id":"FIN-002","vehicle_condition":"New","term_months":48,"apr_min":4.79,"apr_max":6.79,"minimum_down_payment_percent":5,"maximum_vehicle_age_years":1,"active":true},
+    {"financing_rule_id":"FIN-003","vehicle_condition":"New","term_months":60,"apr_min":5.19,"apr_max":7.29,"minimum_down_payment_percent":8,"maximum_vehicle_age_years":1,"active":true},
+    {"financing_rule_id":"FIN-004","vehicle_condition":"New","term_months":72,"apr_min":5.79,"apr_max":7.99,"minimum_down_payment_percent":10,"maximum_vehicle_age_years":1,"active":true},
+    {"financing_rule_id":"FIN-005","vehicle_condition":"Certified Pre-Owned","term_months":36,"apr_min":5.49,"apr_max":7.99,"minimum_down_payment_percent":8,"maximum_vehicle_age_years":6,"active":true},
+    {"financing_rule_id":"FIN-006","vehicle_condition":"Certified Pre-Owned","term_months":48,"apr_min":5.89,"apr_max":8.39,"minimum_down_payment_percent":8,"maximum_vehicle_age_years":6,"active":true},
+    {"financing_rule_id":"FIN-007","vehicle_condition":"Certified Pre-Owned","term_months":60,"apr_min":6.39,"apr_max":8.99,"minimum_down_payment_percent":10,"maximum_vehicle_age_years":6,"active":true},
+    {"financing_rule_id":"FIN-008","vehicle_condition":"Certified Pre-Owned","term_months":72,"apr_min":6.99,"apr_max":9.69,"minimum_down_payment_percent":12,"maximum_vehicle_age_years":5,"active":true},
+    {"financing_rule_id":"FIN-009","vehicle_condition":"Used","term_months":36,"apr_min":6.49,"apr_max":10.49,"minimum_down_payment_percent":10,"maximum_vehicle_age_years":10,"active":true},
+    {"financing_rule_id":"FIN-010","vehicle_condition":"Used","term_months":48,"apr_min":6.99,"apr_max":10.99,"minimum_down_payment_percent":10,"maximum_vehicle_age_years":9,"active":true},
+    {"financing_rule_id":"FIN-011","vehicle_condition":"Used","term_months":60,"apr_min":7.49,"apr_max":11.49,"minimum_down_payment_percent":12,"maximum_vehicle_age_years":8,"active":true},
+    {"financing_rule_id":"FIN-012","vehicle_condition":"Used","term_months":72,"apr_min":8.19,"apr_max":12.19,"minimum_down_payment_percent":15,"maximum_vehicle_age_years":6,"active":true}
+  ]
 }

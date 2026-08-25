@@ -1,0 +1,41 @@
+trade_in_id,lead_id,customer_id,make,model,year,mileage,condition,estimated_value,loan_balance,notes
+TRD-00001,LEAD-003813,CUST-001241,Chevrolet,Blazer EV,2024,17899,Fair,29000,8400,Synthetic estimate only; final value requires an in-person appraisal.
+TRD-00002,LEAD-002583,CUST-000705,Honda,Civic,2010,194116,Excellent,2800,2200,Synthetic estimate only; final value requires an in-person appraisal.
+TRD-00003,LEAD-002098,CUST-002992,Subaru,Forester,2013,158606,Good,4800,0,Synthetic estimate only; final value requires an in-person appraisal.
+TRD-00004,LEAD-000444,CUST-003201,Subaru,Forester,2021,60394,Good,14400,0,Synthetic estimate only; final value requires an in-person appraisal.
+TRD-00005,LEAD-000263,CUST-002468,Mazda,CX-50,2024,9631,Fair,19700,13700,Synthetic estimate only; final value requires an in-person appraisal.
+TRD-00006,LEAD-000340,CUST-002799,Kia,Telluride,2024,28506,Good,25900,0,Synthetic estimate only; final value requires an in-person appraisal.
+TRD-00007,LEAD-000913,CUST-003640,Kia,Sportage,2014,142435,Good,5400,0,Synthetic estimate only; final value requires an in-person appraisal.
+TRD-00008,LEAD-000176,CUST-004389,Nissan,Sentra,2018,95077,Good,7000,0,Synthetic estimate only; final value requires an in-person appraisal.
+TRD-00009,LEAD-000214,CUST-001481,Subaru,Forester,2016,135342,Good,6900,4800,Synthetic estimate only; final value requires an in-person appraisal.
+TRD-00010,LEAD-000393,CUST-004925,Hyundai,Elantra,2011,174645,Good,2900,1900,Synthetic estimate only; final value requires an in-person appraisal.
+TRD-00011,LEAD-003765,CUST-001872,Nissan,Altima,2015,119199,Fair,5400,0,Synthetic estimate only; final value requires an in-person appraisal.
+TRD-00012,LEAD-001040,CUST-004067,Ford,F-150,2018,97326,Good,12100,0,Synthetic estimate only; final value requires an in-person appraisal.
+TRD-00013,LEAD-002780,CUST-002679,Kia,EV6,2023,37248,Fair,23200,0,Synthetic estimate only; final value requires an in-person appraisal.
+TRD-00014,LEAD-000860,CUST-004758,Hyundai,Santa Fe,2024,33481,Poor,17000,7700,Synthetic estimate only; final value requires an in-person appraisal.
+TRD-00015,LEAD-003475,CUST-002557,Kia,Sportage,2023,36105,Fair,15700,13100,Synthetic estimate only; final value requires an in-person appraisal.
+TRD-00016,LEAD-001600,CUST-000312,Chevrolet,Traverse,2010,190736,Fair,3800,3500,Synthetic estimate only; final value requires an in-person appraisal.
+TRD-00017,LEAD-003208,CUST-001780,Volkswagen,Taos,2022,38215,Fair,13000,0,Synthetic estimate only; final value requires an in-person appraisal.
+TRD-00018,LEAD-001052,CUST-000610,Honda,Pilot,2021,70186,Good,18900,11000,Synthetic estimate only; final value requires an in-person appraisal.
+TRD-00019,LEAD-000187,CUST-000880,Nissan,Sentra,2019,76678,Good,8300,6600,Synthetic estimate only; final value requires an in-person appraisal.
+TRD-00020,LEAD-003548,CUST-003992,Mazda,CX-30,2023,30488,Good,16800,0,Synthetic estimate only; final value requires an in-person appraisal.
+TRD-00021,LEAD-001007,CUST-003972,Ford,Mustang Mach-E,2022,56694,Good,22100,19500,Synthetic estimate only; final value requires an in-person appraisal.
+TRD-00022,LEAD-000551,CUST-003531,Subaru,Crosstrek,2022,58979,Fair,12200,0,Synthetic estimate only; final value requires an in-person appraisal.
+TRD-00023,LEAD-000126,CUST-001698,Volkswagen,ID.4,2024,22813,Good,29600,10100,Synthetic estimate only; final value requires an in-person appraisal.
+TRD-00024,LEAD-001951,CUST-003907,Chevrolet,Blazer EV,2024,23619,Fair,28700,0,Synthetic estimate only; final value requires an in-person appraisal.
+TRD-00025,LEAD-001665,CUST-003297,Hyundai,Elantra,2017,122515,Fair,5100,6100,Synthetic estimate only; final value requires an in-person appraisal.
+TRD-00026,LEAD-003046,CUST-003322,Subaru,Crosstrek,2023,46226,Good,16300,14600,Synthetic estimate only; final value requires an in-person appraisal.
+TRD-00027,LEAD-001977,CUST-001619,Volkswagen,Tiguan,2016,116082,Good,7500,8300,Synthetic estimate only; final value requires an in-person appraisal.
+TRD-00028,LEAD-001578,CUST-000894,Chevrolet,Blazer EV,2024,10837,Excellent,36500,0,Synthetic estimate only; final value requires an in-person appraisal.
+TRD-00029,LEAD-002669,CUST-002432,Ford,F-150,2023,23781,Good,24400,0,Synthetic estimate only; final value requires an in-person appraisal.
+TRD-00030,LEAD-002790,CUST-003684,Hyundai,Tucson,2012,161501,Excellent,4700,0,Synthetic estimate only; final value requires an in-person appraisal.
+TRD-00031,LEAD-002291,CUST-000441,Ford,Escape,2011,170557,Good,3800,2500,Synthetic estimate only; final value requires an in-person appraisal.
+TRD-00032,LEAD-003794,CUST-003632,Subaru,Impreza,2019,68125,Good,9400,4900,Synthetic estimate only; final value requires an in-person appraisal.
+TRD-00033,LEAD-002219,CUST-001653,Subaru,Impreza,2014,161308,Excellent,4600,2500,Synthetic estimate only; final value requires an in-person appraisal.
+TRD-00034,LEAD-003876,CUST-000170,Mazda,CX-50,2024,10166,Good,22900,0,Synthetic estimate only; final value requires an in-person appraisal.
+TRD-00035,LEAD-003821,CUST-001865,Ford,Escape,2014,146345,Fair,4700,2800,Synthetic estimate only; final value requires an in-person appraisal.
+TRD-00036,LEAD-001942,CUST-002507,Nissan,Sentra,2013,164348,Good,3400,0,Synthetic estimate only; final value requires an in-person appraisal.
+TRD-00037,LEAD-002570,CUST-002599,Toyota,Camry,2017,123249,Poor,5100,0,Synthetic estimate only; final value requires an in-person appraisal.
+TRD-00038,LEAD-001196,CUST-003510,Hyundai,Tucson,2015,139142,Good,6200,5800,Synthetic estimate only; final value requires an in-person appraisal.
+TRD-00039,LEAD-001219,CUST-004437,Honda,Civic,2019,89268,Fair,7600,5000,Synthetic estimate only; final value requires an in-person appraisal.
+TRD-00040,LEAD-000092,CUST-003097,Honda,Pilot,2021,56935,Poor,13500,15400,Synthetic estimate only; final value requires an in-person appraisal.

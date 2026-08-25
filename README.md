@@ -55,6 +55,17 @@ python backend/scripts/validate_leads.py
 Leads reference existing customers, active salespeople, and matching inventory. Lead scores are
 computed deterministically from captured business signals.
 
+## Milestone 5: Action datasets
+
+Regenerate and validate all post-inventory business data in dependency order:
+
+```powershell
+python backend/scripts/generate_business_data.py
+```
+
+This produces 1,500 appointments, 40 trade-in estimates, and 12 financing rules in addition to
+customers, salespeople, and leads, then runs the cross-dataset relationship quality gate.
+
 Use `--seed` and `--count` to create a reproducible alternative dataset. Run either script with `--help` for all options.
 
 ## Repository layout
