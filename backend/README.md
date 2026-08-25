@@ -23,6 +23,16 @@ using database-backed features.
 requests. `SUPABASE_SECRET_KEY` is privileged and must remain backend-only; do
 not include it in frontend configuration or API responses.
 
+To verify the live Supabase connection after configuring `.env`, call:
+
+```text
+GET http://127.0.0.1:8000/health/database
+```
+
+A successful check returns `{"status":"ok","database":"connected","source":"supabase"}`.
+The endpoint queries at most one `vehicles` row and returns HTTP 503 with a
+sanitized response if configuration or connectivity fails.
+
 ## Data scripts
 
 Run scripts from the repository root so commands are consistent:

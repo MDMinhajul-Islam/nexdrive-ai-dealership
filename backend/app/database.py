@@ -11,11 +11,24 @@ from supabase import Client, create_client
 from app.utils.config import get_settings
 
 
+class SupabaseConfigurationError(RuntimeError):
+    """Raised when required Supabase environment variables are missing."""
+
+
 @lru_cache
 def get_supabase() -> Client:
     settings = get_settings()
-    if not settings.supabase_url or not settings.supabase_publishable_key:
-        raise RuntimeError(
-            "SUPABASE_URL and SUPABASE_PUBLISHABLE_KEY must be set in backend/.env"
+    required = {
+        "SUPABASE_URL": settings.supabase_url,
+        "SUPABASE_PUBLISHABLE_KEY": settings.supabase_publishable_key,
+        "SUPABASE_SECRET_KEY": settings.supabase_secret_key,
+    }
+    missing = [name for name, value in required.items() if not value]
+    if missing:
+        raise SupabaseConfigurationError(
+            f"Missing required Supabase configuration: {', '.join(missing)}"
         )
-    return create_client(settings.supabase_url, settings.supabase_publishable_key)
+
+    # Trusted backend operations use the privileged key. This client must never
+    # be returned through an API response or imported by frontend code.
+    return create_client(settings.supabase_url, settings.supabase_secret_key)
