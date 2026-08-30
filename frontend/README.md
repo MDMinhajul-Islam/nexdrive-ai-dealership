@@ -12,8 +12,9 @@ internal admin experience:
 ## Local configuration
 
 Copy `.env.example` to `.env` and set `VITE_API_BASE_URL`. Admin sign-in also
-requires the public Supabase URL and publishable key. Retell remains optional
-until the agent is ready; no secret keys belong in the browser.
+requires the public Supabase URL and publishable key. Voice calls obtain a
+short-lived access token from `POST /api/retell/create-web-call`; Retell API
+keys and agent configuration remain exclusively on the backend.
 
 ## Dokploy
 
@@ -24,8 +25,8 @@ container port `80`, and HTTPS. Add these as Docker **Build Time Arguments**:
 VITE_API_BASE_URL=https://api.example.com
 VITE_SUPABASE_URL=https://project.supabase.co
 VITE_SUPABASE_PUBLISHABLE_KEY=public-key
-VITE_RETELL_AGENT_ID=optional-agent-id
 ```
 
 After the frontend domain is live, set the exact HTTPS origin in backend
-`CORS_ORIGINS` and rebuild the backend.
+`CORS_ORIGINS` and rebuild the backend. Production voice calls require HTTPS
+so the browser can grant microphone access securely.
