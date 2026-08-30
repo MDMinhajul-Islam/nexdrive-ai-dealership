@@ -1,0 +1,21 @@
+[
+{"id":"S01","name":"Used AWD SUV under budget","tool":"search_inventory","expected":"matches"},
+{"id":"S02","name":"Family SUV with third row","tool":"search_inventory","expected":"matches"},
+{"id":"S03","name":"Unknown feature","tool":"search_inventory","expected":"empty"},
+{"id":"S04","name":"Invalid inverted budget","tool":"search_inventory","expected":"validation"},
+{"id":"S05","name":"Vehicle details found","tool":"get_vehicle_details","expected":"record"},
+{"id":"S06","name":"Vehicle not found","tool":"get_vehicle_details","expected":"not_found"},
+{"id":"S07","name":"Sold vehicle unavailable","tool":"check_vehicle_availability","expected":"unavailable"},
+{"id":"S08","name":"Customer history found","tool":"get_customer_history","expected":"relationships"},
+{"id":"S09","name":"Customer not found","tool":"get_customer_history","expected":"not_found"},
+{"id":"S10","name":"Open test-drive slots","tool":"get_test_drive_slots","expected":"slots"},
+{"id":"S11","name":"Lead create","tool":"create_or_update_lead","expected":"created"},
+{"id":"S12","name":"Lead idempotent update","tool":"create_or_update_lead","expected":"updated"},
+{"id":"S13","name":"Confirmed booking","tool":"create_test_drive","expected":"created"},
+{"id":"S14","name":"Duplicate booking retry","tool":"create_test_drive","expected":"existing"},
+{"id":"S15","name":"Unavailable vehicle booking","tool":"create_test_drive","expected":"conflict"},
+{"id":"S16","name":"Slot double booking","tool":"create_test_drive","expected":"conflict"},
+{"id":"S17","name":"Financing estimate with disclaimer","tool":"estimate_financing","expected":"estimate"},
+{"id":"S18","name":"Insufficient down payment","tool":"estimate_financing","expected":"conflict"},
+{"id":"S19","name":"Backend provider failure","tool":"search_inventory","expected":"safe_failure"}
+]
