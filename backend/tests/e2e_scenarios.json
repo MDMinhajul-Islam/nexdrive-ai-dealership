@@ -17,5 +17,10 @@
 {"id":"S16","name":"Slot double booking","tool":"create_test_drive","expected":"conflict"},
 {"id":"S17","name":"Financing estimate with disclaimer","tool":"estimate_financing","expected":"estimate"},
 {"id":"S18","name":"Insufficient down payment","tool":"estimate_financing","expected":"conflict"},
-{"id":"S19","name":"Backend provider failure","tool":"search_inventory","expected":"safe_failure"}
+{"id":"S19","name":"Backend provider failure","tool":"search_inventory","expected":"safe_failure"},
+{"id":"S20","name":"Trade-in details captured with estimate disclaimer","tool":"capture_trade_in","expected":"estimate"},
+{"id":"S21","name":"Customer requests a human salesperson","tool":"escalate_to_human","expected":"escalated"},
+{"id":"S22","name":"Duplicate escalation retry","tool":"escalate_to_human","expected":"existing"},
+{"id":"S23","name":"Successful call outcome persisted","tool":"record_conversation_outcome","expected":"created"},
+{"id":"S24","name":"Dropped call outcome reconciled","tool":"record_conversation_outcome","expected":"updated"}
 ]

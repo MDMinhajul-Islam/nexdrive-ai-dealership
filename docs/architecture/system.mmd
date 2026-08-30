@@ -1,0 +1,14 @@
+flowchart LR
+  Caller[Phone or Web Caller] --> Retell[Retell Voice Agent]
+  Visitor[Public Website] --> PublicAPI[Customer-safe APIs]
+  Admin[Operations Team] --> Auth[Supabase Auth]
+  Auth --> AdminAPI[Protected Admin APIs]
+  Retell --> Router[FastAPI Tool Router]
+  Router --> Rules[Validated Business Rules]
+  PublicAPI --> Repo[Supabase Repository]
+  AdminAPI --> Repo
+  Rules --> Repo
+  Repo --> DB[(Supabase PostgreSQL)]
+  Rules --> Outcomes[Conversation and Escalation Outcomes]
+  Outcomes --> DB
+  DB --> Dashboard[Operations and Analytics Dashboard]

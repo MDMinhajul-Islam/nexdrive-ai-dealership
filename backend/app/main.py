@@ -11,6 +11,8 @@ from app.utils.audit import audit_middleware
 from app.utils.config import get_settings
 from app.routes.inventory_tools import router as inventory_tools_router
 from app.routes.vehicles import router as vehicles_router
+from app.routes.public import router as public_router
+from app.routes.operations import router as operations_router
 
 
 app = FastAPI(
@@ -20,8 +22,10 @@ app = FastAPI(
 )
 app.include_router(health_router)
 app.middleware("http")(audit_middleware)
-app.add_middleware(CORSMiddleware,allow_origins=[x.strip() for x in get_settings().cors_origins.split(",") if x.strip()],allow_credentials=False,allow_methods=["GET","POST"],allow_headers=["Content-Type","X-Request-ID"])
+app.add_middleware(CORSMiddleware,allow_origins=[x.strip() for x in get_settings().cors_origins.split(",") if x.strip()],allow_credentials=False,allow_methods=["GET","POST","PATCH","OPTIONS"],allow_headers=["Content-Type","Authorization","X-Request-ID","Idempotency-Key"])
+app.include_router(public_router)
 app.include_router(admin_router)
+app.include_router(operations_router)
 app.include_router(business_tools_router)
 app.include_router(customer_tools_router)
 app.include_router(vehicles_router)

@@ -107,7 +107,7 @@ pytest
 
 ## Supabase import and deployment
 
-Run migrations `01` through `09`, then validate and repeatably upsert seed data:
+Run migrations `01` through `10`, then validate and repeatably upsert seed data:
 
 ```bash
 python scripts/validate_seed_compatibility.py
