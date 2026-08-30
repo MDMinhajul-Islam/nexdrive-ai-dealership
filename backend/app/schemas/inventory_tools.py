@@ -81,6 +81,10 @@ class ToolVehicleDetailsResponse(BaseModel):
     vehicle: VehicleDetails
 
 
+class VehicleDetailsRequest(BaseModel):
+    vehicle_id: str = Field(pattern=r"^VEH-[0-9]{6}$")
+
+
 class VehicleAvailability(BaseModel):
     vehicle_id: str
     vehicle_status: str

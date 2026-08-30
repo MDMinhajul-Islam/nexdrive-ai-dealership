@@ -9,6 +9,7 @@ from app.repositories.inventory import InventoryRepository, SupabaseInventoryRep
 from app.schemas.inventory_tools import (
     InventorySearchFilters,
     InventorySearchResponse,
+    VehicleDetailsRequest,
     ToolVehicleDetailsResponse,
     VehicleAvailabilityResponse,
 )
@@ -62,6 +63,12 @@ def get_vehicle_details_tool(vehicle_id: VehicleId, repository: Repository) -> T
 def get_vehicle_details_query_tool(vehicle_id: VehicleIdQuery, repository: Repository) -> ToolVehicleDetailsResponse:
     """Retell-friendly alias for clients that supply vehicle_id as a query parameter."""
     return _vehicle_details_response(vehicle_id, repository)
+
+
+@router.post("/get-vehicle-details", response_model=ToolVehicleDetailsResponse, summary="Get authoritative vehicle details by JSON body")
+def get_vehicle_details_post_tool(request: VehicleDetailsRequest, repository: Repository) -> ToolVehicleDetailsResponse:
+    """Retell-friendly alias for clients that send vehicle_id in a JSON body."""
+    return _vehicle_details_response(request.vehicle_id, repository)
 
 
 @router.get("/check-vehicle-availability/{vehicle_id}", response_model=VehicleAvailabilityResponse, summary="Check current vehicle availability")
