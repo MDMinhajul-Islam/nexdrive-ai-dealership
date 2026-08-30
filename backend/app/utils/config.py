@@ -18,6 +18,8 @@ class Settings(BaseSettings):
     # Backend-only privileged key; never return this from an API response.
     supabase_secret_key: str = ""
     cors_origins: str = "http://localhost:5173"
+    admin_auth_required: bool = False
+    admin_emails: str = ""
 
     model_config = SettingsConfigDict(
         env_file=BACKEND_DIR / ".env",
