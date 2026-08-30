@@ -13,6 +13,7 @@ from app.routes.inventory_tools import router as inventory_tools_router
 from app.routes.vehicles import router as vehicles_router
 from app.routes.public import router as public_router
 from app.routes.operations import router as operations_router
+from app.routes.retell import router as retell_router
 
 
 app = FastAPI(
@@ -30,6 +31,7 @@ app.include_router(business_tools_router)
 app.include_router(customer_tools_router)
 app.include_router(vehicles_router)
 app.include_router(inventory_tools_router)
+app.include_router(retell_router)
 
 
 @app.get("/", tags=["system"])

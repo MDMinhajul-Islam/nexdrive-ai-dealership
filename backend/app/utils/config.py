@@ -22,6 +22,9 @@ class Settings(BaseSettings):
     admin_emails: str = ""
     # Server-only credential used by the controlled vehicle-image sync job.
     carsxe_api_key: str = ""
+    # Server-only Retell credential; never expose this value to a client.
+    retell_api_key: str = ""
+    retell_agent_id: str = ""
 
     model_config = SettingsConfigDict(
         env_file=BACKEND_DIR / ".env",
