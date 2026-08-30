@@ -15,15 +15,16 @@ from pathlib import Path
 
 import httpx
 
-ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(ROOT / "backend"))
+BACKEND_ROOT = Path(__file__).resolve().parents[1]
+PROJECT_ROOT = BACKEND_ROOT.parent
+sys.path.insert(0, str(BACKEND_ROOT))
 
 from app.database import get_supabase  # noqa: E402
 from app.utils.config import get_settings  # noqa: E402
 
 
 def combinations_from_csv(scope: str) -> list[dict[str, str]]:
-    with (ROOT / "database" / "seed" / "vehicles.csv").open(encoding="utf-8", newline="") as handle:
+    with (PROJECT_ROOT / "database" / "seed" / "vehicles.csv").open(encoding="utf-8", newline="") as handle:
         rows = list(csv.DictReader(handle))
     fields = ("year", "make", "model") if scope == "year-model" else ("make", "model")
     unique = {tuple(row[field].strip() for field in fields) for row in rows}
