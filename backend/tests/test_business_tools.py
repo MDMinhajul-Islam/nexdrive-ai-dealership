@@ -5,9 +5,73 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.main import app
+from app.routes import business_tools as business_tool_routes
 from app.routes.business_tools import get_business_client
-from app.schemas.business_tools import BookingRequest, FinancingEstimateRequest, LeadUpsertRequest
-from app.services.business_tools import BusinessConflictError, create_test_drive, estimate_financing, score_lead
+from app.schemas.business_tools import BookingRequest, BookingResponse, FinancingEstimateRequest, LeadUpsertRequest
+from app.services.business_tools import (
+    BusinessConflictError,
+    BusinessNotFoundError,
+    BusinessToolError,
+    create_test_drive,
+    estimate_financing,
+    score_lead,
+)
+
+
+class BookingQuery:
+    def __init__(self, result, client):
+        self.result = result
+        self.client = client
+
+    def select(self, *_args, **_kwargs): return self
+    def eq(self, *_args, **_kwargs): return self
+    def in_(self, *_args, **_kwargs): return self
+    def order(self, *_args, **_kwargs): return self
+    def limit(self, *_args, **_kwargs): return self
+    def insert(self, payload):
+        self.client.insert_payloads.append(payload)
+        return self
+    def execute(self):
+        if isinstance(self.result, Exception):
+            raise self.result
+        return SimpleNamespace(data=self.result)
+
+
+class BookingClient:
+    def __init__(self, results):
+        self.results = iter(results)
+        self.tables = []
+        self.insert_payloads = []
+
+    def table(self, name):
+        self.tables.append(name)
+        return BookingQuery(next(self.results), self)
+
+
+def booking_request(**changes):
+    values = {
+        "lead_id": "LEAD-000001",
+        "customer_id": "CUST-000001",
+        "vehicle_id": "VEH-000001",
+        "salesperson_id": "SP-001",
+        "appointment_date": "2026-08-26",
+        "appointment_time": "09:00",
+    }
+    values.update(changes)
+    return BookingRequest(**values)
+
+
+def booking_success_results():
+    return [
+        [],
+        [{"lead_id": "LEAD-000001", "customer_id": "CUST-000001"}],
+        [{"customer_id": "CUST-000001"}],
+        [{"vehicle_status": "Available", "test_drive_available": True}],
+        [{"working_days": ["Wednesday"], "shift_start": "09:00:00", "shift_end": "17:00:00", "active": True}],
+        [],
+        [],
+        [{"appointment_id": "APT-000001", "lead_id": "LEAD-000001", "status": "Confirmed"}],
+    ]
 
 
 def lead_request(**changes):
@@ -40,6 +104,91 @@ def test_booking_retry_returns_existing_appointment():
     assert result.appointment["appointment_id"] == "APT-000001"
 
 
+def test_booking_persists_only_after_authoritative_checks_pass():
+    client = BookingClient(booking_success_results())
+
+    result = create_test_drive(booking_request(notes="Retell booking"), client)
+
+    assert result.created is True
+    assert result.appointment["appointment_id"] == "APT-000001"
+    assert client.tables == [
+        "appointments", "leads", "customers", "vehicles", "salespeople",
+        "appointments", "appointments", "appointments",
+    ]
+    assert len(client.insert_payloads) == 1
+    payload = client.insert_payloads[0]
+    assert payload == {
+        "lead_id": "LEAD-000001", "customer_id": "CUST-000001",
+        "vehicle_id": "VEH-000001", "salesperson_id": "SP-001",
+        "appointment_date": "2026-08-26", "appointment_time": "09:00:00",
+        "notes": "Retell booking", "appointment_id": "APT-000001",
+        "appointment_type": "Test Drive", "status": "Confirmed",
+        "created_by": "Voice Agent", "created_at": payload["created_at"],
+    }
+    assert isinstance(payload["created_at"], str)
+
+
+@pytest.mark.parametrize(
+    ("results", "message"),
+    [
+        ([[], [],], "Lead not found"),
+        ([[], [{"customer_id": "CUST-000001"}], []], "Customer not found"),
+        ([[], [{"customer_id": "CUST-000001"}], [{"customer_id": "CUST-000001"}], []], "Vehicle not found"),
+        ([[], [{"customer_id": "CUST-000001"}], [{"customer_id": "CUST-000001"}], [{"vehicle_status": "Available", "test_drive_available": True}], []], "Salesperson not found"),
+    ],
+)
+def test_booking_reports_unknown_referenced_entities(results, message):
+    with pytest.raises(BusinessNotFoundError, match=message):
+        create_test_drive(booking_request(), BookingClient(results))
+
+
+def test_booking_rejects_unavailable_vehicle_and_occupied_slot():
+    unavailable_vehicle = [
+        [], [{"customer_id": "CUST-000001"}], [{"customer_id": "CUST-000001"}],
+        [{"vehicle_status": "Sold", "test_drive_available": False}],
+    ]
+    with pytest.raises(BusinessConflictError, match="Vehicle is unavailable"):
+        create_test_drive(booking_request(), BookingClient(unavailable_vehicle))
+
+    occupied_slot = booking_success_results()[:5] + [[{"appointment_id": "APT-999999"}]]
+    with pytest.raises(BusinessConflictError, match="slot is no longer available"):
+        create_test_drive(booking_request(), BookingClient(occupied_slot))
+
+
+def test_booking_database_failure_is_sanitized_by_route(monkeypatch):
+    def unavailable(*_args):
+        raise BusinessToolError("provider details must stay private")
+
+    app.dependency_overrides[get_business_client] = lambda: MagicMock()
+    monkeypatch.setattr(business_tool_routes, "create_test_drive", unavailable)
+    try:
+        response = TestClient(app).post("/api/tools/create-test-drive", json=booking_request().model_dump(mode="json"))
+        assert response.status_code == 503
+        assert response.json() == {"detail": "Business tool unavailable"}
+        assert "provider details" not in response.text
+    finally:
+        app.dependency_overrides.clear()
+
+
+def test_booking_route_returns_authoritative_created_appointment(monkeypatch):
+    appointment = {"appointment_id": "APT-000001", "status": "Confirmed"}
+    app.dependency_overrides[get_business_client] = lambda: MagicMock()
+    monkeypatch.setattr(
+        business_tool_routes,
+        "create_test_drive",
+        lambda *_args: BookingResponse(created=True, appointment=appointment),
+    )
+    try:
+        response = TestClient(app).post("/api/tools/create-test-drive", json=booking_request().model_dump(mode="json"))
+        assert response.status_code == 200
+        assert response.json() == {
+            "success": True, "source": "database", "created": True,
+            "appointment": appointment,
+        }
+    finally:
+        app.dependency_overrides.clear()
+
+
 def test_financing_uses_rule_and_amortization():
     client = MagicMock()
     vehicle_query = MagicMock(); rule_query = MagicMock()
@@ -69,10 +218,11 @@ def test_financing_rejects_insufficient_down_payment():
 
 
 def test_business_routes_validate_before_writes():
-    app.dependency_overrides[get_business_client] = MagicMock
+    app.dependency_overrides[get_business_client] = lambda: MagicMock()
     try:
         response = TestClient(app).post("/api/tools/create-test-drive", json={"lead_id": "bad"})
         assert response.status_code == 422
         assert response.headers["X-Request-ID"]
+        assert TestClient(app).post("/api/tools/create-test-drive", json={}).status_code == 422
     finally:
         app.dependency_overrides.clear()

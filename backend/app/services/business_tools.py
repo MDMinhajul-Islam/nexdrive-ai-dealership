@@ -55,12 +55,29 @@ def create_test_drive(request: BookingRequest, client: Any) -> BookingResponse:
         existing = client.table("appointments").select("*").eq("lead_id", request.lead_id).limit(1).execute().data
         if existing:
             return BookingResponse(created=False, appointment=existing[0])
+
+        lead = client.table("leads").select("lead_id,customer_id").eq("lead_id", request.lead_id).limit(1).execute().data
+        if not lead:
+            raise BusinessNotFoundError("Lead not found")
+        if lead[0]["customer_id"] != request.customer_id:
+            raise BusinessConflictError("Lead does not belong to customer")
+
+        customer = client.table("customers").select("customer_id").eq("customer_id", request.customer_id).limit(1).execute().data
+        if not customer:
+            raise BusinessNotFoundError("Customer not found")
+
         vehicle = client.table("vehicles").select("vehicle_status,test_drive_available").eq("vehicle_id", request.vehicle_id).limit(1).execute().data
-        if not vehicle: raise BusinessNotFoundError("Vehicle not found")
+        if not vehicle:
+            raise BusinessNotFoundError("Vehicle not found")
         if vehicle[0]["vehicle_status"] not in ("Available", "Demo Vehicle") or not vehicle[0]["test_drive_available"]:
             raise BusinessConflictError("Vehicle is unavailable for test drive")
+
         person = client.table("salespeople").select("working_days,shift_start,shift_end,active").eq("salesperson_id", request.salesperson_id).limit(1).execute().data
-        if not person or not person[0]["active"]: raise BusinessConflictError("Salesperson is unavailable")
+        if not person:
+            raise BusinessNotFoundError("Salesperson not found")
+        if not person[0]["active"]:
+            raise BusinessConflictError("Salesperson is unavailable")
+
         slot_time = request.appointment_time.strftime("%H:%M")
         if request.appointment_date.strftime("%A") not in person[0]["working_days"] or not (str(person[0]["shift_start"])[:5] <= slot_time < str(person[0]["shift_end"])[:5]):
             raise BusinessConflictError("Requested time is outside the salesperson shift")

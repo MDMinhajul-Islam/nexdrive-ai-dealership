@@ -27,7 +27,7 @@ def lead_tool(request: LeadUpsertRequest, client: Client = Depends(get_business_
     except (BusinessToolError, BusinessNotFoundError, BusinessConflictError) as exc: raise _error(exc) from None
 
 
-@router.post("/create-test-drive", response_model=BookingResponse)
+@router.post("/create-test-drive", response_model=BookingResponse, summary="Create an authoritative test-drive appointment")
 def booking_tool(request: BookingRequest, client: Client = Depends(get_business_client)) -> BookingResponse:
     try: return create_test_drive(request, client)
     except (BusinessToolError, BusinessNotFoundError, BusinessConflictError) as exc: raise _error(exc) from None
