@@ -44,7 +44,7 @@ def test_create_web_call_sends_trusted_configuration_and_dynamic_variables():
         captured["authorization"] = request.headers["Authorization"]
         captured["body"] = json.loads(request.content)
         return httpx.Response(
-            200,
+            201,
             json={"access_token": "temporary-token", "call_id": "call-123"},
         )
 
@@ -69,6 +69,26 @@ def test_create_web_call_sends_trusted_configuration_and_dynamic_variables():
             "current_date": "2026-08-30",
         },
     }
+
+
+@pytest.mark.parametrize("status_code", [200, 201])
+def test_create_web_call_accepts_valid_2xx_response(status_code):
+    def handler(_request: httpx.Request) -> httpx.Response:
+        return httpx.Response(
+            status_code,
+            json={"access_token": "temporary-token", "call_id": "call-123"},
+        )
+
+    response = asyncio.run(
+        create_web_call(
+            _request(),
+            settings=_settings(),
+            transport=httpx.MockTransport(handler),
+        )
+    )
+
+    assert response.access_token == "temporary-token"
+    assert response.call_id == "call-123"
 
 
 def test_create_web_call_generates_current_date_server_side(monkeypatch):
@@ -190,8 +210,12 @@ def test_retell_timeout_and_network_failures_are_sanitized():
 
 @pytest.mark.parametrize(
     ("status_code", "expected_exception"),
-    [(400, RetellUpstreamRequestError), (401, RetellUpstreamRequestError),
-     (500, RetellUnavailableError)],
+    [
+        (400, RetellUpstreamRequestError),
+        (401, RetellUpstreamRequestError),
+        (422, RetellUpstreamRequestError),
+        (500, RetellUnavailableError),
+    ],
 )
 def test_retell_non_2xx_responses_are_sanitized(status_code, expected_exception):
     def handler(_request: httpx.Request) -> httpx.Response:
@@ -209,17 +233,19 @@ def test_retell_non_2xx_responses_are_sanitized(status_code, expected_exception)
 
 
 @pytest.mark.parametrize(
-    "payload",
+    ("status_code", "payload"),
     [
-        {"call_id": "call-123"},
-        {"access_token": "temporary-token"},
-        {},
-        [],
+        (201, {"call_id": "call-123"}),
+        (200, {"access_token": "temporary-token"}),
+        (200, {}),
+        (200, []),
     ],
 )
-def test_retell_response_missing_required_bootstrap_fields_is_rejected(payload):
+def test_retell_response_missing_required_bootstrap_fields_is_rejected(
+    status_code, payload
+):
     def handler(_request: httpx.Request) -> httpx.Response:
-        return httpx.Response(200, json=payload)
+        return httpx.Response(status_code, json=payload)
 
     with pytest.raises(RetellInvalidResponseError):
         asyncio.run(

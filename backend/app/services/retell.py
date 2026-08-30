@@ -71,10 +71,12 @@ async def create_web_call(
     except httpx.RequestError:
         raise RetellUnavailableError("Retell network request failed") from None
 
-    if 400 <= response.status_code < 500:
-        raise RetellUpstreamRequestError("Retell rejected the web call request")
-    if response.status_code >= 500:
-        raise RetellUnavailableError("Retell service returned an error")
+    if not 200 <= response.status_code < 300:
+        if 400 <= response.status_code < 500:
+            raise RetellUpstreamRequestError("Retell rejected the web call request")
+        if response.status_code >= 500:
+            raise RetellUnavailableError("Retell service returned an error")
+        raise RetellUpstreamRequestError("Retell returned an unexpected status")
 
     try:
         response_data = response.json()
