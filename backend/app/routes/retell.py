@@ -28,15 +28,24 @@ async def create_retell_web_call(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="Retell service is not configured",
         ) from None
-    except RetellUpstreamRequestError:
+    except RetellUpstreamRequestError as exc:
+        detail = {"message": "Retell rejected the web call request."}
+        if exc.upstream_status is not None:
+            detail["upstream_status"] = exc.upstream_status
         raise HTTPException(
             status_code=status.HTTP_502_BAD_GATEWAY,
-            detail="Retell rejected the web call request",
+            detail=detail,
         ) from None
-    except RetellUnavailableError:
+    except RetellUnavailableError as exc:
+        detail: str | dict[str, str | int] = "Retell service unavailable"
+        if exc.upstream_status is not None:
+            detail = {
+                "message": "Retell service unavailable.",
+                "upstream_status": exc.upstream_status,
+            }
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Retell service unavailable",
+            detail=detail,
         ) from None
     except RetellInvalidResponseError:
         raise HTTPException(

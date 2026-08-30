@@ -229,7 +229,64 @@ def test_retell_non_2xx_responses_are_sanitized(status_code, expected_exception)
                 transport=httpx.MockTransport(handler),
             )
         )
+    assert caught.value.upstream_status == status_code
     assert "private upstream details" not in str(caught.value)
+
+
+def test_retell_non_2xx_logs_only_allowlisted_safe_diagnostics(caplog):
+    upstream_access_token = "upstream-access-token-must-not-log"
+
+    def handler(_request: httpx.Request) -> httpx.Response:
+        return httpx.Response(401, json={
+            "message": "Authentication failed",
+            "code": "invalid_api_key",
+            "access_token": upstream_access_token,
+            "authorization": f"Bearer {TEST_API_KEY}",
+            "headers": {"Authorization": f"Bearer {TEST_API_KEY}"},
+        })
+
+    caplog.set_level("WARNING", logger="app.services.retell")
+    with pytest.raises(RetellUpstreamRequestError):
+        asyncio.run(
+            create_web_call(
+                _request(),
+                settings=_settings(),
+                transport=httpx.MockTransport(handler),
+            )
+        )
+
+    assert "status=401" in caplog.text
+    assert "code=invalid_api_key" in caplog.text
+    assert "message=Authentication failed" in caplog.text
+    assert TEST_API_KEY not in caplog.text
+    assert upstream_access_token not in caplog.text
+    assert "Authorization" not in caplog.text
+    assert "access_token" not in caplog.text
+
+
+def test_retell_diagnostics_redact_sensitive_selected_fields(caplog):
+    def handler(_request: httpx.Request) -> httpx.Response:
+        return httpx.Response(422, json={
+            "message": f"Authorization Bearer {TEST_API_KEY}",
+            "code": "access_token_invalid",
+        })
+
+    caplog.set_level("WARNING", logger="app.services.retell")
+    with pytest.raises(RetellUpstreamRequestError):
+        asyncio.run(
+            create_web_call(
+                _request(),
+                settings=_settings(),
+                transport=httpx.MockTransport(handler),
+            )
+        )
+
+    assert "status=422" in caplog.text
+    assert "message=[redacted]" in caplog.text
+    assert "code=[redacted]" in caplog.text
+    assert TEST_API_KEY not in caplog.text
+    assert "Bearer" not in caplog.text
+    assert "access_token_invalid" not in caplog.text
 
 
 @pytest.mark.parametrize(
@@ -261,11 +318,19 @@ def test_retell_response_missing_required_bootstrap_fields_is_rejected(
     ("exception", "status_code", "detail"),
     [
         (
-            RetellUpstreamRequestError("private"),
+            RetellUpstreamRequestError("private", upstream_status=401),
             502,
-            "Retell rejected the web call request",
+            {
+                "message": "Retell rejected the web call request.",
+                "upstream_status": 401,
+            },
         ),
         (RetellUnavailableError("private"), 503, "Retell service unavailable"),
+        (
+            RetellUnavailableError("private", upstream_status=500),
+            503,
+            {"message": "Retell service unavailable.", "upstream_status": 500},
+        ),
         (
             RetellInvalidResponseError("private"),
             502,

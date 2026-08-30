@@ -1,5 +1,6 @@
 """Secure server-side Retell web-call creation."""
 
+import logging
 from datetime import date
 
 import httpx
@@ -10,6 +11,9 @@ from app.utils.config import Settings, get_settings
 
 RETELL_WEB_CALL_URL = "https://api.retellai.com/v2/create-web-call"
 RETELL_REQUEST_TIMEOUT_SECONDS = 10.0
+MAX_UPSTREAM_DIAGNOSTIC_LENGTH = 200
+
+logger = logging.getLogger(__name__)
 
 
 class RetellConfigurationError(RuntimeError):
@@ -19,13 +23,76 @@ class RetellConfigurationError(RuntimeError):
 class RetellUpstreamRequestError(RuntimeError):
     """Retell rejected an otherwise valid backend request."""
 
+    def __init__(self, message: str, upstream_status: int | None = None):
+        super().__init__(message)
+        self.upstream_status = upstream_status
+
 
 class RetellUnavailableError(RuntimeError):
     """Retell could not be reached or returned a server-side failure."""
 
+    def __init__(self, message: str, upstream_status: int | None = None):
+        super().__init__(message)
+        self.upstream_status = upstream_status
+
 
 class RetellInvalidResponseError(RuntimeError):
     """Retell returned a response that cannot safely bootstrap the SDK."""
+
+
+def _safe_diagnostic_value(value: object, api_key: str) -> str | None:
+    if not isinstance(value, (str, int, float)) or isinstance(value, bool):
+        return None
+    text = " ".join(str(value).split())[:MAX_UPSTREAM_DIAGNOSTIC_LENGTH]
+    if not text:
+        return None
+    if api_key and api_key in text:
+        text = text.replace(api_key, "[redacted]")
+    lowered = text.lower()
+    if any(marker in lowered for marker in (
+        "access_token", "authorization", "bearer ", "retell_api_key"
+    )):
+        return "[redacted]"
+    return text
+
+
+def _safe_upstream_diagnostics(
+    response: httpx.Response, api_key: str
+) -> tuple[str | None, str | None]:
+    try:
+        payload = response.json()
+    except ValueError:
+        return None, None
+    if not isinstance(payload, dict):
+        return None, None
+
+    error = payload.get("error")
+    nested_error = error if isinstance(error, dict) else {}
+    message = (
+        payload.get("message")
+        or payload.get("error_message")
+        or nested_error.get("message")
+        or (error if isinstance(error, str) else None)
+    )
+    code = (
+        payload.get("code")
+        or payload.get("error_code")
+        or nested_error.get("code")
+    )
+    return (
+        _safe_diagnostic_value(message, api_key),
+        _safe_diagnostic_value(code, api_key),
+    )
+
+
+def _log_upstream_failure(response: httpx.Response, api_key: str) -> None:
+    message, code = _safe_upstream_diagnostics(response, api_key)
+    logger.warning(
+        "Retell create-web-call upstream failure status=%s code=%s message=%s",
+        response.status_code,
+        code or "unavailable",
+        message or "unavailable",
+    )
 
 
 async def create_web_call(
@@ -72,11 +139,18 @@ async def create_web_call(
         raise RetellUnavailableError("Retell network request failed") from None
 
     if not 200 <= response.status_code < 300:
+        _log_upstream_failure(response, resolved_settings.retell_api_key)
         if 400 <= response.status_code < 500:
-            raise RetellUpstreamRequestError("Retell rejected the web call request")
+            raise RetellUpstreamRequestError(
+                "Retell rejected the web call request", response.status_code
+            )
         if response.status_code >= 500:
-            raise RetellUnavailableError("Retell service returned an error")
-        raise RetellUpstreamRequestError("Retell returned an unexpected status")
+            raise RetellUnavailableError(
+                "Retell service returned an error", response.status_code
+            )
+        raise RetellUpstreamRequestError(
+            "Retell returned an unexpected status", response.status_code
+        )
 
     try:
         response_data = response.json()
