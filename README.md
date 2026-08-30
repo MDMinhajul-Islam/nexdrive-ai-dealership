@@ -33,6 +33,22 @@ synthetic 555 namespace and all email addresses use the reserved `.example` doma
 
 Use `--seed` and `--count` to create a reproducible alternative dataset. Run either script with `--help` for all options.
 
+## Business workflow milestone
+
+Generate deterministic business records and run the API tests:
+
+```powershell
+python backend/scripts/generate_business_data.py
+cd backend
+pytest
+```
+
+Implemented under `/api/v1`: lead create/update with deterministic scoring,
+appointment booking, customer history, and financing estimates. API create calls
+support `Idempotency-Key`; all responses carry `X-Request-ID`.
+
+See `backend/docs/status.md` for the current checklist and remaining deployment work.
+
 ## Repository layout
 
 - `database/reference`: controlled vehicle, feature, color, and financing reference data
@@ -41,6 +57,6 @@ Use `--seed` and `--count` to create a reproducible alternative dataset. Run eit
 - `backend/app`: FastAPI application, routes, services, schemas, and utilities
 - `backend/scripts`: deterministic data generators and validation tools
 - `backend/docs`: backend architecture, ERD, testing, reports, and screenshots
-- `frontend`, `retell`: placeholders for future milestones
+- `frontend`, `retell`: reserved for the dashboard and voice-agent integration
 
 All people, contact details, vehicle identifiers, and business records in this project must be synthetic.

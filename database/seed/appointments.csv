@@ -1,0 +1,1201 @@
+appointment_id,customer_id,vehicle_id,salesperson_id,appointment_type,starts_at,duration_minutes,status,notes
+APPT-000001,CUST-000001,VEH-003725,SALES-001,Test Drive,2026-09-28T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000002,CUST-000004,VEH-000478,SALES-004,Test Drive,2026-08-19T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000003,CUST-000005,VEH-008555,SALES-005,Test Drive,2026-09-27T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000004,CUST-000007,VEH-002696,SALES-007,Consultation,2026-10-20T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000005,CUST-000008,VEH-004745,SALES-008,Consultation,2026-10-10T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000006,CUST-000011,VEH-002737,SALES-011,Test Drive,2026-10-23T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000007,CUST-000012,VEH-006560,SALES-012,Test Drive,2026-10-13T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000008,CUST-000013,VEH-000440,SALES-013,Test Drive,2026-09-19T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000009,CUST-000014,VEH-000035,SALES-014,Test Drive,2026-10-21T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000010,CUST-000015,VEH-002751,SALES-015,Consultation,2026-09-20T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000011,CUST-000019,VEH-009348,SALES-019,Test Drive,2026-08-22T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000012,CUST-000020,VEH-002405,SALES-020,Consultation,2026-10-10T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000013,CUST-000021,VEH-006165,SALES-021,Test Drive,2026-08-22T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000014,CUST-000022,VEH-003542,SALES-022,Test Drive,2026-10-24T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000015,CUST-000023,VEH-004061,SALES-023,Test Drive,2026-08-04T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000016,CUST-000024,VEH-002445,SALES-024,Consultation,2026-08-03T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000017,CUST-000025,VEH-000589,SALES-001,Test Drive,2026-08-29T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000018,CUST-000026,VEH-002873,SALES-002,Test Drive,2026-10-17T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000019,CUST-000027,VEH-007374,SALES-003,Test Drive,2026-09-26T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000020,CUST-000028,VEH-000270,SALES-004,Consultation,2026-09-24T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000021,CUST-000029,VEH-003546,SALES-005,Test Drive,2026-10-02T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000022,CUST-000031,VEH-005007,SALES-007,Trade-In Appraisal,2026-08-16T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000023,CUST-000032,VEH-007449,SALES-008,Test Drive,2026-10-24T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000024,CUST-000033,VEH-009775,SALES-009,Consultation,2026-09-21T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000025,CUST-000035,VEH-004921,SALES-011,Test Drive,2026-08-21T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000026,CUST-000036,VEH-007608,SALES-012,Test Drive,2026-09-27T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000027,CUST-000037,VEH-000993,SALES-013,Consultation,2026-09-11T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000028,CUST-000038,VEH-005363,SALES-014,Test Drive,2026-09-18T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000029,CUST-000039,VEH-009709,SALES-015,Test Drive,2026-09-01T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000030,CUST-000040,VEH-002613,SALES-016,Trade-In Appraisal,2026-09-15T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000031,CUST-000041,VEH-003578,SALES-017,Test Drive,2026-09-30T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000032,CUST-000042,VEH-005360,SALES-018,Consultation,2026-07-26T17:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000033,CUST-000043,VEH-005214,SALES-019,Consultation,2026-10-08T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000034,CUST-000044,VEH-002381,SALES-020,Test Drive,2026-09-17T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000035,CUST-000046,VEH-009097,SALES-022,Test Drive,2026-08-23T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000036,CUST-000047,VEH-005847,SALES-023,Test Drive,2026-07-27T17:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000037,CUST-000048,VEH-005517,SALES-024,Test Drive,2026-09-18T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000038,CUST-000049,VEH-005776,SALES-001,Trade-In Appraisal,2026-08-08T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000039,CUST-000052,VEH-004582,SALES-004,Consultation,2026-09-23T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000040,CUST-000053,VEH-007501,SALES-005,Test Drive,2026-10-08T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000041,CUST-000054,VEH-005454,SALES-006,Trade-In Appraisal,2026-08-18T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000042,CUST-000056,VEH-003260,SALES-008,Test Drive,2026-08-14T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000043,CUST-000057,VEH-005463,SALES-009,Test Drive,2026-10-21T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000044,CUST-000058,VEH-003837,SALES-010,Consultation,2026-08-19T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000045,CUST-000059,VEH-008492,SALES-011,Test Drive,2026-09-04T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000046,CUST-000061,VEH-006322,SALES-013,Test Drive,2026-08-30T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000047,CUST-000062,VEH-009242,SALES-014,Consultation,2026-10-12T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000048,CUST-000063,VEH-004852,SALES-015,Test Drive,2026-08-01T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000049,CUST-000064,VEH-004913,SALES-016,Test Drive,2026-08-13T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000050,CUST-000065,VEH-001190,SALES-017,Trade-In Appraisal,2026-08-09T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000051,CUST-000066,VEH-009611,SALES-018,Test Drive,2026-08-20T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000052,CUST-000067,VEH-006193,SALES-019,Consultation,2026-08-27T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000053,CUST-000068,VEH-006398,SALES-020,Consultation,2026-08-21T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000054,CUST-000069,VEH-009008,SALES-021,Test Drive,2026-10-15T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000055,CUST-000070,VEH-006435,SALES-022,Test Drive,2026-09-20T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000056,CUST-000071,VEH-009256,SALES-023,Test Drive,2026-09-20T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000057,CUST-000072,VEH-008513,SALES-024,Consultation,2026-09-07T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000058,CUST-000073,VEH-000784,SALES-001,Test Drive,2026-08-29T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000059,CUST-000074,VEH-007710,SALES-002,Test Drive,2026-07-31T15:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000060,CUST-000075,VEH-006702,SALES-003,Test Drive,2026-10-10T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000061,CUST-000076,VEH-003617,SALES-004,Test Drive,2026-09-30T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000062,CUST-000077,VEH-006534,SALES-005,Test Drive,2026-09-14T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000063,CUST-000078,VEH-007250,SALES-006,Test Drive,2026-09-17T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000064,CUST-000079,VEH-007718,SALES-007,Consultation,2026-08-22T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000065,CUST-000080,VEH-003408,SALES-008,Test Drive,2026-09-10T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000066,CUST-000081,VEH-009464,SALES-009,Test Drive,2026-08-16T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000067,CUST-000082,VEH-000862,SALES-010,Consultation,2026-10-14T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000068,CUST-000084,VEH-004198,SALES-012,Test Drive,2026-08-15T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000069,CUST-000085,VEH-008336,SALES-013,Test Drive,2026-08-20T15:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000070,CUST-000086,VEH-006378,SALES-014,Test Drive,2026-10-01T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000071,CUST-000088,VEH-006684,SALES-016,Consultation,2026-09-17T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000072,CUST-000089,VEH-008799,SALES-017,Test Drive,2026-08-30T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000073,CUST-000090,VEH-004696,SALES-018,Test Drive,2026-09-17T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000074,CUST-000091,VEH-007403,SALES-019,Test Drive,2026-10-20T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000075,CUST-000092,VEH-005595,SALES-020,Test Drive,2026-09-08T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000076,CUST-000093,VEH-006618,SALES-021,Test Drive,2026-09-07T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000077,CUST-000094,VEH-008769,SALES-022,Test Drive,2026-08-16T17:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000078,CUST-000095,VEH-005737,SALES-023,Test Drive,2026-10-03T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000079,CUST-000096,VEH-002727,SALES-024,Test Drive,2026-10-11T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000080,CUST-000097,VEH-005789,SALES-001,Test Drive,2026-09-26T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000081,CUST-000098,VEH-008802,SALES-002,Test Drive,2026-09-22T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000082,CUST-000101,VEH-001306,SALES-005,Test Drive,2026-07-29T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000083,CUST-000102,VEH-001693,SALES-006,Test Drive,2026-08-09T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000084,CUST-000103,VEH-006671,SALES-007,Test Drive,2026-08-18T17:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000085,CUST-000104,VEH-006062,SALES-008,Consultation,2026-09-13T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000086,CUST-000107,VEH-005658,SALES-011,Consultation,2026-09-12T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000087,CUST-000108,VEH-000560,SALES-012,Consultation,2026-09-03T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000088,CUST-000109,VEH-009034,SALES-013,Test Drive,2026-10-02T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000089,CUST-000110,VEH-004317,SALES-014,Test Drive,2026-08-28T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000090,CUST-000114,VEH-001383,SALES-018,Consultation,2026-09-02T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000091,CUST-000115,VEH-002370,SALES-019,Consultation,2026-09-28T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000092,CUST-000116,VEH-004139,SALES-020,Test Drive,2026-09-01T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000093,CUST-000118,VEH-000565,SALES-022,Test Drive,2026-10-01T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000094,CUST-000121,VEH-007844,SALES-001,Test Drive,2026-09-08T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000095,CUST-000122,VEH-004543,SALES-002,Test Drive,2026-10-20T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000096,CUST-000123,VEH-001593,SALES-003,Consultation,2026-07-27T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000097,CUST-000124,VEH-006517,SALES-004,Test Drive,2026-08-07T17:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000098,CUST-000125,VEH-001275,SALES-005,Consultation,2026-08-07T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000099,CUST-000126,VEH-007575,SALES-006,Test Drive,2026-09-16T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000100,CUST-000127,VEH-004422,SALES-007,Test Drive,2026-09-15T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000101,CUST-000130,VEH-005990,SALES-010,Test Drive,2026-09-28T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000102,CUST-000131,VEH-001538,SALES-011,Test Drive,2026-08-02T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000103,CUST-000133,VEH-006245,SALES-013,Test Drive,2026-08-07T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000104,CUST-000134,VEH-007392,SALES-014,Test Drive,2026-08-22T17:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000105,CUST-000136,VEH-007820,SALES-016,Test Drive,2026-09-08T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000106,CUST-000137,VEH-007067,SALES-017,Test Drive,2026-10-13T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000107,CUST-000138,VEH-005944,SALES-018,Test Drive,2026-08-14T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000108,CUST-000140,VEH-006880,SALES-020,Test Drive,2026-08-26T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000109,CUST-000141,VEH-005466,SALES-021,Consultation,2026-10-10T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000110,CUST-000142,VEH-003101,SALES-022,Consultation,2026-08-13T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000111,CUST-000143,VEH-004701,SALES-023,Consultation,2026-09-28T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000112,CUST-000144,VEH-002627,SALES-024,Test Drive,2026-08-29T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000113,CUST-000145,VEH-005232,SALES-001,Test Drive,2026-07-30T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000114,CUST-000146,VEH-004864,SALES-002,Test Drive,2026-09-22T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000115,CUST-000147,VEH-009498,SALES-003,Test Drive,2026-08-19T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000116,CUST-000148,VEH-008915,SALES-004,Test Drive,2026-08-16T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000117,CUST-000149,VEH-002126,SALES-005,Consultation,2026-09-08T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000118,CUST-000151,VEH-000849,SALES-007,Consultation,2026-10-19T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000119,CUST-000152,VEH-001178,SALES-008,Test Drive,2026-08-26T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000120,CUST-000153,VEH-003257,SALES-009,Test Drive,2026-09-24T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000121,CUST-000154,VEH-000801,SALES-010,Test Drive,2026-09-25T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000122,CUST-000155,VEH-001031,SALES-011,Test Drive,2026-10-09T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000123,CUST-000156,VEH-008734,SALES-012,Consultation,2026-08-21T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000124,CUST-000157,VEH-001579,SALES-013,Test Drive,2026-09-21T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000125,CUST-000159,VEH-007288,SALES-015,Test Drive,2026-07-29T17:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000126,CUST-000161,VEH-008123,SALES-017,Test Drive,2026-10-08T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000127,CUST-000162,VEH-002825,SALES-018,Test Drive,2026-07-26T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000128,CUST-000164,VEH-006814,SALES-020,Consultation,2026-08-02T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000129,CUST-000165,VEH-002688,SALES-021,Test Drive,2026-08-17T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000130,CUST-000166,VEH-008672,SALES-022,Test Drive,2026-09-25T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000131,CUST-000167,VEH-007271,SALES-023,Test Drive,2026-09-09T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000132,CUST-000168,VEH-000780,SALES-024,Test Drive,2026-09-13T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000133,CUST-000169,VEH-002113,SALES-001,Trade-In Appraisal,2026-10-03T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000134,CUST-000170,VEH-009412,SALES-002,Test Drive,2026-09-08T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000135,CUST-000171,VEH-004363,SALES-003,Test Drive,2026-09-22T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000136,CUST-000172,VEH-001899,SALES-004,Test Drive,2026-08-20T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000137,CUST-000173,VEH-006915,SALES-005,Test Drive,2026-10-11T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000138,CUST-000174,VEH-000847,SALES-006,Test Drive,2026-10-21T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000139,CUST-000176,VEH-003088,SALES-008,Consultation,2026-09-01T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000140,CUST-000177,VEH-005682,SALES-009,Test Drive,2026-09-09T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000141,CUST-000178,VEH-002389,SALES-010,Trade-In Appraisal,2026-10-03T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000142,CUST-000179,VEH-005024,SALES-011,Test Drive,2026-10-22T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000143,CUST-000180,VEH-006332,SALES-012,Trade-In Appraisal,2026-08-22T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000144,CUST-000181,VEH-007077,SALES-013,Consultation,2026-09-20T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000145,CUST-000183,VEH-006834,SALES-015,Test Drive,2026-09-13T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000146,CUST-000186,VEH-004612,SALES-018,Consultation,2026-09-01T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000147,CUST-000187,VEH-005229,SALES-019,Test Drive,2026-10-17T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000148,CUST-000188,VEH-002204,SALES-020,Consultation,2026-09-22T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000149,CUST-000189,VEH-003372,SALES-021,Test Drive,2026-08-31T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000150,CUST-000190,VEH-000773,SALES-022,Test Drive,2026-08-02T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000151,CUST-000192,VEH-002084,SALES-024,Test Drive,2026-09-04T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000152,CUST-000193,VEH-008198,SALES-001,Test Drive,2026-10-23T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000153,CUST-000194,VEH-008912,SALES-002,Test Drive,2026-07-28T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000154,CUST-000195,VEH-003021,SALES-003,Consultation,2026-09-15T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000155,CUST-000196,VEH-006261,SALES-004,Test Drive,2026-10-02T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000156,CUST-000197,VEH-002027,SALES-005,Test Drive,2026-09-05T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000157,CUST-000198,VEH-002238,SALES-006,Test Drive,2026-08-09T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000158,CUST-000199,VEH-007138,SALES-007,Test Drive,2026-09-26T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000159,CUST-000200,VEH-000283,SALES-008,Consultation,2026-09-11T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000160,CUST-000201,VEH-002194,SALES-009,Consultation,2026-09-11T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000161,CUST-000203,VEH-004790,SALES-011,Test Drive,2026-09-23T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000162,CUST-000204,VEH-002412,SALES-012,Test Drive,2026-10-06T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000163,CUST-000205,VEH-007634,SALES-013,Test Drive,2026-07-29T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000164,CUST-000206,VEH-009293,SALES-014,Test Drive,2026-07-29T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000165,CUST-000208,VEH-006607,SALES-016,Test Drive,2026-09-06T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000166,CUST-000209,VEH-004555,SALES-017,Consultation,2026-09-11T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000167,CUST-000210,VEH-003148,SALES-018,Consultation,2026-09-22T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000168,CUST-000212,VEH-002739,SALES-020,Trade-In Appraisal,2026-09-13T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000169,CUST-000214,VEH-009686,SALES-022,Test Drive,2026-08-10T15:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000170,CUST-000215,VEH-002814,SALES-023,Consultation,2026-10-04T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000171,CUST-000217,VEH-008381,SALES-001,Test Drive,2026-10-07T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000172,CUST-000218,VEH-002896,SALES-002,Test Drive,2026-08-22T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000173,CUST-000219,VEH-009987,SALES-003,Test Drive,2026-10-23T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000174,CUST-000221,VEH-000358,SALES-005,Test Drive,2026-09-18T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000175,CUST-000222,VEH-007764,SALES-006,Test Drive,2026-08-09T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000176,CUST-000223,VEH-000129,SALES-007,Test Drive,2026-09-27T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000177,CUST-000224,VEH-000054,SALES-008,Test Drive,2026-07-29T15:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000178,CUST-000225,VEH-000166,SALES-009,Test Drive,2026-08-28T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000179,CUST-000228,VEH-008151,SALES-012,Test Drive,2026-08-20T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000180,CUST-000230,VEH-000267,SALES-014,Test Drive,2026-09-07T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000181,CUST-000231,VEH-007235,SALES-015,Test Drive,2026-08-17T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000182,CUST-000232,VEH-009286,SALES-016,Consultation,2026-10-07T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000183,CUST-000234,VEH-009608,SALES-018,Test Drive,2026-09-04T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000184,CUST-000235,VEH-001213,SALES-019,Test Drive,2026-08-13T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000185,CUST-000236,VEH-006017,SALES-020,Test Drive,2026-10-13T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000186,CUST-000237,VEH-000234,SALES-021,Test Drive,2026-10-15T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000187,CUST-000238,VEH-002892,SALES-022,Test Drive,2026-10-07T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000188,CUST-000240,VEH-008207,SALES-024,Trade-In Appraisal,2026-09-27T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000189,CUST-000241,VEH-005840,SALES-001,Test Drive,2026-08-02T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000190,CUST-000242,VEH-005305,SALES-002,Consultation,2026-08-21T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000191,CUST-000243,VEH-003595,SALES-003,Test Drive,2026-09-20T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000192,CUST-000244,VEH-005157,SALES-004,Test Drive,2026-10-19T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000193,CUST-000246,VEH-000269,SALES-006,Test Drive,2026-09-10T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000194,CUST-000247,VEH-007585,SALES-007,Test Drive,2026-09-24T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000195,CUST-000248,VEH-006324,SALES-008,Test Drive,2026-09-10T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000196,CUST-000249,VEH-003189,SALES-009,Trade-In Appraisal,2026-09-03T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000197,CUST-000250,VEH-002722,SALES-010,Test Drive,2026-09-17T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000198,CUST-000251,VEH-007179,SALES-011,Test Drive,2026-10-14T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000199,CUST-000252,VEH-006906,SALES-012,Test Drive,2026-10-21T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000200,CUST-000253,VEH-007665,SALES-013,Test Drive,2026-09-16T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000201,CUST-000254,VEH-006092,SALES-014,Test Drive,2026-09-29T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000202,CUST-000255,VEH-002500,SALES-015,Consultation,2026-09-28T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000203,CUST-000257,VEH-004499,SALES-017,Test Drive,2026-09-29T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000204,CUST-000258,VEH-009052,SALES-018,Test Drive,2026-10-13T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000205,CUST-000259,VEH-003807,SALES-019,Test Drive,2026-09-23T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000206,CUST-000260,VEH-000227,SALES-020,Test Drive,2026-10-14T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000207,CUST-000261,VEH-002029,SALES-021,Test Drive,2026-08-27T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000208,CUST-000262,VEH-003990,SALES-022,Test Drive,2026-08-31T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000209,CUST-000263,VEH-000666,SALES-023,Test Drive,2026-08-13T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000210,CUST-000264,VEH-000526,SALES-024,Consultation,2026-09-11T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000211,CUST-000265,VEH-004431,SALES-001,Test Drive,2026-09-05T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000212,CUST-000266,VEH-007364,SALES-002,Consultation,2026-10-10T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000213,CUST-000267,VEH-001007,SALES-003,Test Drive,2026-09-28T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000214,CUST-000268,VEH-003965,SALES-004,Test Drive,2026-10-08T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000215,CUST-000269,VEH-007585,SALES-005,Consultation,2026-08-09T15:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000216,CUST-000270,VEH-000881,SALES-006,Trade-In Appraisal,2026-10-08T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000217,CUST-000271,VEH-002803,SALES-007,Consultation,2026-08-06T15:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000218,CUST-000272,VEH-000412,SALES-008,Consultation,2026-10-17T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000219,CUST-000273,VEH-006714,SALES-009,Test Drive,2026-09-09T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000220,CUST-000274,VEH-000956,SALES-010,Consultation,2026-08-24T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000221,CUST-000275,VEH-001641,SALES-011,Test Drive,2026-09-16T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000222,CUST-000276,VEH-004182,SALES-012,Consultation,2026-10-09T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000223,CUST-000277,VEH-001850,SALES-013,Test Drive,2026-09-11T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000224,CUST-000278,VEH-009820,SALES-014,Test Drive,2026-07-29T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000225,CUST-000282,VEH-003113,SALES-018,Test Drive,2026-09-22T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000226,CUST-000283,VEH-000255,SALES-019,Test Drive,2026-09-25T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000227,CUST-000284,VEH-006507,SALES-020,Trade-In Appraisal,2026-10-10T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000228,CUST-000285,VEH-003049,SALES-021,Test Drive,2026-09-30T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000229,CUST-000286,VEH-004767,SALES-022,Consultation,2026-08-11T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000230,CUST-000289,VEH-007318,SALES-001,Test Drive,2026-09-09T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000231,CUST-000290,VEH-001480,SALES-002,Test Drive,2026-09-11T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000232,CUST-000291,VEH-005067,SALES-003,Test Drive,2026-10-03T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000233,CUST-000292,VEH-005862,SALES-004,Test Drive,2026-08-23T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000234,CUST-000293,VEH-003723,SALES-005,Consultation,2026-08-12T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000235,CUST-000294,VEH-000632,SALES-006,Test Drive,2026-10-12T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000236,CUST-000295,VEH-005383,SALES-007,Consultation,2026-08-05T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000237,CUST-000297,VEH-003595,SALES-009,Test Drive,2026-10-22T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000238,CUST-000298,VEH-004078,SALES-010,Test Drive,2026-10-02T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000239,CUST-000299,VEH-001243,SALES-011,Test Drive,2026-10-19T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000240,CUST-000300,VEH-004643,SALES-012,Consultation,2026-10-09T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000241,CUST-000301,VEH-009613,SALES-013,Test Drive,2026-08-13T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000242,CUST-000302,VEH-005630,SALES-014,Test Drive,2026-09-14T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000243,CUST-000303,VEH-005474,SALES-015,Test Drive,2026-10-20T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000244,CUST-000304,VEH-003620,SALES-016,Test Drive,2026-08-21T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000245,CUST-000305,VEH-007672,SALES-017,Test Drive,2026-09-20T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000246,CUST-000307,VEH-002388,SALES-019,Test Drive,2026-07-28T15:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000247,CUST-000309,VEH-006496,SALES-021,Test Drive,2026-08-15T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000248,CUST-000310,VEH-005970,SALES-022,Test Drive,2026-08-10T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000249,CUST-000311,VEH-006741,SALES-023,Test Drive,2026-09-10T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000250,CUST-000312,VEH-000074,SALES-024,Consultation,2026-10-18T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000251,CUST-000313,VEH-006585,SALES-001,Test Drive,2026-09-28T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000252,CUST-000314,VEH-004188,SALES-002,Test Drive,2026-10-05T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000253,CUST-000315,VEH-003579,SALES-003,Test Drive,2026-08-12T17:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000254,CUST-000316,VEH-008574,SALES-004,Consultation,2026-09-22T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000255,CUST-000317,VEH-001032,SALES-005,Test Drive,2026-09-11T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000256,CUST-000318,VEH-005841,SALES-006,Consultation,2026-08-20T17:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000257,CUST-000319,VEH-004259,SALES-007,Test Drive,2026-08-01T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000258,CUST-000320,VEH-003001,SALES-008,Test Drive,2026-10-01T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000259,CUST-000321,VEH-001700,SALES-009,Test Drive,2026-09-14T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000260,CUST-000322,VEH-006955,SALES-010,Test Drive,2026-09-18T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000261,CUST-000323,VEH-009976,SALES-011,Test Drive,2026-09-01T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000262,CUST-000324,VEH-001941,SALES-012,Test Drive,2026-10-05T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000263,CUST-000325,VEH-007101,SALES-013,Trade-In Appraisal,2026-09-02T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000264,CUST-000326,VEH-003892,SALES-014,Test Drive,2026-09-21T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000265,CUST-000328,VEH-008807,SALES-016,Consultation,2026-09-27T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000266,CUST-000329,VEH-009664,SALES-017,Test Drive,2026-10-20T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000267,CUST-000330,VEH-000194,SALES-018,Test Drive,2026-08-31T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000268,CUST-000331,VEH-002699,SALES-019,Test Drive,2026-09-19T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000269,CUST-000332,VEH-000359,SALES-020,Test Drive,2026-08-10T17:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000270,CUST-000333,VEH-005863,SALES-021,Test Drive,2026-08-23T17:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000271,CUST-000334,VEH-003330,SALES-022,Test Drive,2026-08-29T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000272,CUST-000335,VEH-001508,SALES-023,Test Drive,2026-10-22T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000273,CUST-000336,VEH-000842,SALES-024,Consultation,2026-08-26T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000274,CUST-000339,VEH-009059,SALES-003,Consultation,2026-08-24T17:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000275,CUST-000341,VEH-003524,SALES-005,Test Drive,2026-10-20T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000276,CUST-000342,VEH-007576,SALES-006,Test Drive,2026-08-04T15:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000277,CUST-000343,VEH-002838,SALES-007,Test Drive,2026-10-23T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000278,CUST-000344,VEH-006724,SALES-008,Test Drive,2026-08-05T15:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000279,CUST-000345,VEH-001679,SALES-009,Test Drive,2026-10-03T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000280,CUST-000350,VEH-007882,SALES-014,Test Drive,2026-08-22T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000281,CUST-000351,VEH-007471,SALES-015,Trade-In Appraisal,2026-10-05T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000282,CUST-000352,VEH-006928,SALES-016,Test Drive,2026-10-20T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000283,CUST-000353,VEH-000658,SALES-017,Test Drive,2026-09-11T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000284,CUST-000354,VEH-008134,SALES-018,Consultation,2026-09-19T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000285,CUST-000355,VEH-007655,SALES-019,Test Drive,2026-09-21T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000286,CUST-000356,VEH-002416,SALES-020,Consultation,2026-08-16T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000287,CUST-000357,VEH-004125,SALES-021,Test Drive,2026-10-04T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000288,CUST-000358,VEH-004375,SALES-022,Test Drive,2026-08-03T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000289,CUST-000359,VEH-003017,SALES-023,Test Drive,2026-08-24T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000290,CUST-000360,VEH-007648,SALES-024,Test Drive,2026-10-03T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000291,CUST-000361,VEH-009981,SALES-001,Test Drive,2026-08-12T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000292,CUST-000362,VEH-001557,SALES-002,Test Drive,2026-09-27T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000293,CUST-000364,VEH-008506,SALES-004,Test Drive,2026-08-05T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000294,CUST-000365,VEH-008201,SALES-005,Trade-In Appraisal,2026-08-01T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000295,CUST-000366,VEH-007383,SALES-006,Test Drive,2026-10-20T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000296,CUST-000367,VEH-008980,SALES-007,Consultation,2026-09-26T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000297,CUST-000368,VEH-003786,SALES-008,Consultation,2026-08-27T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000298,CUST-000369,VEH-001289,SALES-009,Test Drive,2026-08-31T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000299,CUST-000370,VEH-008465,SALES-010,Consultation,2026-10-05T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000300,CUST-000371,VEH-009957,SALES-011,Test Drive,2026-09-19T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000301,CUST-000372,VEH-000920,SALES-012,Test Drive,2026-08-31T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000302,CUST-000373,VEH-003782,SALES-013,Test Drive,2026-09-20T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000303,CUST-000374,VEH-005874,SALES-014,Test Drive,2026-10-21T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000304,CUST-000376,VEH-003300,SALES-016,Test Drive,2026-08-10T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000305,CUST-000379,VEH-008236,SALES-019,Test Drive,2026-09-28T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000306,CUST-000380,VEH-000243,SALES-020,Test Drive,2026-08-02T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000307,CUST-000381,VEH-002200,SALES-021,Test Drive,2026-08-13T15:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000308,CUST-000382,VEH-000796,SALES-022,Test Drive,2026-08-22T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000309,CUST-000383,VEH-000203,SALES-023,Trade-In Appraisal,2026-10-16T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000310,CUST-000385,VEH-001859,SALES-001,Test Drive,2026-09-07T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000311,CUST-000386,VEH-005725,SALES-002,Test Drive,2026-08-15T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000312,CUST-000387,VEH-001667,SALES-003,Test Drive,2026-09-20T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000313,CUST-000388,VEH-007860,SALES-004,Test Drive,2026-08-08T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000314,CUST-000390,VEH-002966,SALES-006,Test Drive,2026-10-11T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000315,CUST-000392,VEH-002276,SALES-008,Test Drive,2026-08-26T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000316,CUST-000393,VEH-000736,SALES-009,Test Drive,2026-08-04T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000317,CUST-000395,VEH-002888,SALES-011,Test Drive,2026-08-02T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000318,CUST-000396,VEH-000507,SALES-012,Test Drive,2026-10-21T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000319,CUST-000397,VEH-005438,SALES-013,Test Drive,2026-09-12T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000320,CUST-000398,VEH-006061,SALES-014,Consultation,2026-09-01T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000321,CUST-000399,VEH-008334,SALES-015,Consultation,2026-10-04T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000322,CUST-000400,VEH-007449,SALES-016,Test Drive,2026-08-29T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000323,CUST-000401,VEH-009765,SALES-017,Test Drive,2026-08-13T15:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000324,CUST-000402,VEH-008355,SALES-018,Consultation,2026-09-29T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000325,CUST-000403,VEH-000308,SALES-019,Test Drive,2026-10-18T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000326,CUST-000404,VEH-004845,SALES-020,Consultation,2026-09-16T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000327,CUST-000405,VEH-002388,SALES-021,Test Drive,2026-08-08T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000328,CUST-000406,VEH-005106,SALES-022,Consultation,2026-08-19T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000329,CUST-000408,VEH-004412,SALES-024,Consultation,2026-09-24T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000330,CUST-000410,VEH-007765,SALES-002,Trade-In Appraisal,2026-08-31T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000331,CUST-000411,VEH-008938,SALES-003,Consultation,2026-09-23T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000332,CUST-000413,VEH-008530,SALES-005,Test Drive,2026-09-08T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000333,CUST-000414,VEH-005866,SALES-006,Test Drive,2026-08-25T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000334,CUST-000415,VEH-003835,SALES-007,Test Drive,2026-07-26T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000335,CUST-000417,VEH-001265,SALES-009,Test Drive,2026-10-03T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000336,CUST-000418,VEH-005850,SALES-010,Test Drive,2026-09-23T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000337,CUST-000419,VEH-005124,SALES-011,Test Drive,2026-07-29T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000338,CUST-000421,VEH-006064,SALES-013,Consultation,2026-08-26T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000339,CUST-000422,VEH-009413,SALES-014,Test Drive,2026-09-05T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000340,CUST-000423,VEH-007373,SALES-015,Test Drive,2026-09-08T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000341,CUST-000424,VEH-006150,SALES-016,Test Drive,2026-10-08T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000342,CUST-000425,VEH-005100,SALES-017,Test Drive,2026-08-29T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000343,CUST-000428,VEH-001176,SALES-020,Test Drive,2026-09-27T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000344,CUST-000430,VEH-008160,SALES-022,Test Drive,2026-08-04T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000345,CUST-000431,VEH-003352,SALES-023,Test Drive,2026-08-24T17:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000346,CUST-000432,VEH-002726,SALES-024,Trade-In Appraisal,2026-09-01T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000347,CUST-000433,VEH-003332,SALES-001,Test Drive,2026-10-07T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000348,CUST-000435,VEH-008646,SALES-003,Test Drive,2026-08-10T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000349,CUST-000436,VEH-003185,SALES-004,Test Drive,2026-09-19T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000350,CUST-000439,VEH-002595,SALES-007,Test Drive,2026-10-05T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000351,CUST-000441,VEH-007065,SALES-009,Test Drive,2026-08-31T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000352,CUST-000442,VEH-001321,SALES-010,Consultation,2026-08-29T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000353,CUST-000443,VEH-002792,SALES-011,Consultation,2026-10-07T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000354,CUST-000445,VEH-007676,SALES-013,Consultation,2026-09-01T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000355,CUST-000446,VEH-001143,SALES-014,Test Drive,2026-09-26T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000356,CUST-000447,VEH-009683,SALES-015,Test Drive,2026-08-30T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000357,CUST-000448,VEH-006698,SALES-016,Test Drive,2026-08-11T15:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000358,CUST-000449,VEH-007915,SALES-017,Test Drive,2026-09-06T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000359,CUST-000451,VEH-008752,SALES-019,Test Drive,2026-10-06T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000360,CUST-000452,VEH-006999,SALES-020,Test Drive,2026-08-19T17:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000361,CUST-000453,VEH-006236,SALES-021,Test Drive,2026-07-26T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000362,CUST-000454,VEH-007794,SALES-022,Test Drive,2026-09-22T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000363,CUST-000456,VEH-006243,SALES-024,Test Drive,2026-09-18T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000364,CUST-000458,VEH-008186,SALES-002,Consultation,2026-10-06T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000365,CUST-000459,VEH-008450,SALES-003,Test Drive,2026-08-08T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000366,CUST-000460,VEH-005355,SALES-004,Consultation,2026-08-31T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000367,CUST-000462,VEH-009516,SALES-006,Test Drive,2026-10-10T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000368,CUST-000463,VEH-007706,SALES-007,Test Drive,2026-10-13T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000369,CUST-000464,VEH-001318,SALES-008,Trade-In Appraisal,2026-09-16T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000370,CUST-000465,VEH-006960,SALES-009,Consultation,2026-08-02T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000371,CUST-000466,VEH-006888,SALES-010,Test Drive,2026-10-15T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000372,CUST-000467,VEH-009161,SALES-011,Test Drive,2026-09-09T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000373,CUST-000468,VEH-001052,SALES-012,Test Drive,2026-09-26T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000374,CUST-000470,VEH-000238,SALES-014,Consultation,2026-08-16T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000375,CUST-000471,VEH-005730,SALES-015,Trade-In Appraisal,2026-10-20T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000376,CUST-000472,VEH-006339,SALES-016,Test Drive,2026-09-04T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000377,CUST-000475,VEH-005649,SALES-019,Consultation,2026-07-29T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000378,CUST-000476,VEH-002996,SALES-020,Test Drive,2026-08-24T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000379,CUST-000477,VEH-000047,SALES-021,Test Drive,2026-08-11T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000380,CUST-000478,VEH-005619,SALES-022,Consultation,2026-10-14T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000381,CUST-000479,VEH-006005,SALES-023,Trade-In Appraisal,2026-10-02T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000382,CUST-000481,VEH-004006,SALES-001,Consultation,2026-07-27T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000383,CUST-000482,VEH-001117,SALES-002,Test Drive,2026-09-23T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000384,CUST-000484,VEH-009431,SALES-004,Test Drive,2026-09-12T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000385,CUST-000485,VEH-008713,SALES-005,Consultation,2026-09-13T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000386,CUST-000486,VEH-002947,SALES-006,Trade-In Appraisal,2026-09-18T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000387,CUST-000487,VEH-001910,SALES-007,Test Drive,2026-09-03T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000388,CUST-000488,VEH-000239,SALES-008,Test Drive,2026-08-13T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000389,CUST-000489,VEH-007612,SALES-009,Consultation,2026-09-02T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000390,CUST-000490,VEH-004314,SALES-010,Test Drive,2026-10-04T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000391,CUST-000492,VEH-005344,SALES-012,Test Drive,2026-08-25T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000392,CUST-000493,VEH-002743,SALES-013,Test Drive,2026-09-10T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000393,CUST-000498,VEH-008075,SALES-018,Test Drive,2026-10-23T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000394,CUST-000499,VEH-009177,SALES-019,Test Drive,2026-08-16T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000395,CUST-000500,VEH-001121,SALES-020,Test Drive,2026-10-15T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000396,CUST-000501,VEH-005331,SALES-021,Test Drive,2026-09-18T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000397,CUST-000504,VEH-004198,SALES-024,Test Drive,2026-09-25T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000398,CUST-000505,VEH-006855,SALES-001,Consultation,2026-08-31T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000399,CUST-000506,VEH-009698,SALES-002,Test Drive,2026-10-13T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000400,CUST-000507,VEH-003943,SALES-003,Test Drive,2026-08-02T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000401,CUST-000509,VEH-009855,SALES-005,Test Drive,2026-07-30T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000402,CUST-000510,VEH-009413,SALES-006,Test Drive,2026-10-14T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000403,CUST-000512,VEH-006422,SALES-008,Consultation,2026-08-26T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000404,CUST-000513,VEH-001004,SALES-009,Consultation,2026-08-22T15:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000405,CUST-000514,VEH-009823,SALES-010,Test Drive,2026-09-22T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000406,CUST-000515,VEH-004180,SALES-011,Consultation,2026-08-09T17:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000407,CUST-000516,VEH-001620,SALES-012,Consultation,2026-09-22T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000408,CUST-000518,VEH-005933,SALES-014,Trade-In Appraisal,2026-08-06T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000409,CUST-000519,VEH-001925,SALES-015,Test Drive,2026-10-15T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000410,CUST-000520,VEH-009710,SALES-016,Test Drive,2026-10-19T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000411,CUST-000521,VEH-004858,SALES-017,Test Drive,2026-10-13T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000412,CUST-000522,VEH-008722,SALES-018,Test Drive,2026-10-15T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000413,CUST-000523,VEH-009904,SALES-019,Test Drive,2026-08-27T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000414,CUST-000524,VEH-001340,SALES-020,Test Drive,2026-08-10T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000415,CUST-000525,VEH-008295,SALES-021,Test Drive,2026-08-31T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000416,CUST-000526,VEH-001262,SALES-022,Test Drive,2026-10-05T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000417,CUST-000527,VEH-007028,SALES-023,Test Drive,2026-08-18T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000418,CUST-000528,VEH-005143,SALES-024,Consultation,2026-10-15T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000419,CUST-000529,VEH-001980,SALES-001,Test Drive,2026-09-04T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000420,CUST-000532,VEH-006836,SALES-004,Consultation,2026-10-06T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000421,CUST-000533,VEH-009979,SALES-005,Test Drive,2026-10-21T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000422,CUST-000535,VEH-007742,SALES-007,Test Drive,2026-10-09T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000423,CUST-000536,VEH-003441,SALES-008,Test Drive,2026-09-16T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000424,CUST-000537,VEH-004821,SALES-009,Test Drive,2026-09-06T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000425,CUST-000538,VEH-006009,SALES-010,Test Drive,2026-10-13T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000426,CUST-000539,VEH-002216,SALES-011,Test Drive,2026-10-18T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000427,CUST-000540,VEH-000225,SALES-012,Trade-In Appraisal,2026-08-17T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000428,CUST-000541,VEH-005882,SALES-013,Consultation,2026-08-03T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000429,CUST-000542,VEH-009295,SALES-014,Test Drive,2026-07-27T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000430,CUST-000543,VEH-002627,SALES-015,Test Drive,2026-09-03T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000431,CUST-000544,VEH-001341,SALES-016,Test Drive,2026-07-26T17:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000432,CUST-000545,VEH-007779,SALES-017,Consultation,2026-08-06T15:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000433,CUST-000546,VEH-006610,SALES-018,Trade-In Appraisal,2026-08-15T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000434,CUST-000548,VEH-004979,SALES-020,Test Drive,2026-10-15T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000435,CUST-000549,VEH-007448,SALES-021,Consultation,2026-07-28T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000436,CUST-000550,VEH-006718,SALES-022,Test Drive,2026-08-02T17:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000437,CUST-000551,VEH-009067,SALES-023,Consultation,2026-08-01T17:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000438,CUST-000552,VEH-002121,SALES-024,Test Drive,2026-07-31T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000439,CUST-000554,VEH-006420,SALES-002,Test Drive,2026-08-29T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000440,CUST-000555,VEH-009854,SALES-003,Test Drive,2026-10-01T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000441,CUST-000557,VEH-009137,SALES-005,Consultation,2026-09-18T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000442,CUST-000558,VEH-005052,SALES-006,Test Drive,2026-09-23T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000443,CUST-000560,VEH-001699,SALES-008,Test Drive,2026-10-22T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000444,CUST-000561,VEH-006200,SALES-009,Test Drive,2026-10-03T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000445,CUST-000562,VEH-003837,SALES-010,Test Drive,2026-09-01T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000446,CUST-000563,VEH-003719,SALES-011,Test Drive,2026-08-21T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000447,CUST-000564,VEH-002134,SALES-012,Test Drive,2026-08-06T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000448,CUST-000565,VEH-000075,SALES-013,Test Drive,2026-09-02T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000449,CUST-000566,VEH-005136,SALES-014,Consultation,2026-07-30T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000450,CUST-000567,VEH-008963,SALES-015,Consultation,2026-10-05T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000451,CUST-000568,VEH-003021,SALES-016,Test Drive,2026-08-03T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000452,CUST-000569,VEH-009856,SALES-017,Test Drive,2026-10-24T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000453,CUST-000570,VEH-002025,SALES-018,Test Drive,2026-09-08T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000454,CUST-000572,VEH-000907,SALES-020,Consultation,2026-09-14T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000455,CUST-000573,VEH-004220,SALES-021,Consultation,2026-09-27T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000456,CUST-000575,VEH-000255,SALES-023,Test Drive,2026-07-28T15:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000457,CUST-000576,VEH-004275,SALES-024,Test Drive,2026-09-13T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000458,CUST-000577,VEH-008343,SALES-001,Test Drive,2026-08-22T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000459,CUST-000578,VEH-004923,SALES-002,Test Drive,2026-10-08T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000460,CUST-000579,VEH-000386,SALES-003,Trade-In Appraisal,2026-08-03T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000461,CUST-000580,VEH-008926,SALES-004,Test Drive,2026-09-07T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000462,CUST-000581,VEH-001786,SALES-005,Consultation,2026-09-05T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000463,CUST-000583,VEH-007931,SALES-007,Test Drive,2026-07-31T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000464,CUST-000584,VEH-002680,SALES-008,Trade-In Appraisal,2026-08-27T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000465,CUST-000586,VEH-008815,SALES-010,Trade-In Appraisal,2026-08-16T15:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000466,CUST-000587,VEH-006625,SALES-011,Test Drive,2026-10-06T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000467,CUST-000588,VEH-005450,SALES-012,Test Drive,2026-09-15T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000468,CUST-000589,VEH-000185,SALES-013,Test Drive,2026-10-23T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000469,CUST-000590,VEH-008305,SALES-014,Consultation,2026-09-07T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000470,CUST-000591,VEH-004155,SALES-015,Test Drive,2026-07-26T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000471,CUST-000594,VEH-005506,SALES-018,Test Drive,2026-08-22T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000472,CUST-000595,VEH-002509,SALES-019,Test Drive,2026-08-04T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000473,CUST-000596,VEH-000489,SALES-020,Test Drive,2026-08-04T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000474,CUST-000597,VEH-006697,SALES-021,Test Drive,2026-09-28T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000475,CUST-000598,VEH-000239,SALES-022,Test Drive,2026-08-25T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000476,CUST-000599,VEH-005145,SALES-023,Test Drive,2026-09-01T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000477,CUST-000600,VEH-007007,SALES-024,Test Drive,2026-08-04T17:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000478,CUST-000601,VEH-009416,SALES-001,Test Drive,2026-08-04T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000479,CUST-000603,VEH-006140,SALES-003,Trade-In Appraisal,2026-09-08T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000480,CUST-000604,VEH-007510,SALES-004,Test Drive,2026-09-10T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000481,CUST-000605,VEH-008969,SALES-005,Test Drive,2026-09-25T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000482,CUST-000606,VEH-005833,SALES-006,Test Drive,2026-10-04T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000483,CUST-000607,VEH-006270,SALES-007,Consultation,2026-08-06T15:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000484,CUST-000608,VEH-002217,SALES-008,Trade-In Appraisal,2026-08-13T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000485,CUST-000609,VEH-005671,SALES-009,Test Drive,2026-09-27T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000486,CUST-000610,VEH-002341,SALES-010,Consultation,2026-08-13T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000487,CUST-000611,VEH-008478,SALES-011,Test Drive,2026-09-08T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000488,CUST-000612,VEH-000550,SALES-012,Consultation,2026-10-19T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000489,CUST-000614,VEH-006950,SALES-014,Test Drive,2026-09-21T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000490,CUST-000615,VEH-001701,SALES-015,Test Drive,2026-08-04T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000491,CUST-000616,VEH-005201,SALES-016,Test Drive,2026-09-01T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000492,CUST-000617,VEH-007966,SALES-017,Test Drive,2026-08-28T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000493,CUST-000618,VEH-008269,SALES-018,Test Drive,2026-08-06T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000494,CUST-000619,VEH-008574,SALES-019,Test Drive,2026-10-13T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000495,CUST-000622,VEH-001473,SALES-022,Test Drive,2026-09-18T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000496,CUST-000623,VEH-003062,SALES-023,Test Drive,2026-10-21T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000497,CUST-000625,VEH-005537,SALES-001,Test Drive,2026-08-16T15:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000498,CUST-000626,VEH-003484,SALES-002,Test Drive,2026-09-11T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000499,CUST-000627,VEH-002957,SALES-003,Test Drive,2026-07-26T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000500,CUST-000628,VEH-001108,SALES-004,Test Drive,2026-10-21T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000501,CUST-000629,VEH-007500,SALES-005,Test Drive,2026-09-06T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000502,CUST-000630,VEH-009858,SALES-006,Test Drive,2026-09-18T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000503,CUST-000631,VEH-002267,SALES-007,Test Drive,2026-09-26T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000504,CUST-000632,VEH-002560,SALES-008,Consultation,2026-09-29T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000505,CUST-000633,VEH-006668,SALES-009,Trade-In Appraisal,2026-10-03T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000506,CUST-000635,VEH-004003,SALES-011,Consultation,2026-10-11T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000507,CUST-000637,VEH-002558,SALES-013,Test Drive,2026-09-26T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000508,CUST-000638,VEH-006671,SALES-014,Test Drive,2026-10-11T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000509,CUST-000639,VEH-001485,SALES-015,Test Drive,2026-08-10T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000510,CUST-000640,VEH-001068,SALES-016,Consultation,2026-09-04T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000511,CUST-000641,VEH-004894,SALES-017,Test Drive,2026-10-02T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000512,CUST-000642,VEH-009430,SALES-018,Consultation,2026-10-05T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000513,CUST-000643,VEH-001490,SALES-019,Test Drive,2026-07-28T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000514,CUST-000645,VEH-004495,SALES-021,Trade-In Appraisal,2026-07-30T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000515,CUST-000647,VEH-006731,SALES-023,Test Drive,2026-08-05T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000516,CUST-000648,VEH-004945,SALES-024,Consultation,2026-10-04T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000517,CUST-000649,VEH-007934,SALES-001,Test Drive,2026-09-11T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000518,CUST-000650,VEH-001231,SALES-002,Consultation,2026-10-22T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000519,CUST-000651,VEH-000811,SALES-003,Test Drive,2026-08-18T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000520,CUST-000652,VEH-001161,SALES-004,Test Drive,2026-10-17T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000521,CUST-000653,VEH-008740,SALES-005,Test Drive,2026-08-18T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000522,CUST-000654,VEH-003311,SALES-006,Consultation,2026-10-20T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000523,CUST-000655,VEH-005992,SALES-007,Test Drive,2026-08-26T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000524,CUST-000656,VEH-001045,SALES-008,Test Drive,2026-07-29T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000525,CUST-000657,VEH-001932,SALES-009,Consultation,2026-08-24T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000526,CUST-000660,VEH-007953,SALES-012,Test Drive,2026-08-13T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000527,CUST-000663,VEH-000196,SALES-015,Test Drive,2026-10-02T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000528,CUST-000664,VEH-008993,SALES-016,Test Drive,2026-08-30T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000529,CUST-000665,VEH-000690,SALES-017,Trade-In Appraisal,2026-09-28T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000530,CUST-000667,VEH-004012,SALES-019,Test Drive,2026-07-26T17:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000531,CUST-000668,VEH-005436,SALES-020,Test Drive,2026-08-18T15:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000532,CUST-000669,VEH-001861,SALES-021,Test Drive,2026-10-01T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000533,CUST-000670,VEH-009175,SALES-022,Test Drive,2026-10-04T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000534,CUST-000671,VEH-006560,SALES-023,Test Drive,2026-08-21T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000535,CUST-000672,VEH-008026,SALES-024,Consultation,2026-08-20T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000536,CUST-000673,VEH-003582,SALES-001,Test Drive,2026-10-14T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000537,CUST-000674,VEH-001801,SALES-002,Test Drive,2026-10-15T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000538,CUST-000675,VEH-005394,SALES-003,Consultation,2026-08-28T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000539,CUST-000676,VEH-002548,SALES-004,Test Drive,2026-08-11T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000540,CUST-000677,VEH-006388,SALES-005,Test Drive,2026-09-23T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000541,CUST-000678,VEH-005870,SALES-006,Test Drive,2026-08-15T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000542,CUST-000679,VEH-004311,SALES-007,Test Drive,2026-09-15T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000543,CUST-000680,VEH-001499,SALES-008,Consultation,2026-09-29T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000544,CUST-000681,VEH-001894,SALES-009,Consultation,2026-08-17T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000545,CUST-000682,VEH-008741,SALES-010,Test Drive,2026-10-09T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000546,CUST-000683,VEH-001836,SALES-011,Test Drive,2026-10-24T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000547,CUST-000684,VEH-005116,SALES-012,Test Drive,2026-08-08T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000548,CUST-000685,VEH-006769,SALES-013,Test Drive,2026-09-14T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000549,CUST-000686,VEH-004713,SALES-014,Test Drive,2026-08-06T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000550,CUST-000687,VEH-002665,SALES-015,Test Drive,2026-08-03T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000551,CUST-000688,VEH-005504,SALES-016,Consultation,2026-08-28T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000552,CUST-000689,VEH-006612,SALES-017,Test Drive,2026-08-25T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000553,CUST-000690,VEH-009066,SALES-018,Test Drive,2026-10-16T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000554,CUST-000691,VEH-008105,SALES-019,Trade-In Appraisal,2026-07-29T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000555,CUST-000692,VEH-008462,SALES-020,Consultation,2026-08-07T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000556,CUST-000693,VEH-000199,SALES-021,Test Drive,2026-08-31T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000557,CUST-000694,VEH-000239,SALES-022,Test Drive,2026-09-12T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000558,CUST-000695,VEH-008961,SALES-023,Test Drive,2026-08-04T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000559,CUST-000696,VEH-000252,SALES-024,Test Drive,2026-09-15T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000560,CUST-000698,VEH-000908,SALES-002,Consultation,2026-08-01T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000561,CUST-000699,VEH-006755,SALES-003,Trade-In Appraisal,2026-08-30T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000562,CUST-000700,VEH-001543,SALES-004,Test Drive,2026-09-01T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000563,CUST-000701,VEH-000247,SALES-005,Test Drive,2026-10-13T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000564,CUST-000703,VEH-006727,SALES-007,Test Drive,2026-09-01T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000565,CUST-000704,VEH-007250,SALES-008,Test Drive,2026-08-10T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000566,CUST-000705,VEH-001322,SALES-009,Test Drive,2026-10-11T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000567,CUST-000706,VEH-004097,SALES-010,Test Drive,2026-08-26T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000568,CUST-000707,VEH-004693,SALES-011,Trade-In Appraisal,2026-10-15T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000569,CUST-000708,VEH-001492,SALES-012,Test Drive,2026-07-27T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000570,CUST-000709,VEH-006660,SALES-013,Test Drive,2026-09-01T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000571,CUST-000711,VEH-003371,SALES-015,Test Drive,2026-09-18T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000572,CUST-000712,VEH-002493,SALES-016,Test Drive,2026-08-10T17:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000573,CUST-000713,VEH-000088,SALES-017,Test Drive,2026-08-17T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000574,CUST-000714,VEH-001414,SALES-018,Test Drive,2026-10-16T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000575,CUST-000715,VEH-004792,SALES-019,Test Drive,2026-09-19T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000576,CUST-000716,VEH-001639,SALES-020,Test Drive,2026-09-10T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000577,CUST-000718,VEH-007346,SALES-022,Test Drive,2026-08-05T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000578,CUST-000719,VEH-007792,SALES-023,Test Drive,2026-08-30T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000579,CUST-000720,VEH-009003,SALES-024,Test Drive,2026-09-30T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000580,CUST-000721,VEH-009067,SALES-001,Test Drive,2026-10-13T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000581,CUST-000723,VEH-005755,SALES-003,Test Drive,2026-09-08T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000582,CUST-000725,VEH-007085,SALES-005,Test Drive,2026-09-22T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000583,CUST-000726,VEH-002197,SALES-006,Consultation,2026-09-18T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000584,CUST-000728,VEH-008389,SALES-008,Test Drive,2026-09-05T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000585,CUST-000729,VEH-005371,SALES-009,Trade-In Appraisal,2026-09-05T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000586,CUST-000730,VEH-008422,SALES-010,Test Drive,2026-09-05T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000587,CUST-000731,VEH-001219,SALES-011,Test Drive,2026-08-25T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000588,CUST-000732,VEH-004629,SALES-012,Trade-In Appraisal,2026-09-06T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000589,CUST-000733,VEH-003931,SALES-013,Test Drive,2026-10-19T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000590,CUST-000734,VEH-005286,SALES-014,Test Drive,2026-09-28T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000591,CUST-000735,VEH-003115,SALES-015,Test Drive,2026-09-17T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000592,CUST-000736,VEH-000167,SALES-016,Consultation,2026-09-09T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000593,CUST-000737,VEH-009843,SALES-017,Test Drive,2026-08-29T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000594,CUST-000738,VEH-001264,SALES-018,Test Drive,2026-08-28T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000595,CUST-000739,VEH-006039,SALES-019,Test Drive,2026-08-13T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000596,CUST-000740,VEH-004326,SALES-020,Test Drive,2026-08-27T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000597,CUST-000742,VEH-002048,SALES-022,Test Drive,2026-07-29T15:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000598,CUST-000743,VEH-005092,SALES-023,Test Drive,2026-09-03T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000599,CUST-000744,VEH-004406,SALES-024,Test Drive,2026-10-02T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000600,CUST-000745,VEH-004123,SALES-001,Test Drive,2026-09-13T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000601,CUST-000746,VEH-008456,SALES-002,Test Drive,2026-09-29T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000602,CUST-000747,VEH-001521,SALES-003,Test Drive,2026-09-22T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000603,CUST-000748,VEH-009522,SALES-004,Test Drive,2026-09-06T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000604,CUST-000749,VEH-006772,SALES-005,Test Drive,2026-08-18T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000605,CUST-000750,VEH-002601,SALES-006,Consultation,2026-09-26T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000606,CUST-000752,VEH-003104,SALES-008,Test Drive,2026-07-26T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000607,CUST-000754,VEH-008771,SALES-010,Test Drive,2026-09-10T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000608,CUST-000755,VEH-005815,SALES-011,Test Drive,2026-09-10T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000609,CUST-000756,VEH-004239,SALES-012,Test Drive,2026-07-26T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000610,CUST-000757,VEH-002842,SALES-013,Test Drive,2026-09-27T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000611,CUST-000758,VEH-005668,SALES-014,Test Drive,2026-08-30T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000612,CUST-000760,VEH-000658,SALES-016,Test Drive,2026-09-30T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000613,CUST-000761,VEH-008585,SALES-017,Test Drive,2026-09-19T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000614,CUST-000762,VEH-005082,SALES-018,Consultation,2026-08-26T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000615,CUST-000763,VEH-000826,SALES-019,Trade-In Appraisal,2026-08-12T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000616,CUST-000765,VEH-007581,SALES-021,Test Drive,2026-08-02T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000617,CUST-000766,VEH-009481,SALES-022,Test Drive,2026-08-12T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000618,CUST-000767,VEH-003016,SALES-023,Test Drive,2026-09-23T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000619,CUST-000769,VEH-009169,SALES-001,Test Drive,2026-08-23T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000620,CUST-000770,VEH-002075,SALES-002,Test Drive,2026-10-08T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000621,CUST-000772,VEH-008011,SALES-004,Test Drive,2026-10-13T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000622,CUST-000773,VEH-008660,SALES-005,Trade-In Appraisal,2026-10-18T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000623,CUST-000775,VEH-003503,SALES-007,Test Drive,2026-08-01T17:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000624,CUST-000776,VEH-001462,SALES-008,Trade-In Appraisal,2026-08-17T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000625,CUST-000777,VEH-009205,SALES-009,Test Drive,2026-10-01T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000626,CUST-000779,VEH-000826,SALES-011,Test Drive,2026-09-24T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000627,CUST-000781,VEH-001854,SALES-013,Test Drive,2026-10-19T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000628,CUST-000782,VEH-001196,SALES-014,Consultation,2026-10-10T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000629,CUST-000783,VEH-009818,SALES-015,Test Drive,2026-08-31T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000630,CUST-000784,VEH-003387,SALES-016,Test Drive,2026-09-11T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000631,CUST-000786,VEH-005041,SALES-018,Test Drive,2026-10-19T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000632,CUST-000787,VEH-007858,SALES-019,Test Drive,2026-09-05T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000633,CUST-000789,VEH-002767,SALES-021,Test Drive,2026-09-06T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000634,CUST-000790,VEH-003923,SALES-022,Test Drive,2026-09-24T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000635,CUST-000791,VEH-007874,SALES-023,Test Drive,2026-10-05T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000636,CUST-000792,VEH-008955,SALES-024,Test Drive,2026-08-07T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000637,CUST-000793,VEH-004870,SALES-001,Test Drive,2026-09-22T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000638,CUST-000796,VEH-005261,SALES-004,Test Drive,2026-10-09T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000639,CUST-000797,VEH-003637,SALES-005,Consultation,2026-08-13T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000640,CUST-000798,VEH-005860,SALES-006,Test Drive,2026-09-10T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000641,CUST-000799,VEH-001596,SALES-007,Test Drive,2026-08-24T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000642,CUST-000800,VEH-000118,SALES-008,Test Drive,2026-09-22T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000643,CUST-000801,VEH-006963,SALES-009,Test Drive,2026-10-13T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000644,CUST-000802,VEH-000707,SALES-010,Test Drive,2026-07-29T15:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000645,CUST-000803,VEH-005991,SALES-011,Test Drive,2026-09-29T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000646,CUST-000804,VEH-003090,SALES-012,Test Drive,2026-08-18T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000647,CUST-000806,VEH-002985,SALES-014,Consultation,2026-08-19T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000648,CUST-000807,VEH-002275,SALES-015,Test Drive,2026-09-02T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000649,CUST-000808,VEH-009229,SALES-016,Test Drive,2026-08-16T17:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000650,CUST-000809,VEH-007449,SALES-017,Test Drive,2026-08-01T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000651,CUST-000810,VEH-005129,SALES-018,Test Drive,2026-08-26T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000652,CUST-000811,VEH-006251,SALES-019,Test Drive,2026-09-08T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000653,CUST-000813,VEH-001118,SALES-021,Test Drive,2026-08-12T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000654,CUST-000815,VEH-006482,SALES-023,Test Drive,2026-09-27T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000655,CUST-000816,VEH-009279,SALES-024,Test Drive,2026-08-18T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000656,CUST-000817,VEH-004990,SALES-001,Test Drive,2026-08-12T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000657,CUST-000818,VEH-005867,SALES-002,Test Drive,2026-07-29T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000658,CUST-000819,VEH-002809,SALES-003,Test Drive,2026-09-12T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000659,CUST-000820,VEH-006873,SALES-004,Test Drive,2026-08-27T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000660,CUST-000821,VEH-000370,SALES-005,Trade-In Appraisal,2026-10-10T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000661,CUST-000822,VEH-000781,SALES-006,Consultation,2026-09-29T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000662,CUST-000823,VEH-000835,SALES-007,Consultation,2026-09-19T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000663,CUST-000824,VEH-009632,SALES-008,Test Drive,2026-10-24T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000664,CUST-000826,VEH-002676,SALES-010,Test Drive,2026-09-20T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000665,CUST-000827,VEH-002586,SALES-011,Consultation,2026-10-01T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000666,CUST-000830,VEH-007882,SALES-014,Consultation,2026-10-24T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000667,CUST-000832,VEH-002820,SALES-016,Consultation,2026-09-12T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000668,CUST-000833,VEH-004224,SALES-017,Test Drive,2026-07-26T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000669,CUST-000834,VEH-002129,SALES-018,Test Drive,2026-09-24T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000670,CUST-000835,VEH-003224,SALES-019,Consultation,2026-09-21T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000671,CUST-000836,VEH-006950,SALES-020,Test Drive,2026-09-24T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000672,CUST-000838,VEH-001513,SALES-022,Test Drive,2026-10-02T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000673,CUST-000839,VEH-007844,SALES-023,Trade-In Appraisal,2026-10-17T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000674,CUST-000840,VEH-001098,SALES-024,Test Drive,2026-09-22T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000675,CUST-000843,VEH-000721,SALES-003,Test Drive,2026-09-14T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000676,CUST-000846,VEH-008273,SALES-006,Test Drive,2026-09-09T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000677,CUST-000848,VEH-004721,SALES-008,Test Drive,2026-09-25T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000678,CUST-000849,VEH-009170,SALES-009,Consultation,2026-07-29T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000679,CUST-000850,VEH-007771,SALES-010,Test Drive,2026-08-27T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000680,CUST-000851,VEH-004231,SALES-011,Trade-In Appraisal,2026-09-07T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000681,CUST-000852,VEH-000736,SALES-012,Test Drive,2026-08-10T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000682,CUST-000853,VEH-009689,SALES-013,Test Drive,2026-10-12T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000683,CUST-000854,VEH-000849,SALES-014,Test Drive,2026-09-19T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000684,CUST-000856,VEH-009742,SALES-016,Consultation,2026-08-24T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000685,CUST-000857,VEH-002870,SALES-017,Consultation,2026-10-20T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000686,CUST-000858,VEH-005536,SALES-018,Test Drive,2026-07-30T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000687,CUST-000859,VEH-000471,SALES-019,Test Drive,2026-08-23T15:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000688,CUST-000860,VEH-008847,SALES-020,Consultation,2026-09-29T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000689,CUST-000862,VEH-003683,SALES-022,Test Drive,2026-08-29T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000690,CUST-000863,VEH-009815,SALES-023,Test Drive,2026-08-26T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000691,CUST-000864,VEH-000965,SALES-024,Test Drive,2026-09-13T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000692,CUST-000865,VEH-005902,SALES-001,Test Drive,2026-08-24T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000693,CUST-000866,VEH-007452,SALES-002,Test Drive,2026-10-16T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000694,CUST-000867,VEH-009158,SALES-003,Trade-In Appraisal,2026-08-21T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000695,CUST-000868,VEH-008776,SALES-004,Test Drive,2026-08-20T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000696,CUST-000869,VEH-000480,SALES-005,Consultation,2026-08-30T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000697,CUST-000870,VEH-009328,SALES-006,Test Drive,2026-08-02T17:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000698,CUST-000871,VEH-002592,SALES-007,Test Drive,2026-10-06T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000699,CUST-000872,VEH-004319,SALES-008,Test Drive,2026-08-03T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000700,CUST-000873,VEH-000126,SALES-009,Test Drive,2026-08-15T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000701,CUST-000874,VEH-005924,SALES-010,Test Drive,2026-07-27T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000702,CUST-000875,VEH-003545,SALES-011,Test Drive,2026-08-26T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000703,CUST-000876,VEH-002073,SALES-012,Test Drive,2026-08-12T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000704,CUST-000877,VEH-002919,SALES-013,Test Drive,2026-10-02T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000705,CUST-000878,VEH-008700,SALES-014,Test Drive,2026-10-08T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000706,CUST-000879,VEH-000103,SALES-015,Test Drive,2026-10-12T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000707,CUST-000880,VEH-006504,SALES-016,Test Drive,2026-09-27T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000708,CUST-000881,VEH-004539,SALES-017,Test Drive,2026-09-01T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000709,CUST-000882,VEH-006429,SALES-018,Test Drive,2026-09-26T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000710,CUST-000883,VEH-000167,SALES-019,Test Drive,2026-08-24T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000711,CUST-000884,VEH-009675,SALES-020,Test Drive,2026-08-16T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000712,CUST-000885,VEH-002537,SALES-021,Test Drive,2026-10-22T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000713,CUST-000886,VEH-002562,SALES-022,Test Drive,2026-08-07T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000714,CUST-000887,VEH-007935,SALES-023,Test Drive,2026-09-02T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000715,CUST-000888,VEH-009393,SALES-024,Test Drive,2026-08-11T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000716,CUST-000889,VEH-009375,SALES-001,Test Drive,2026-07-29T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000717,CUST-000890,VEH-002023,SALES-002,Trade-In Appraisal,2026-10-13T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000718,CUST-000891,VEH-009785,SALES-003,Trade-In Appraisal,2026-07-28T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000719,CUST-000892,VEH-001680,SALES-004,Consultation,2026-10-13T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000720,CUST-000893,VEH-004616,SALES-005,Test Drive,2026-08-31T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000721,CUST-000894,VEH-002285,SALES-006,Trade-In Appraisal,2026-08-18T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000722,CUST-000896,VEH-007413,SALES-008,Test Drive,2026-10-09T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000723,CUST-000897,VEH-005270,SALES-009,Consultation,2026-10-21T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000724,CUST-000899,VEH-004474,SALES-011,Test Drive,2026-10-06T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000725,CUST-000900,VEH-006772,SALES-012,Consultation,2026-08-10T15:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000726,CUST-000901,VEH-001949,SALES-013,Consultation,2026-08-08T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000727,CUST-000902,VEH-007429,SALES-014,Test Drive,2026-10-06T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000728,CUST-000903,VEH-006138,SALES-015,Test Drive,2026-09-28T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000729,CUST-000904,VEH-005561,SALES-016,Test Drive,2026-09-03T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000730,CUST-000905,VEH-003782,SALES-017,Test Drive,2026-09-21T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000731,CUST-000906,VEH-009953,SALES-018,Test Drive,2026-08-18T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000732,CUST-000907,VEH-002790,SALES-019,Test Drive,2026-09-01T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000733,CUST-000908,VEH-005690,SALES-020,Test Drive,2026-08-20T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000734,CUST-000910,VEH-008372,SALES-022,Consultation,2026-10-05T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000735,CUST-000911,VEH-004233,SALES-023,Test Drive,2026-07-27T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000736,CUST-000913,VEH-005579,SALES-001,Test Drive,2026-09-30T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000737,CUST-000914,VEH-003785,SALES-002,Test Drive,2026-08-12T17:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000738,CUST-000916,VEH-006503,SALES-004,Consultation,2026-09-14T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000739,CUST-000917,VEH-005688,SALES-005,Test Drive,2026-08-30T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000740,CUST-000918,VEH-000683,SALES-006,Consultation,2026-10-07T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000741,CUST-000919,VEH-003829,SALES-007,Test Drive,2026-09-07T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000742,CUST-000920,VEH-008370,SALES-008,Test Drive,2026-08-24T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000743,CUST-000921,VEH-000078,SALES-009,Test Drive,2026-08-30T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000744,CUST-000922,VEH-005603,SALES-010,Test Drive,2026-08-28T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000745,CUST-000923,VEH-002320,SALES-011,Test Drive,2026-09-19T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000746,CUST-000924,VEH-009198,SALES-012,Test Drive,2026-09-23T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000747,CUST-000925,VEH-006384,SALES-013,Trade-In Appraisal,2026-08-03T17:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000748,CUST-000926,VEH-000585,SALES-014,Test Drive,2026-10-02T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000749,CUST-000927,VEH-008774,SALES-015,Trade-In Appraisal,2026-08-03T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000750,CUST-000928,VEH-002536,SALES-016,Test Drive,2026-10-18T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000751,CUST-000929,VEH-002257,SALES-017,Test Drive,2026-09-16T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000752,CUST-000930,VEH-002270,SALES-018,Test Drive,2026-08-18T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000753,CUST-000931,VEH-000978,SALES-019,Consultation,2026-10-22T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000754,CUST-000932,VEH-009612,SALES-020,Test Drive,2026-09-01T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000755,CUST-000933,VEH-007851,SALES-021,Test Drive,2026-10-20T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000756,CUST-000934,VEH-007776,SALES-022,Test Drive,2026-09-02T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000757,CUST-000935,VEH-000799,SALES-023,Test Drive,2026-09-09T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000758,CUST-000936,VEH-008030,SALES-024,Test Drive,2026-09-11T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000759,CUST-000938,VEH-002968,SALES-002,Test Drive,2026-10-07T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000760,CUST-000939,VEH-005146,SALES-003,Trade-In Appraisal,2026-10-23T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000761,CUST-000940,VEH-001711,SALES-004,Test Drive,2026-10-05T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000762,CUST-000941,VEH-004297,SALES-005,Test Drive,2026-10-03T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000763,CUST-000943,VEH-001319,SALES-007,Test Drive,2026-09-21T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000764,CUST-000944,VEH-003709,SALES-008,Test Drive,2026-10-01T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000765,CUST-000947,VEH-004522,SALES-011,Test Drive,2026-08-30T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000766,CUST-000948,VEH-002167,SALES-012,Test Drive,2026-07-31T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000767,CUST-000949,VEH-005122,SALES-013,Test Drive,2026-09-29T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000768,CUST-000950,VEH-004944,SALES-014,Test Drive,2026-08-27T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000769,CUST-000951,VEH-008629,SALES-015,Consultation,2026-10-21T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000770,CUST-000952,VEH-005109,SALES-016,Test Drive,2026-10-05T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000771,CUST-000953,VEH-002246,SALES-017,Test Drive,2026-08-10T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000772,CUST-000954,VEH-007990,SALES-018,Consultation,2026-08-04T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000773,CUST-000955,VEH-006841,SALES-019,Trade-In Appraisal,2026-08-13T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000774,CUST-000958,VEH-008176,SALES-022,Consultation,2026-09-03T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000775,CUST-000959,VEH-000935,SALES-023,Test Drive,2026-07-31T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000776,CUST-000960,VEH-009335,SALES-024,Test Drive,2026-10-11T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000777,CUST-000961,VEH-006435,SALES-001,Test Drive,2026-08-24T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000778,CUST-000962,VEH-008885,SALES-002,Test Drive,2026-08-11T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000779,CUST-000963,VEH-001228,SALES-003,Test Drive,2026-08-02T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000780,CUST-000964,VEH-004553,SALES-004,Test Drive,2026-09-19T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000781,CUST-000965,VEH-001961,SALES-005,Test Drive,2026-09-05T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000782,CUST-000966,VEH-001094,SALES-006,Test Drive,2026-08-29T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000783,CUST-000967,VEH-009858,SALES-007,Consultation,2026-09-06T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000784,CUST-000968,VEH-002462,SALES-008,Test Drive,2026-10-08T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000785,CUST-000971,VEH-009697,SALES-011,Test Drive,2026-10-18T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000786,CUST-000972,VEH-007130,SALES-012,Test Drive,2026-10-18T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000787,CUST-000973,VEH-000447,SALES-013,Test Drive,2026-10-22T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000788,CUST-000974,VEH-007812,SALES-014,Test Drive,2026-09-23T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000789,CUST-000975,VEH-003100,SALES-015,Test Drive,2026-10-09T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000790,CUST-000976,VEH-008505,SALES-016,Test Drive,2026-09-29T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000791,CUST-000977,VEH-007224,SALES-017,Test Drive,2026-08-07T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000792,CUST-000978,VEH-002187,SALES-018,Trade-In Appraisal,2026-08-10T15:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000793,CUST-000980,VEH-000429,SALES-020,Test Drive,2026-10-12T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000794,CUST-000981,VEH-001359,SALES-021,Trade-In Appraisal,2026-09-28T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000795,CUST-000982,VEH-005944,SALES-022,Test Drive,2026-08-24T15:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000796,CUST-000983,VEH-002481,SALES-023,Consultation,2026-08-16T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000797,CUST-000984,VEH-005062,SALES-024,Test Drive,2026-09-11T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000798,CUST-000985,VEH-005899,SALES-001,Test Drive,2026-10-13T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000799,CUST-000986,VEH-000551,SALES-002,Test Drive,2026-07-28T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000800,CUST-000988,VEH-000065,SALES-004,Test Drive,2026-09-23T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000801,CUST-000989,VEH-006408,SALES-005,Test Drive,2026-08-31T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000802,CUST-000990,VEH-005186,SALES-006,Test Drive,2026-09-24T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000803,CUST-000991,VEH-003272,SALES-007,Test Drive,2026-09-03T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000804,CUST-000992,VEH-001111,SALES-008,Test Drive,2026-07-28T17:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000805,CUST-000993,VEH-007767,SALES-009,Consultation,2026-10-06T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000806,CUST-000994,VEH-005679,SALES-010,Test Drive,2026-09-22T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000807,CUST-000995,VEH-005341,SALES-011,Consultation,2026-07-26T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000808,CUST-000997,VEH-001327,SALES-013,Test Drive,2026-08-03T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000809,CUST-000998,VEH-009963,SALES-014,Test Drive,2026-08-23T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000810,CUST-000999,VEH-007039,SALES-015,Test Drive,2026-09-28T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000811,CUST-001000,VEH-002311,SALES-016,Test Drive,2026-08-21T17:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000812,CUST-001001,VEH-007805,SALES-017,Test Drive,2026-10-08T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000813,CUST-001002,VEH-001958,SALES-018,Test Drive,2026-08-18T15:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000814,CUST-001004,VEH-008549,SALES-020,Test Drive,2026-09-11T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000815,CUST-001006,VEH-002504,SALES-022,Consultation,2026-09-01T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000816,CUST-001007,VEH-005661,SALES-023,Test Drive,2026-09-05T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000817,CUST-001009,VEH-009556,SALES-001,Consultation,2026-07-28T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000818,CUST-001010,VEH-008840,SALES-002,Consultation,2026-10-19T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000819,CUST-001011,VEH-007302,SALES-003,Test Drive,2026-10-04T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000820,CUST-001012,VEH-002422,SALES-004,Consultation,2026-08-15T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000821,CUST-001013,VEH-001392,SALES-005,Consultation,2026-09-29T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000822,CUST-001014,VEH-004000,SALES-006,Test Drive,2026-09-16T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000823,CUST-001015,VEH-009505,SALES-007,Test Drive,2026-09-07T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000824,CUST-001016,VEH-007607,SALES-008,Trade-In Appraisal,2026-10-15T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000825,CUST-001017,VEH-000676,SALES-009,Test Drive,2026-08-31T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000826,CUST-001019,VEH-002832,SALES-011,Test Drive,2026-08-01T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000827,CUST-001020,VEH-000198,SALES-012,Test Drive,2026-08-14T17:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000828,CUST-001021,VEH-000974,SALES-013,Test Drive,2026-09-29T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000829,CUST-001023,VEH-005271,SALES-015,Trade-In Appraisal,2026-08-09T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000830,CUST-001025,VEH-005128,SALES-017,Test Drive,2026-09-12T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000831,CUST-001026,VEH-001711,SALES-018,Consultation,2026-07-30T17:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000832,CUST-001027,VEH-002831,SALES-019,Consultation,2026-09-05T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000833,CUST-001028,VEH-000607,SALES-020,Test Drive,2026-10-01T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000834,CUST-001029,VEH-000718,SALES-021,Test Drive,2026-10-13T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000835,CUST-001031,VEH-007715,SALES-023,Test Drive,2026-09-30T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000836,CUST-001032,VEH-001409,SALES-024,Test Drive,2026-09-05T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000837,CUST-001033,VEH-003827,SALES-001,Test Drive,2026-10-21T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000838,CUST-001034,VEH-005208,SALES-002,Test Drive,2026-08-24T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000839,CUST-001035,VEH-009710,SALES-003,Test Drive,2026-08-03T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000840,CUST-001036,VEH-005740,SALES-004,Consultation,2026-08-12T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000841,CUST-001037,VEH-002906,SALES-005,Test Drive,2026-10-17T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000842,CUST-001038,VEH-000925,SALES-006,Test Drive,2026-08-16T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000843,CUST-001039,VEH-000548,SALES-007,Test Drive,2026-09-29T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000844,CUST-001040,VEH-004100,SALES-008,Trade-In Appraisal,2026-09-22T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000845,CUST-001041,VEH-000176,SALES-009,Test Drive,2026-08-20T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000846,CUST-001042,VEH-002963,SALES-010,Test Drive,2026-09-15T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000847,CUST-001043,VEH-001976,SALES-011,Consultation,2026-08-09T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000848,CUST-001044,VEH-007106,SALES-012,Test Drive,2026-10-22T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000849,CUST-001045,VEH-002354,SALES-013,Test Drive,2026-08-06T17:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000850,CUST-001046,VEH-002927,SALES-014,Test Drive,2026-09-18T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000851,CUST-001047,VEH-009772,SALES-015,Trade-In Appraisal,2026-08-10T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000852,CUST-001048,VEH-002783,SALES-016,Test Drive,2026-08-07T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000853,CUST-001050,VEH-005170,SALES-018,Test Drive,2026-09-04T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000854,CUST-001051,VEH-006413,SALES-019,Consultation,2026-09-17T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000855,CUST-001052,VEH-004835,SALES-020,Test Drive,2026-08-13T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000856,CUST-001053,VEH-001691,SALES-021,Consultation,2026-08-23T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000857,CUST-001055,VEH-000904,SALES-023,Test Drive,2026-08-25T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000858,CUST-001057,VEH-008503,SALES-001,Test Drive,2026-08-11T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000859,CUST-001059,VEH-009275,SALES-003,Test Drive,2026-08-28T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000860,CUST-001060,VEH-001985,SALES-004,Test Drive,2026-08-15T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000861,CUST-001061,VEH-002341,SALES-005,Consultation,2026-07-30T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000862,CUST-001063,VEH-003172,SALES-007,Consultation,2026-10-19T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000863,CUST-001064,VEH-003730,SALES-008,Consultation,2026-10-20T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000864,CUST-001065,VEH-005952,SALES-009,Test Drive,2026-09-05T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000865,CUST-001066,VEH-008955,SALES-010,Test Drive,2026-09-04T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000866,CUST-001067,VEH-004152,SALES-011,Test Drive,2026-08-31T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000867,CUST-001068,VEH-009260,SALES-012,Test Drive,2026-09-21T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000868,CUST-001069,VEH-009059,SALES-013,Test Drive,2026-09-02T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000869,CUST-001070,VEH-002187,SALES-014,Test Drive,2026-10-09T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000870,CUST-001071,VEH-004955,SALES-015,Test Drive,2026-08-03T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000871,CUST-001072,VEH-009497,SALES-016,Consultation,2026-09-07T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000872,CUST-001073,VEH-003884,SALES-017,Test Drive,2026-10-03T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000873,CUST-001074,VEH-008291,SALES-018,Test Drive,2026-09-12T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000874,CUST-001075,VEH-006474,SALES-019,Test Drive,2026-08-06T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000875,CUST-001077,VEH-007878,SALES-021,Consultation,2026-08-30T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000876,CUST-001078,VEH-002757,SALES-022,Consultation,2026-10-15T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000877,CUST-001079,VEH-001029,SALES-023,Test Drive,2026-08-29T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000878,CUST-001081,VEH-002200,SALES-001,Test Drive,2026-08-14T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000879,CUST-001082,VEH-009009,SALES-002,Test Drive,2026-08-11T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000880,CUST-001083,VEH-006103,SALES-003,Test Drive,2026-07-29T15:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000881,CUST-001084,VEH-008484,SALES-004,Test Drive,2026-09-07T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000882,CUST-001085,VEH-002652,SALES-005,Test Drive,2026-09-22T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000883,CUST-001086,VEH-007530,SALES-006,Test Drive,2026-09-08T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000884,CUST-001087,VEH-005022,SALES-007,Test Drive,2026-08-09T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000885,CUST-001088,VEH-004823,SALES-008,Consultation,2026-10-05T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000886,CUST-001089,VEH-005590,SALES-009,Test Drive,2026-08-23T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000887,CUST-001090,VEH-005566,SALES-010,Test Drive,2026-08-09T17:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000888,CUST-001091,VEH-001317,SALES-011,Consultation,2026-07-28T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000889,CUST-001093,VEH-003816,SALES-013,Test Drive,2026-09-09T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000890,CUST-001094,VEH-009545,SALES-014,Test Drive,2026-09-09T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000891,CUST-001095,VEH-005679,SALES-015,Test Drive,2026-09-16T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000892,CUST-001096,VEH-004596,SALES-016,Trade-In Appraisal,2026-09-22T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000893,CUST-001097,VEH-004169,SALES-017,Test Drive,2026-08-28T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000894,CUST-001098,VEH-009899,SALES-018,Consultation,2026-08-14T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000895,CUST-001099,VEH-009514,SALES-019,Test Drive,2026-10-11T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000896,CUST-001100,VEH-000431,SALES-020,Consultation,2026-10-11T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000897,CUST-001101,VEH-002418,SALES-021,Trade-In Appraisal,2026-08-25T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000898,CUST-001102,VEH-000694,SALES-022,Consultation,2026-08-10T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000899,CUST-001103,VEH-002297,SALES-023,Test Drive,2026-10-02T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000900,CUST-001105,VEH-006977,SALES-001,Test Drive,2026-09-28T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000901,CUST-001106,VEH-006706,SALES-002,Consultation,2026-08-31T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000902,CUST-001107,VEH-006222,SALES-003,Trade-In Appraisal,2026-08-02T15:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000903,CUST-001109,VEH-000970,SALES-005,Test Drive,2026-08-03T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000904,CUST-001111,VEH-009734,SALES-007,Test Drive,2026-08-19T17:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000905,CUST-001112,VEH-009985,SALES-008,Test Drive,2026-08-14T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000906,CUST-001113,VEH-002241,SALES-009,Consultation,2026-09-24T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000907,CUST-001114,VEH-002789,SALES-010,Test Drive,2026-08-16T15:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000908,CUST-001115,VEH-001046,SALES-011,Test Drive,2026-08-16T17:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000909,CUST-001116,VEH-004563,SALES-012,Consultation,2026-08-10T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000910,CUST-001117,VEH-001870,SALES-013,Test Drive,2026-10-01T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000911,CUST-001118,VEH-004833,SALES-014,Test Drive,2026-08-08T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000912,CUST-001119,VEH-004982,SALES-015,Test Drive,2026-09-10T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000913,CUST-001120,VEH-003093,SALES-016,Test Drive,2026-09-04T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000914,CUST-001121,VEH-006601,SALES-017,Test Drive,2026-09-22T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000915,CUST-001122,VEH-007923,SALES-018,Trade-In Appraisal,2026-09-22T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000916,CUST-001123,VEH-002769,SALES-019,Test Drive,2026-10-02T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000917,CUST-001124,VEH-006315,SALES-020,Test Drive,2026-08-19T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000918,CUST-001125,VEH-007165,SALES-021,Test Drive,2026-10-11T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000919,CUST-001126,VEH-006090,SALES-022,Test Drive,2026-10-11T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000920,CUST-001127,VEH-000979,SALES-023,Test Drive,2026-09-14T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000921,CUST-001129,VEH-003445,SALES-001,Consultation,2026-10-12T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000922,CUST-001130,VEH-008409,SALES-002,Test Drive,2026-09-07T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000923,CUST-001131,VEH-006522,SALES-003,Test Drive,2026-10-23T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000924,CUST-001132,VEH-001219,SALES-004,Test Drive,2026-10-18T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000925,CUST-001133,VEH-004608,SALES-005,Trade-In Appraisal,2026-08-24T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000926,CUST-001134,VEH-003841,SALES-006,Test Drive,2026-09-30T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000927,CUST-001136,VEH-000470,SALES-008,Trade-In Appraisal,2026-10-03T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000928,CUST-001137,VEH-008559,SALES-009,Test Drive,2026-09-07T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000929,CUST-001138,VEH-001423,SALES-010,Consultation,2026-10-10T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000930,CUST-001139,VEH-007995,SALES-011,Trade-In Appraisal,2026-07-28T17:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000931,CUST-001140,VEH-001254,SALES-012,Consultation,2026-10-16T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000932,CUST-001141,VEH-002227,SALES-013,Test Drive,2026-10-12T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000933,CUST-001142,VEH-005762,SALES-014,Consultation,2026-09-01T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000934,CUST-001143,VEH-001434,SALES-015,Consultation,2026-09-19T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000935,CUST-001144,VEH-007702,SALES-016,Test Drive,2026-10-23T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000936,CUST-001145,VEH-005105,SALES-017,Consultation,2026-09-19T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000937,CUST-001146,VEH-001629,SALES-018,Consultation,2026-10-14T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000938,CUST-001147,VEH-008950,SALES-019,Test Drive,2026-10-12T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000939,CUST-001148,VEH-007197,SALES-020,Test Drive,2026-08-30T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000940,CUST-001149,VEH-009994,SALES-021,Consultation,2026-09-20T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000941,CUST-001150,VEH-007895,SALES-022,Test Drive,2026-08-27T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000942,CUST-001151,VEH-000944,SALES-023,Consultation,2026-08-14T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000943,CUST-001153,VEH-007457,SALES-001,Test Drive,2026-07-28T15:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000944,CUST-001155,VEH-006559,SALES-003,Test Drive,2026-10-14T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000945,CUST-001156,VEH-007401,SALES-004,Consultation,2026-08-29T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000946,CUST-001157,VEH-000503,SALES-005,Test Drive,2026-09-28T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000947,CUST-001158,VEH-004670,SALES-006,Test Drive,2026-08-18T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000948,CUST-001159,VEH-006138,SALES-007,Test Drive,2026-08-06T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000949,CUST-001160,VEH-001992,SALES-008,Test Drive,2026-10-09T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000950,CUST-001161,VEH-009723,SALES-009,Test Drive,2026-08-11T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000951,CUST-001162,VEH-004656,SALES-010,Trade-In Appraisal,2026-07-30T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000952,CUST-001165,VEH-009758,SALES-013,Consultation,2026-08-10T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000953,CUST-001166,VEH-009494,SALES-014,Test Drive,2026-10-06T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000954,CUST-001167,VEH-007148,SALES-015,Test Drive,2026-08-03T15:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000955,CUST-001168,VEH-006712,SALES-016,Test Drive,2026-09-13T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000956,CUST-001169,VEH-005918,SALES-017,Test Drive,2026-10-05T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000957,CUST-001170,VEH-008061,SALES-018,Test Drive,2026-09-26T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000958,CUST-001171,VEH-007530,SALES-019,Consultation,2026-08-04T15:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000959,CUST-001172,VEH-007297,SALES-020,Consultation,2026-09-21T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000960,CUST-001173,VEH-004097,SALES-021,Test Drive,2026-10-24T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000961,CUST-001174,VEH-000597,SALES-022,Test Drive,2026-09-04T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000962,CUST-001175,VEH-004277,SALES-023,Consultation,2026-08-29T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000963,CUST-001176,VEH-001167,SALES-024,Test Drive,2026-09-01T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000964,CUST-001177,VEH-004620,SALES-001,Test Drive,2026-08-20T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000965,CUST-001178,VEH-005741,SALES-002,Consultation,2026-10-03T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000966,CUST-001179,VEH-005430,SALES-003,Test Drive,2026-09-10T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000967,CUST-001180,VEH-000383,SALES-004,Test Drive,2026-07-28T17:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000968,CUST-001183,VEH-005272,SALES-007,Trade-In Appraisal,2026-08-11T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000969,CUST-001184,VEH-002604,SALES-008,Test Drive,2026-09-06T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000970,CUST-001185,VEH-007626,SALES-009,Consultation,2026-10-04T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000971,CUST-001186,VEH-005996,SALES-010,Test Drive,2026-09-09T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000972,CUST-001187,VEH-002213,SALES-011,Test Drive,2026-09-02T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000973,CUST-001188,VEH-005235,SALES-012,Trade-In Appraisal,2026-08-15T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000974,CUST-001189,VEH-003942,SALES-013,Test Drive,2026-08-25T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000975,CUST-001190,VEH-005588,SALES-014,Consultation,2026-10-20T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000976,CUST-001191,VEH-003191,SALES-015,Test Drive,2026-08-07T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000977,CUST-001192,VEH-001016,SALES-016,Test Drive,2026-07-28T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000978,CUST-001193,VEH-008856,SALES-017,Test Drive,2026-09-13T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000979,CUST-001194,VEH-009265,SALES-018,Consultation,2026-08-04T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000980,CUST-001195,VEH-009627,SALES-019,Test Drive,2026-10-04T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000981,CUST-001196,VEH-000594,SALES-020,Test Drive,2026-09-14T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000982,CUST-001197,VEH-005539,SALES-021,Trade-In Appraisal,2026-09-14T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000983,CUST-001199,VEH-009640,SALES-023,Test Drive,2026-10-12T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000984,CUST-001200,VEH-000219,SALES-024,Test Drive,2026-08-25T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000985,CUST-001201,VEH-003403,SALES-001,Test Drive,2026-09-17T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000986,CUST-001202,VEH-003185,SALES-002,Test Drive,2026-08-05T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000987,CUST-001203,VEH-002958,SALES-003,Test Drive,2026-09-04T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000988,CUST-001204,VEH-004597,SALES-004,Test Drive,2026-10-19T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000989,CUST-001206,VEH-009931,SALES-006,Test Drive,2026-10-06T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000990,CUST-001207,VEH-003549,SALES-007,Consultation,2026-08-09T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000991,CUST-001209,VEH-009818,SALES-009,Test Drive,2026-08-15T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000992,CUST-001210,VEH-009800,SALES-010,Test Drive,2026-08-12T15:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000993,CUST-001211,VEH-008973,SALES-011,Test Drive,2026-08-28T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000994,CUST-001212,VEH-008347,SALES-012,Test Drive,2026-09-15T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000995,CUST-001213,VEH-000788,SALES-013,Test Drive,2026-08-31T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000996,CUST-001214,VEH-007254,SALES-014,Test Drive,2026-10-04T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000997,CUST-001215,VEH-004466,SALES-015,Consultation,2026-08-23T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-000998,CUST-001216,VEH-000242,SALES-016,Trade-In Appraisal,2026-09-10T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-000999,CUST-001217,VEH-004793,SALES-017,Test Drive,2026-10-08T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001000,CUST-001218,VEH-004500,SALES-018,Test Drive,2026-09-03T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001001,CUST-001219,VEH-007329,SALES-019,Test Drive,2026-08-13T15:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001002,CUST-001221,VEH-002937,SALES-021,Trade-In Appraisal,2026-08-22T15:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001003,CUST-001222,VEH-008526,SALES-022,Consultation,2026-09-06T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001004,CUST-001223,VEH-005793,SALES-023,Test Drive,2026-07-31T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001005,CUST-001224,VEH-008416,SALES-024,Test Drive,2026-09-08T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001006,CUST-001225,VEH-006020,SALES-001,Test Drive,2026-10-02T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001007,CUST-001226,VEH-004622,SALES-002,Test Drive,2026-09-15T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001008,CUST-001227,VEH-005607,SALES-003,Test Drive,2026-08-25T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001009,CUST-001228,VEH-008676,SALES-004,Consultation,2026-08-25T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001010,CUST-001231,VEH-001847,SALES-007,Trade-In Appraisal,2026-09-25T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001011,CUST-001232,VEH-005387,SALES-008,Test Drive,2026-09-28T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001012,CUST-001233,VEH-002085,SALES-009,Trade-In Appraisal,2026-08-04T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001013,CUST-001234,VEH-002175,SALES-010,Consultation,2026-08-17T17:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001014,CUST-001236,VEH-001991,SALES-012,Test Drive,2026-09-24T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001015,CUST-001238,VEH-002244,SALES-014,Consultation,2026-10-08T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001016,CUST-001239,VEH-007133,SALES-015,Test Drive,2026-08-01T15:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001017,CUST-001240,VEH-007499,SALES-016,Test Drive,2026-10-18T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001018,CUST-001241,VEH-001400,SALES-017,Consultation,2026-09-25T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001019,CUST-001242,VEH-005590,SALES-018,Test Drive,2026-08-29T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001020,CUST-001243,VEH-003990,SALES-019,Consultation,2026-09-23T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001021,CUST-001244,VEH-003832,SALES-020,Trade-In Appraisal,2026-09-03T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001022,CUST-001245,VEH-008549,SALES-021,Test Drive,2026-08-15T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001023,CUST-001246,VEH-001664,SALES-022,Test Drive,2026-10-24T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001024,CUST-001247,VEH-006040,SALES-023,Consultation,2026-08-31T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001025,CUST-001248,VEH-001948,SALES-024,Consultation,2026-09-14T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001026,CUST-001249,VEH-004422,SALES-001,Test Drive,2026-09-20T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001027,CUST-001250,VEH-009047,SALES-002,Test Drive,2026-09-09T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001028,CUST-001251,VEH-003372,SALES-003,Test Drive,2026-09-07T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001029,CUST-001252,VEH-006035,SALES-004,Consultation,2026-10-05T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001030,CUST-001253,VEH-007585,SALES-005,Test Drive,2026-07-31T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001031,CUST-001255,VEH-005405,SALES-007,Trade-In Appraisal,2026-08-06T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001032,CUST-001256,VEH-004693,SALES-008,Consultation,2026-09-22T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001033,CUST-001258,VEH-007321,SALES-010,Consultation,2026-10-20T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001034,CUST-001259,VEH-005212,SALES-011,Test Drive,2026-10-22T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001035,CUST-001260,VEH-002474,SALES-012,Consultation,2026-08-27T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001036,CUST-001261,VEH-009209,SALES-013,Consultation,2026-08-14T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001037,CUST-001262,VEH-007308,SALES-014,Test Drive,2026-10-20T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001038,CUST-001265,VEH-000317,SALES-017,Consultation,2026-10-21T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001039,CUST-001266,VEH-004290,SALES-018,Test Drive,2026-09-22T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001040,CUST-001267,VEH-009696,SALES-019,Test Drive,2026-08-18T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001041,CUST-001268,VEH-002894,SALES-020,Test Drive,2026-07-28T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001042,CUST-001269,VEH-003042,SALES-021,Consultation,2026-07-27T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001043,CUST-001270,VEH-004752,SALES-022,Test Drive,2026-09-07T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001044,CUST-001272,VEH-002841,SALES-024,Test Drive,2026-08-14T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001045,CUST-001274,VEH-008512,SALES-002,Test Drive,2026-10-11T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001046,CUST-001275,VEH-009716,SALES-003,Test Drive,2026-09-16T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001047,CUST-001276,VEH-008932,SALES-004,Consultation,2026-09-20T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001048,CUST-001277,VEH-006674,SALES-005,Consultation,2026-08-25T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001049,CUST-001278,VEH-004495,SALES-006,Test Drive,2026-10-14T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001050,CUST-001279,VEH-006493,SALES-007,Consultation,2026-09-29T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001051,CUST-001282,VEH-005031,SALES-010,Test Drive,2026-10-02T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001052,CUST-001284,VEH-001050,SALES-012,Test Drive,2026-10-13T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001053,CUST-001285,VEH-003363,SALES-013,Test Drive,2026-09-26T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001054,CUST-001286,VEH-007668,SALES-014,Consultation,2026-10-08T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001055,CUST-001287,VEH-001481,SALES-015,Consultation,2026-07-26T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001056,CUST-001288,VEH-002201,SALES-016,Test Drive,2026-10-10T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001057,CUST-001289,VEH-000875,SALES-017,Test Drive,2026-09-23T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001058,CUST-001290,VEH-004768,SALES-018,Test Drive,2026-09-17T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001059,CUST-001291,VEH-001907,SALES-019,Test Drive,2026-08-01T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001060,CUST-001292,VEH-009503,SALES-020,Test Drive,2026-08-31T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001061,CUST-001293,VEH-008648,SALES-021,Test Drive,2026-08-21T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001062,CUST-001294,VEH-003695,SALES-022,Test Drive,2026-09-30T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001063,CUST-001295,VEH-006605,SALES-023,Consultation,2026-10-24T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001064,CUST-001296,VEH-006454,SALES-024,Test Drive,2026-08-25T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001065,CUST-001297,VEH-004662,SALES-001,Test Drive,2026-09-26T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001066,CUST-001298,VEH-009032,SALES-002,Test Drive,2026-10-03T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001067,CUST-001300,VEH-001576,SALES-004,Test Drive,2026-10-19T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001068,CUST-001301,VEH-004337,SALES-005,Consultation,2026-08-16T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001069,CUST-001302,VEH-007337,SALES-006,Test Drive,2026-10-13T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001070,CUST-001303,VEH-009374,SALES-007,Test Drive,2026-08-19T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001071,CUST-001304,VEH-006294,SALES-008,Consultation,2026-08-15T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001072,CUST-001305,VEH-003687,SALES-009,Consultation,2026-09-25T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001073,CUST-001306,VEH-008706,SALES-010,Trade-In Appraisal,2026-08-13T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001074,CUST-001307,VEH-005303,SALES-011,Test Drive,2026-08-22T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001075,CUST-001308,VEH-001421,SALES-012,Test Drive,2026-09-27T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001076,CUST-001309,VEH-005281,SALES-013,Consultation,2026-10-09T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001077,CUST-001310,VEH-005566,SALES-014,Test Drive,2026-09-05T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001078,CUST-001311,VEH-006762,SALES-015,Test Drive,2026-08-14T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001079,CUST-001313,VEH-005354,SALES-017,Test Drive,2026-09-08T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001080,CUST-001314,VEH-006722,SALES-018,Test Drive,2026-10-08T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001081,CUST-001317,VEH-002129,SALES-021,Test Drive,2026-10-18T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001082,CUST-001318,VEH-001224,SALES-022,Test Drive,2026-08-23T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001083,CUST-001319,VEH-009588,SALES-023,Test Drive,2026-08-05T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001084,CUST-001320,VEH-009317,SALES-024,Test Drive,2026-07-31T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001085,CUST-001321,VEH-008105,SALES-001,Test Drive,2026-08-22T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001086,CUST-001322,VEH-009624,SALES-002,Test Drive,2026-08-17T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001087,CUST-001323,VEH-000113,SALES-003,Test Drive,2026-07-26T17:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001088,CUST-001324,VEH-008264,SALES-004,Consultation,2026-08-11T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001089,CUST-001325,VEH-007719,SALES-005,Trade-In Appraisal,2026-09-11T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001090,CUST-001326,VEH-007820,SALES-006,Test Drive,2026-09-05T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001091,CUST-001327,VEH-007050,SALES-007,Test Drive,2026-10-01T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001092,CUST-001328,VEH-001475,SALES-008,Test Drive,2026-08-20T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001093,CUST-001329,VEH-001634,SALES-009,Test Drive,2026-10-01T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001094,CUST-001330,VEH-001077,SALES-010,Test Drive,2026-09-14T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001095,CUST-001331,VEH-006003,SALES-011,Trade-In Appraisal,2026-08-06T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001096,CUST-001332,VEH-001563,SALES-012,Test Drive,2026-08-24T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001097,CUST-001333,VEH-007700,SALES-013,Test Drive,2026-08-20T17:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001098,CUST-001334,VEH-003851,SALES-014,Test Drive,2026-09-05T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001099,CUST-001336,VEH-002920,SALES-016,Test Drive,2026-10-01T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001100,CUST-001337,VEH-009239,SALES-017,Consultation,2026-08-07T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001101,CUST-001338,VEH-002034,SALES-018,Test Drive,2026-08-21T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001102,CUST-001339,VEH-001219,SALES-019,Test Drive,2026-10-11T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001103,CUST-001340,VEH-000414,SALES-020,Trade-In Appraisal,2026-09-26T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001104,CUST-001341,VEH-003707,SALES-021,Test Drive,2026-09-08T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001105,CUST-001343,VEH-006117,SALES-023,Test Drive,2026-10-02T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001106,CUST-001344,VEH-005904,SALES-024,Test Drive,2026-09-19T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001107,CUST-001347,VEH-004891,SALES-003,Trade-In Appraisal,2026-08-18T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001108,CUST-001348,VEH-007577,SALES-004,Test Drive,2026-10-22T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001109,CUST-001349,VEH-006223,SALES-005,Test Drive,2026-08-31T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001110,CUST-001350,VEH-005473,SALES-006,Test Drive,2026-08-11T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001111,CUST-001351,VEH-006837,SALES-007,Test Drive,2026-10-18T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001112,CUST-001352,VEH-009878,SALES-008,Test Drive,2026-10-15T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001113,CUST-001353,VEH-005259,SALES-009,Consultation,2026-10-19T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001114,CUST-001354,VEH-006395,SALES-010,Test Drive,2026-09-19T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001115,CUST-001355,VEH-001930,SALES-011,Trade-In Appraisal,2026-10-08T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001116,CUST-001357,VEH-004775,SALES-013,Test Drive,2026-08-22T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001117,CUST-001358,VEH-003248,SALES-014,Trade-In Appraisal,2026-08-26T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001118,CUST-001359,VEH-008967,SALES-015,Consultation,2026-08-06T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001119,CUST-001361,VEH-001716,SALES-017,Test Drive,2026-08-14T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001120,CUST-001362,VEH-002325,SALES-018,Consultation,2026-10-15T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001121,CUST-001363,VEH-009878,SALES-019,Test Drive,2026-10-21T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001122,CUST-001364,VEH-000617,SALES-020,Test Drive,2026-10-08T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001123,CUST-001365,VEH-002406,SALES-021,Consultation,2026-08-05T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001124,CUST-001366,VEH-001898,SALES-022,Test Drive,2026-08-29T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001125,CUST-001367,VEH-003293,SALES-023,Test Drive,2026-08-29T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001126,CUST-001368,VEH-007176,SALES-024,Consultation,2026-09-21T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001127,CUST-001369,VEH-007745,SALES-001,Test Drive,2026-10-10T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001128,CUST-001370,VEH-001677,SALES-002,Test Drive,2026-09-01T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001129,CUST-001371,VEH-008254,SALES-003,Test Drive,2026-08-16T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001130,CUST-001373,VEH-004133,SALES-005,Test Drive,2026-10-01T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001131,CUST-001374,VEH-008718,SALES-006,Test Drive,2026-08-14T15:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001132,CUST-001375,VEH-005463,SALES-007,Consultation,2026-08-06T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001133,CUST-001376,VEH-007482,SALES-008,Consultation,2026-08-11T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001134,CUST-001377,VEH-000087,SALES-009,Test Drive,2026-09-23T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001135,CUST-001379,VEH-004978,SALES-011,Test Drive,2026-07-30T15:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001136,CUST-001380,VEH-004389,SALES-012,Test Drive,2026-09-20T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001137,CUST-001381,VEH-008929,SALES-013,Test Drive,2026-08-29T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001138,CUST-001382,VEH-007508,SALES-014,Test Drive,2026-09-21T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001139,CUST-001383,VEH-002306,SALES-015,Test Drive,2026-08-14T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001140,CUST-001385,VEH-002606,SALES-017,Test Drive,2026-09-05T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001141,CUST-001387,VEH-004503,SALES-019,Test Drive,2026-10-03T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001142,CUST-001388,VEH-006121,SALES-020,Test Drive,2026-08-26T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001143,CUST-001390,VEH-001546,SALES-022,Test Drive,2026-08-25T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001144,CUST-001391,VEH-001012,SALES-023,Test Drive,2026-08-26T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001145,CUST-001393,VEH-003285,SALES-001,Test Drive,2026-10-13T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001146,CUST-001394,VEH-000327,SALES-002,Test Drive,2026-08-20T15:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001147,CUST-001395,VEH-002531,SALES-003,Test Drive,2026-09-09T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001148,CUST-001396,VEH-007359,SALES-004,Test Drive,2026-07-31T16:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001149,CUST-001397,VEH-002371,SALES-005,Test Drive,2026-10-24T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001150,CUST-001398,VEH-002099,SALES-006,Test Drive,2026-10-07T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001151,CUST-001399,VEH-006164,SALES-007,Test Drive,2026-10-10T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001152,CUST-001400,VEH-007300,SALES-008,Trade-In Appraisal,2026-08-24T19:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001153,CUST-001401,VEH-005095,SALES-009,Consultation,2026-09-15T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001154,CUST-001402,VEH-002533,SALES-010,Consultation,2026-08-27T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001155,CUST-001403,VEH-003731,SALES-011,Test Drive,2026-08-15T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001156,CUST-001404,VEH-009673,SALES-012,Consultation,2026-08-13T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001157,CUST-001405,VEH-004998,SALES-013,Consultation,2026-10-16T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001158,CUST-001406,VEH-008227,SALES-014,Consultation,2026-09-11T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001159,CUST-001407,VEH-002550,SALES-015,Test Drive,2026-10-15T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001160,CUST-001408,VEH-007190,SALES-016,Trade-In Appraisal,2026-10-11T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001161,CUST-001410,VEH-002309,SALES-018,Trade-In Appraisal,2026-10-07T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001162,CUST-001411,VEH-006674,SALES-019,Consultation,2026-09-06T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001163,CUST-001412,VEH-004120,SALES-020,Test Drive,2026-08-05T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001164,CUST-001413,VEH-003813,SALES-021,Test Drive,2026-10-04T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001165,CUST-001414,VEH-003774,SALES-022,Test Drive,2026-10-20T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001166,CUST-001415,VEH-009917,SALES-023,Test Drive,2026-09-12T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001167,CUST-001417,VEH-003719,SALES-001,Trade-In Appraisal,2026-09-18T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001168,CUST-001418,VEH-007206,SALES-002,Test Drive,2026-08-21T15:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001169,CUST-001419,VEH-002666,SALES-003,Test Drive,2026-10-20T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001170,CUST-001421,VEH-009296,SALES-005,Test Drive,2026-10-06T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001171,CUST-001422,VEH-007061,SALES-006,Test Drive,2026-08-06T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001172,CUST-001423,VEH-007261,SALES-007,Consultation,2026-07-31T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001173,CUST-001424,VEH-006366,SALES-008,Consultation,2026-09-25T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001174,CUST-001425,VEH-006441,SALES-009,Test Drive,2026-09-01T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001175,CUST-001426,VEH-008566,SALES-010,Trade-In Appraisal,2026-08-21T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001176,CUST-001427,VEH-008525,SALES-011,Test Drive,2026-10-04T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001177,CUST-001428,VEH-007281,SALES-012,Trade-In Appraisal,2026-09-30T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001178,CUST-001430,VEH-006725,SALES-014,Test Drive,2026-10-21T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001179,CUST-001433,VEH-008307,SALES-017,Test Drive,2026-08-17T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001180,CUST-001434,VEH-005626,SALES-018,Consultation,2026-09-15T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001181,CUST-001435,VEH-004864,SALES-019,Test Drive,2026-08-28T12:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001182,CUST-001436,VEH-003738,SALES-020,Test Drive,2026-10-13T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001183,CUST-001437,VEH-006508,SALES-021,Consultation,2026-10-06T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001184,CUST-001438,VEH-006091,SALES-022,Test Drive,2026-08-11T17:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001185,CUST-001439,VEH-001254,SALES-023,Test Drive,2026-08-10T12:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001186,CUST-001440,VEH-005506,SALES-024,Test Drive,2026-09-22T13:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001187,CUST-001441,VEH-000251,SALES-001,Test Drive,2026-09-03T16:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001188,CUST-001442,VEH-003405,SALES-002,Trade-In Appraisal,2026-10-11T17:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001189,CUST-001443,VEH-004494,SALES-003,Consultation,2026-08-08T15:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001190,CUST-001444,VEH-004434,SALES-004,Trade-In Appraisal,2026-10-17T15:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001191,CUST-001445,VEH-003964,SALES-005,Test Drive,2026-08-25T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001192,CUST-001446,VEH-008541,SALES-006,Test Drive,2026-09-27T19:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001193,CUST-001447,VEH-003020,SALES-007,Test Drive,2026-10-05T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001194,CUST-001448,VEH-007920,SALES-008,Test Drive,2026-07-31T18:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001195,CUST-001449,VEH-003554,SALES-009,Test Drive,2026-08-22T13:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001196,CUST-001451,VEH-002952,SALES-011,Test Drive,2026-09-02T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001197,CUST-001452,VEH-007600,SALES-012,Test Drive,2026-07-26T14:00:00+00:00,45,Completed,Synthetic demo appointment.
+APPT-001198,CUST-001453,VEH-009867,SALES-013,Consultation,2026-09-27T18:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001199,CUST-001454,VEH-008374,SALES-014,Consultation,2026-09-14T14:00:00+00:00,45,Scheduled,Synthetic demo appointment.
+APPT-001200,CUST-001455,VEH-008886,SALES-015,Test Drive,2026-08-22T15:00:00+00:00,45,Completed,Synthetic demo appointment.

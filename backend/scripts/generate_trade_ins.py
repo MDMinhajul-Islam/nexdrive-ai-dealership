@@ -1,1 +1,6 @@
-"""Generate synthetic trade-in data (implementation reserved for its milestone)."""
+"""Generate all related deterministic business seeds (including trade-ins)."""
+
+from generate_business_data import main
+
+if __name__ == "__main__":
+    raise SystemExit(main())
