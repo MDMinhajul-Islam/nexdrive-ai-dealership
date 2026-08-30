@@ -32,6 +32,16 @@ def create_or_update_lead(request: LeadUpsertRequest, client: Any) -> LeadRespon
     try:
         if not client.table("customers").select("customer_id").eq("customer_id", request.customer_id).limit(1).execute().data:
             raise BusinessNotFoundError("Customer not found")
+
+        if request.vehicle_interest and not client.table("vehicles").select("vehicle_id").eq("vehicle_id", request.vehicle_interest).limit(1).execute().data:
+            raise BusinessNotFoundError("Vehicle not found")
+
+        salesperson = client.table("salespeople").select("salesperson_id,active").eq("salesperson_id", request.assigned_salesperson).limit(1).execute().data
+        if not salesperson:
+            raise BusinessNotFoundError("Salesperson not found")
+        if not salesperson[0]["active"]:
+            raise BusinessConflictError("Salesperson is unavailable")
+
         score, temperature = score_lead(request)
         existing = client.table("leads").select("*").eq("customer_id", request.customer_id).not_.in_("lead_status", ["Won", "Lost"]).order("updated_at", desc=True).limit(1).execute().data
         payload = request.model_dump()

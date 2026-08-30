@@ -2,10 +2,12 @@
 
 from datetime import date, time
 from typing import Any, Literal
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class LeadUpsertRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     customer_id: str = Field(pattern=r"^CUST-[0-9]{6}$")
     source: Literal["Website", "Inbound Call", "Paid Search", "Referral", "Social Media", "Walk-In", "Vehicle Marketplace"] = "Inbound Call"
     budget: int = Field(ge=3000, le=100000)
