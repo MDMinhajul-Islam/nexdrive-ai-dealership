@@ -27,22 +27,36 @@ def summary(db:Client=Depends(client)):
  except Exception: raise HTTPException(503,"Dashboard summary unavailable") from None
 
 @router.get("/inventory")
-def inventory(q:str|None=None,status:str|None=None,limit:int=Query(50,ge=1,le=200),db:Client=Depends(client)):
- query=db.table("vehicles").select("vehicle_id,make,model,year,trim,condition,sale_price,vehicle_status,dealership_location").order("vehicle_id").limit(limit)
+def inventory(q:str|None=Query(None,max_length=80),status:str|None=None,condition:str|None=None,body_type:str|None=None,location:str|None=None,limit:int=Query(50,ge=1,le=200),db:Client=Depends(client)):
+ query=db.table("vehicles").select("vehicle_id,make,model,year,trim,body_type,condition,fuel_type,drivetrain,sale_price,vehicle_status,dealership_location").order("vehicle_id").limit(limit)
  if status: query=query.eq("vehicle_status",status)
- if q: query=query.or_(f"make.ilike.%{q}%,model.ilike.%{q}%,stock_number.ilike.%{q}%")
+ if condition: query=query.eq("condition",condition)
+ if body_type: query=query.eq("body_type",body_type)
+ if location: query=query.eq("dealership_location",location)
+ if q:
+  term="".join(char for char in q.strip() if char.isalnum() or char in " -_")
+  if term: query=query.or_(f"make.ilike.%{term}%,model.ilike.%{term}%,trim.ilike.%{term}%,stock_number.ilike.%{term}%,vehicle_id.ilike.%{term}%")
  return run(query)
 
 @router.get("/leads")
-def leads(status:str|None=None,limit:int=Query(50,ge=1,le=200),db:Client=Depends(client)):
- query=db.table("leads").select("lead_id,customer_id,lead_status,budget,lead_score,lead_temperature,vehicle_interest,assigned_salesperson,next_followup_date").order("created_at",desc=True).limit(limit)
+def leads(q:str|None=Query(None,max_length=80),status:str|None=None,temperature:str|None=None,source:str|None=None,limit:int=Query(50,ge=1,le=200),db:Client=Depends(client)):
+ query=db.table("leads").select("lead_id,customer_id,lead_status,budget,lead_score,lead_temperature,source,vehicle_interest,assigned_salesperson,next_followup_date").order("created_at",desc=True).limit(limit)
  if status: query=query.eq("lead_status",status)
+ if temperature: query=query.eq("lead_temperature",temperature)
+ if source: query=query.eq("source",source)
+ if q:
+  term="".join(char for char in q.strip() if char.isalnum() or char in " -_")
+  if term: query=query.or_(f"lead_id.ilike.%{term}%,customer_id.ilike.%{term}%,vehicle_interest.ilike.%{term}%")
  return run(query)
 
 @router.get("/appointments")
-def appointments(status:str|None=None,limit:int=Query(50,ge=1,le=200),db:Client=Depends(client)):
+def appointments(q:str|None=Query(None,max_length=80),status:str|None=None,appointment_date:str|None=None,limit:int=Query(50,ge=1,le=200),db:Client=Depends(client)):
  query=db.table("appointments").select("appointment_id,customer_id,vehicle_id,salesperson_id,appointment_date,appointment_time,appointment_type,status").order("appointment_date",desc=True).limit(limit)
  if status: query=query.eq("status",status)
+ if appointment_date: query=query.eq("appointment_date",appointment_date)
+ if q:
+  term="".join(char for char in q.strip() if char.isalnum() or char in " -_")
+  if term: query=query.or_(f"appointment_id.ilike.%{term}%,customer_id.ilike.%{term}%,vehicle_id.ilike.%{term}%,salesperson_id.ilike.%{term}%")
  return run(query)
 
 
@@ -115,16 +129,18 @@ def archive_inventory(vehicle_id:str,db:Client=Depends(client)):
 
 @router.get("/analytics")
 def analytics(db:Client=Depends(client)):
- try:
-  sessions=db.table("conversation_sessions").select("status,outcome,channel").limit(5000).execute().data or []
-  leads_data=db.table("leads").select("budget,source,lead_temperature,vehicle_interest").limit(5000).execute().data or []
-  appointments_data=db.table("appointments").select("status").limit(5000).execute().data or []
-  def tally(rows,key):
-   result={}
-   for row in rows: result[str(row.get(key) or "Unknown")]=result.get(str(row.get(key) or "Unknown"),0)+1
-   return result
-  return {"success":True,"source":"database","calls":{"total":len(sessions),"status":tally(sessions,"status"),"outcomes":tally(sessions,"outcome")},"leads":{"average_budget":round(sum(float(x.get("budget") or 0) for x in leads_data)/len(leads_data),2) if leads_data else 0,"temperature":tally(leads_data,"lead_temperature"),"sources":tally(leads_data,"source")},"appointments":tally(appointments_data,"status")}
- except Exception: raise HTTPException(503,"Analytics are unavailable until agent operations migration 10 is applied") from None
+ def safe_rows(table,columns,limit=5000):
+  try: return db.table(table).select(columns).limit(limit).execute().data or [],True
+  except Exception: return [],False
+ sessions,calls_ready=safe_rows("conversation_sessions","status,outcome,channel")
+ leads_data,leads_ready=safe_rows("leads","budget,source,lead_temperature,vehicle_interest")
+ appointments_data,appointments_ready=safe_rows("appointments","status")
+ if not leads_ready and not appointments_ready: raise HTTPException(503,"Core analytics data is unavailable")
+ def tally(rows,key):
+  result={}
+  for row in rows: result[str(row.get(key) or "Unknown")]=result.get(str(row.get(key) or "Unknown"),0)+1
+  return result
+ return {"success":True,"source":"database","generated_at":datetime.now(timezone.utc).isoformat(),"availability":{"voice_tracking":calls_ready,"leads":leads_ready,"appointments":appointments_ready},"calls":{"total":len(sessions),"status":tally(sessions,"status"),"outcomes":tally(sessions,"outcome")},"leads":{"total":len(leads_data),"average_budget":round(sum(float(x.get("budget") or 0) for x in leads_data)/len(leads_data),2) if leads_data else 0,"temperature":tally(leads_data,"lead_temperature"),"sources":tally(leads_data,"source")},"appointments":{"total":len(appointments_data),"status":tally(appointments_data,"status")}}
 
 
 @router.patch("/leads/{lead_id}")
