@@ -5,5 +5,4 @@ __pycache__/
 test-temp/
 tests/
 docs/
-scripts/
 *.pyc

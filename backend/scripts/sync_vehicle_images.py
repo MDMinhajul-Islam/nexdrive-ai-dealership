@@ -22,11 +22,25 @@ from app.database import get_supabase  # noqa: E402
 from app.utils.config import get_settings  # noqa: E402
 
 
-def combinations(scope: str) -> list[dict[str, str]]:
+def combinations_from_csv(scope: str) -> list[dict[str, str]]:
     with (ROOT / "database" / "seed" / "vehicles.csv").open(encoding="utf-8", newline="") as handle:
         rows = list(csv.DictReader(handle))
     fields = ("year", "make", "model") if scope == "year-model" else ("make", "model")
     unique = {tuple(row[field].strip() for field in fields) for row in rows}
+    return [dict(zip(fields, values, strict=True)) for values in sorted(unique)]
+
+
+def combinations_from_database(scope: str, db) -> list[dict[str, str]]:
+    fields = ("year", "make", "model") if scope == "year-model" else ("make", "model")
+    rows: list[dict] = []
+    offset = 0
+    while True:
+        batch = db.table("vehicles").select(",".join(fields)).range(offset, offset + 999).execute().data or []
+        rows.extend(batch)
+        if len(batch) < 1000:
+            break
+        offset += 1000
+    unique = {tuple(str(row[field]).strip() for field in fields) for row in rows}
     return [dict(zip(fields, values, strict=True)) for values in sorted(unique)]
 
 
@@ -51,15 +65,17 @@ def main() -> int:
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--delay", type=float, default=0.2, help="Seconds between provider calls")
     args = parser.parse_args()
-    items = combinations(args.scope)
-    print(f"IMAGE SYNC scope={args.scope} combinations={len(items)}")
     if args.dry_run:
+        items = combinations_from_csv(args.scope)
+        print(f"IMAGE SYNC scope={args.scope} combinations={len(items)}")
         return 0
 
     settings = get_settings()
     if not settings.carsxe_api_key:
         raise SystemExit("CARSXE_API_KEY is not configured")
     db = get_supabase()
+    items = combinations_from_database(args.scope, db)
+    print(f"IMAGE SYNC scope={args.scope} combinations={len(items)}")
     synced = missing = failed = 0
     with httpx.Client(timeout=25, follow_redirects=True) as client:
         for index, item in enumerate(items, 1):
