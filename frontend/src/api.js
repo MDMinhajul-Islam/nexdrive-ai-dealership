@@ -25,7 +25,11 @@ export async function api(path, options = {}, admin = false) {
   const response = await fetch(`${API}${path}`, { ...options, headers });
   const data = await response.json().catch(() => ({}));
   if (response.status === 401 && admin) clearSession();
-  if (!response.ok) throw new Error(data.detail || 'The request could not be completed.');
+  if (!response.ok) {
+    const error = new Error(data.detail || 'The request could not be completed.');
+    error.status = response.status;
+    throw error;
+  }
   return data;
 }
 export const money = value => value == null ? '—' : new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(value);

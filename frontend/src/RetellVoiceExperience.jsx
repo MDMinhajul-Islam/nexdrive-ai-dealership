@@ -7,7 +7,7 @@ const DEMO_CUSTOMER_ID = 'CUST-000005';
 const DEMO_SALESPERSON_ID = 'SP-001';
 const ACTIVE_STATES = new Set(['connecting', 'connected', 'agent-speaking']);
 const MICROPHONE_ERROR = 'Microphone access is required to talk with the AI sales assistant.';
-const SAFE_CONNECTION_ERROR = 'We could not connect you to the AI sales assistant. Please try again.';
+const SAFE_CONNECTION_ERROR = 'Unable to start the voice call. Please try again.';
 
 const STATUS_LABELS = {
   idle: 'Ready to talk',
@@ -139,6 +139,9 @@ export function RetellVoiceExperience({
     } catch (error) {
       if (!mounted.current) return;
       startInProgress.current = false;
+      if (import.meta.env.DEV && error?.status) {
+        console.warn('Retell create-web-call request failed', { status: error.status });
+      }
       const denied = await microphoneIsDenied(error);
       setErrorMessage(denied ? MICROPHONE_ERROR : SAFE_CONNECTION_ERROR);
       setCallState('error');
@@ -178,7 +181,7 @@ export function RetellVoiceExperience({
         <p>{helperText}</p>
         <div className="voice-controls">
           {canStart
-            ? <button className="gold voice-start" onClick={startCall}>Start Call</button>
+            ? <button className="gold voice-start" onClick={startCall}>{callState === 'error' ? 'Try Again' : 'Start Call'}</button>
             : callState === 'connecting'
               ? <button className="gold voice-start" disabled>Connecting...</button>
               : <>
