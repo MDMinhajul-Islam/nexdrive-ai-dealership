@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from supabase import Client
 
 from app.database import get_supabase
+from app.services.vehicle_images import attach_vehicle_images
 
 router = APIRouter(prefix="/api/public", tags=["Public Dealership"])
 
@@ -26,7 +27,8 @@ def inventory(
             if value: query = query.eq(field, value)
         if budget_max: query = query.lte("sale_price", budget_max)
         if q: query = query.or_(f"make.ilike.%{q}%,model.ilike.%{q}%,trim.ilike.%{q}%")
-        return {"success": True, "source": "database", "records": query.execute().data or []}
+        records = query.execute().data or []
+        return {"success": True, "source": "database", "records": attach_vehicle_images(db, records)}
     except Exception:
         raise HTTPException(503, "Inventory is temporarily unavailable") from None
 
@@ -37,6 +39,7 @@ def vehicle_detail(vehicle_id: str, db: Client = Depends(get_supabase)):
         rows = db.table("vehicles").select("*").eq("vehicle_id", vehicle_id).limit(1).execute().data
         if not rows: raise HTTPException(404, "Vehicle not found")
         features = db.table("vehicle_features").select("features(name,category)").eq("vehicle_id", vehicle_id).execute().data or []
-        return {"success": True, "source": "database", "vehicle": rows[0], "features": [item.get("features") for item in features if item.get("features")]}
+        vehicle = attach_vehicle_images(db, rows)[0]
+        return {"success": True, "source": "database", "vehicle": vehicle, "features": [item.get("features") for item in features if item.get("features")]}
     except HTTPException: raise
     except Exception: raise HTTPException(503, "Vehicle details are temporarily unavailable") from None

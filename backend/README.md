@@ -107,7 +107,18 @@ pytest
 
 ## Supabase import and deployment
 
-Run migrations `01` through `10`, then validate and repeatably upsert seed data:
+Run migrations `01` through `11`, then validate and repeatably upsert seed data. To add licensed
+representative make/model photography, configure `CARSXE_API_KEY` only in the backend environment
+and run the controlled sync after migration 11:
+
+```powershell
+python scripts/sync_vehicle_images.py --dry-run
+python scripts/sync_vehicle_images.py --scope model
+```
+
+The default sync performs 41 provider lookups for the current catalog. Use `--scope year-model`
+only when the API plan supports roughly 401 lookups. The public API never exposes the provider key
+and falls back to bundled body-type artwork if a licensed photo is unavailable.
 
 ```bash
 python scripts/validate_seed_compatibility.py

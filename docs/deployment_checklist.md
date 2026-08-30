@@ -1,6 +1,7 @@
 # Deployment checklist
 
-- Run schemas `01_vehicles.sql` through `10_agent_operations.sql` in order.
+- Run schemas `01_vehicles.sql` through `11_vehicle_images.sql` in order.
+- Configure backend-only `CARSXE_API_KEY`, then run `python scripts/sync_vehicle_images.py --scope model` once.
 - Run every dataset validator and `validate_seed_compatibility.py`.
 - Dry-run, then run `import_supabase.py`; verify table counts.
 - Configure backend `SUPABASE_URL`, publishable/secret keys, `CORS_ORIGINS`,
