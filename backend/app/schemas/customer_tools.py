@@ -25,6 +25,12 @@ class TestDriveSlotQuery(BaseModel):
     limit: int = Field(default=20, ge=1, le=50)
 
 
+class TestDriveSlotDiscoveryRequest(TestDriveSlotQuery):
+    """Retell request contract for vehicle-specific, read-only slot discovery."""
+
+    vehicle_id: str = Field(pattern=r"^VEH-[0-9]{6}$")
+
+
 class TestDriveSlot(BaseModel):
     salesperson_id: str
     salesperson_name: str

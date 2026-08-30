@@ -7,8 +7,19 @@ from fastapi import APIRouter, Depends, HTTPException, Path, Query, status
 
 from app.database import get_supabase
 from app.repositories.customer_tools import CustomerToolsRepository, SupabaseCustomerToolsRepository
-from app.schemas.customer_tools import CustomerHistoryResponse, TestDriveSlotQuery, TestDriveSlotsResponse
+from app.repositories.inventory import InventoryRepository, SupabaseInventoryRepository
+from app.schemas.customer_tools import (
+    CustomerHistoryResponse,
+    TestDriveSlotDiscoveryRequest,
+    TestDriveSlotQuery,
+    TestDriveSlotsResponse,
+)
 from app.services.customer_tools import CustomerNotFoundError, CustomerToolsUnavailableError, get_customer_history, get_test_drive_slots
+from app.services.inventory_tools import (
+    InventoryToolUnavailableError,
+    InventoryVehicleNotFoundError,
+    check_vehicle_availability,
+)
 
 router = APIRouter(prefix="/api/tools", tags=["Customer Tools"])
 CustomerId = Annotated[str, Path(pattern=r"^CUST-[0-9]{6}$")]
@@ -19,6 +30,15 @@ def get_customer_tools_repository() -> CustomerToolsRepository:
 
 
 Repository = Annotated[CustomerToolsRepository, Depends(get_customer_tools_repository)]
+
+
+def get_test_drive_inventory_repository() -> InventoryRepository:
+    return SupabaseInventoryRepository(client_factory=get_supabase)
+
+
+InventoryRepositoryDependency = Annotated[
+    InventoryRepository, Depends(get_test_drive_inventory_repository)
+]
 
 
 @router.get("/get-customer-history/{customer_id}", response_model=CustomerHistoryResponse)
@@ -38,9 +58,50 @@ def test_drive_slots_tool(
     salesperson_id: str | None = Query(None, pattern=r"^SP-[0-9]{3}$"),
     limit: int = Query(20, ge=1, le=50),
 ) -> TestDriveSlotsResponse:
+    return _test_drive_slots_response(
+        TestDriveSlotQuery(
+            start_date=start_date,
+            days=days,
+            salesperson_id=salesperson_id,
+            limit=limit,
+        ),
+        repository,
+    )
+
+
+def _test_drive_slots_response(
+    query: TestDriveSlotQuery, repository: CustomerToolsRepository
+) -> TestDriveSlotsResponse:
     try:
-        return get_test_drive_slots(TestDriveSlotQuery(
-            start_date=start_date, days=days, salesperson_id=salesperson_id, limit=limit,
-        ), repository)
+        return get_test_drive_slots(query, repository)
     except CustomerToolsUnavailableError:
         raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="Scheduling service unavailable") from None
+
+
+@router.post("/get-test-drive-slots", response_model=TestDriveSlotsResponse)
+def test_drive_slots_post_tool(
+    request: TestDriveSlotDiscoveryRequest,
+    repository: Repository,
+    inventory_repository: InventoryRepositoryDependency,
+) -> TestDriveSlotsResponse:
+    """Retell-friendly, read-only vehicle-specific test-drive slot discovery."""
+    try:
+        availability = check_vehicle_availability(
+            request.vehicle_id, inventory_repository
+        )
+    except InventoryVehicleNotFoundError:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Vehicle not found") from None
+    except InventoryToolUnavailableError:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="Inventory service unavailable") from None
+
+    if not availability.can_book_test_drive:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail={
+                "vehicle_id": availability.vehicle_id,
+                "vehicle_status": availability.vehicle_status,
+                "reason": availability.reason,
+            },
+        )
+
+    return _test_drive_slots_response(request, repository)

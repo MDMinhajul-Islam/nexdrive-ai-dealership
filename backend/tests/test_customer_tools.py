@@ -1,11 +1,18 @@
 from datetime import date
+from pathlib import Path
 
 from fastapi.testclient import TestClient
 
 from app.main import app
-from app.routes.customer_tools import get_customer_tools_repository
+from app.repositories.inventory import CsvInventoryRepository
+from app.routes import customer_tools as customer_tool_routes
+from app.routes.customer_tools import (
+    get_customer_tools_repository,
+    get_test_drive_inventory_repository,
+)
 from app.schemas.customer_tools import TestDriveSlotQuery as SlotQuery
 from app.services.customer_tools import get_customer_history, get_test_drive_slots
+from app.services.inventory_tools import InventoryToolUnavailableError
 
 
 class FakeRepository:
@@ -62,5 +69,76 @@ def test_customer_tool_routes():
         })
         assert slots.status_code == 200
         assert slots.json()["count"] == 2
+    finally:
+        app.dependency_overrides.clear()
+
+
+def test_test_drive_slots_post_route_uses_authoritative_vehicle_and_slots():
+    inventory = CsvInventoryRepository(Path(__file__).parent / "fixtures" / "inventory")
+    app.dependency_overrides[get_customer_tools_repository] = FakeRepository
+    app.dependency_overrides[get_test_drive_inventory_repository] = lambda: inventory
+    try:
+        client = TestClient(app)
+        get_response = client.get("/api/tools/get-test-drive-slots", params={
+            "start_date": "2026-08-25", "days": 1, "salesperson_id": "SP-001",
+        })
+        response = client.post("/api/tools/get-test-drive-slots", json={
+            "vehicle_id": "VEH-000001", "start_date": "2026-08-25",
+            "days": 1, "salesperson_id": "SP-001",
+        })
+        assert response.status_code == 200
+        assert response.json() == get_response.json()
+        assert response.json()["count"] == 2
+
+        ineligible = client.post("/api/tools/get-test-drive-slots", json={
+            "vehicle_id": "VEH-000002", "start_date": "2026-08-25",
+        })
+        assert ineligible.status_code == 409
+        assert ineligible.json()["detail"]["vehicle_status"] == "Sold"
+        assert "cannot be recommended" in ineligible.json()["detail"]["reason"]
+    finally:
+        app.dependency_overrides.clear()
+
+
+def test_test_drive_slots_post_route_rejects_invalid_or_missing_input():
+    client = TestClient(app)
+    invalid_vehicle = client.post("/api/tools/get-test-drive-slots", json={
+        "vehicle_id": "bad-id", "start_date": "2026-08-25",
+    })
+    assert invalid_vehicle.status_code == 422
+
+    missing_vehicle = client.post("/api/tools/get-test-drive-slots", json={
+        "start_date": "2026-08-25",
+    })
+    assert missing_vehicle.status_code == 422
+
+    invalid_date = client.post("/api/tools/get-test-drive-slots", json={
+        "vehicle_id": "VEH-000001", "start_date": "not-a-date",
+    })
+    assert invalid_date.status_code == 422
+
+
+def test_test_drive_slots_post_route_returns_not_found_and_safe_service_errors(monkeypatch):
+    inventory = CsvInventoryRepository(Path(__file__).parent / "fixtures" / "inventory")
+    app.dependency_overrides[get_customer_tools_repository] = FakeRepository
+    app.dependency_overrides[get_test_drive_inventory_repository] = lambda: inventory
+    try:
+        client = TestClient(app)
+        not_found = client.post("/api/tools/get-test-drive-slots", json={
+            "vehicle_id": "VEH-999999", "start_date": "2026-08-25",
+        })
+        assert not_found.status_code == 404
+        assert not_found.json() == {"detail": "Vehicle not found"}
+
+        def unavailable(*_args):
+            raise InventoryToolUnavailableError("provider details must stay private")
+
+        monkeypatch.setattr(customer_tool_routes, "check_vehicle_availability", unavailable)
+        failed = client.post("/api/tools/get-test-drive-slots", json={
+            "vehicle_id": "VEH-000001", "start_date": "2026-08-25",
+        })
+        assert failed.status_code == 503
+        assert failed.json() == {"detail": "Inventory service unavailable"}
+        assert "provider details" not in failed.text
     finally:
         app.dependency_overrides.clear()
