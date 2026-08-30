@@ -10,7 +10,7 @@ class Query:
  def limit(self,*_a,**_k): return self
  def eq(self,key,value): self.filters.append((key,value)); return self
  def or_(self,value): self.filters.append(("or",value)); return self
- def execute(self): return SimpleNamespace(data=[{"vehicle_id":"VEH-000001","vehicle_status":"Available"}])
+ def execute(self): return SimpleNamespace(data=[{"vehicle_id":"VEH-000001","vehicle_status":"Available"}],count=10)
 class Client:
  def __init__(self): self.query=Query()
  def table(self,_name): return self.query
@@ -28,4 +28,13 @@ def test_admin_inventory_is_database_backed_and_filterable():
 def test_admin_limits_are_validated():
  app.dependency_overrides[admin_client]=Client
  try: assert TestClient(app).get("/api/admin/leads?limit=500").status_code==422
+ finally: app.dependency_overrides.clear()
+
+def test_admin_summary_returns_operational_counts():
+ app.dependency_overrides[admin_client]=Client
+ try:
+  response=TestClient(app).get("/api/admin/summary")
+  assert response.status_code==200
+  assert response.json()["vehicles"]==10
+  assert response.json()["available_vehicles"]==10
  finally: app.dependency_overrides.clear()
