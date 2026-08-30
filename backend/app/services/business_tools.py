@@ -15,6 +15,62 @@ class BusinessConflictError(RuntimeError): pass
 class BusinessNotFoundError(RuntimeError): pass
 
 
+class ExistingAppointmentConflictError(BusinessConflictError):
+    def __init__(self, message: str, appointment: dict[str, Any]):
+        super().__init__(message)
+        self.details = {
+            "message": message,
+            "requested_booking_created": False,
+            "existing_appointment": {
+                key: appointment.get(key)
+                for key in (
+                    "appointment_id",
+                    "lead_id",
+                    "vehicle_id",
+                    "salesperson_id",
+                    "appointment_date",
+                    "appointment_time",
+                    "status",
+                )
+            },
+        }
+
+
+ACTIVE_APPOINTMENT_STATUSES = {"Requested", "Confirmed", "Rescheduled"}
+
+
+def _canonical_date(value: Any) -> str:
+    return value.isoformat() if isinstance(value, date) else str(value)[:10]
+
+
+def _canonical_time(value: Any) -> str:
+    return value.strftime("%H:%M:%S") if hasattr(value, "strftime") else str(value)[:8]
+
+
+def _is_exact_active_booking(appointment: dict[str, Any], request: BookingRequest) -> bool:
+    return (
+        _is_active_future_booking(appointment)
+        and appointment.get("lead_id") == request.lead_id
+        and appointment.get("customer_id") == request.customer_id
+        and appointment.get("vehicle_id") == request.vehicle_id
+        and appointment.get("salesperson_id") == request.salesperson_id
+        and _canonical_date(appointment.get("appointment_date")) == request.appointment_date.isoformat()
+        and _canonical_time(appointment.get("appointment_time")) == request.appointment_time.strftime("%H:%M:%S")
+    )
+
+
+def _is_active_future_booking(appointment: dict[str, Any]) -> bool:
+    if (
+        appointment.get("appointment_type") != "Test Drive"
+        or appointment.get("status") not in ACTIVE_APPOINTMENT_STATUSES
+    ):
+        return False
+    try:
+        return date.fromisoformat(_canonical_date(appointment.get("appointment_date"))) >= date.today()
+    except ValueError:
+        return False
+
+
 def classify_lead_score(score: int) -> str:
     return "Hot" if score >= 70 else "Warm" if score >= 40 else "Cold"
 
@@ -79,7 +135,17 @@ def create_test_drive(request: BookingRequest, client: Any) -> BookingResponse:
     try:
         existing = client.table("appointments").select("*").eq("lead_id", request.lead_id).limit(1).execute().data
         if existing:
-            return BookingResponse(created=False, appointment=existing[0])
+            appointment = existing[0]
+            if _is_exact_active_booking(appointment, request):
+                return BookingResponse(created=False, appointment=appointment)
+            if _is_active_future_booking(appointment):
+                message = "This lead already has a different active test-drive appointment."
+            else:
+                message = (
+                    "This lead already has an appointment that cannot be treated as "
+                    "an exact duplicate or replaced automatically."
+                )
+            raise ExistingAppointmentConflictError(message, appointment)
 
         lead = client.table("leads").select("lead_id,customer_id").eq("lead_id", request.lead_id).limit(1).execute().data
         if not lead:

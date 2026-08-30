@@ -16,6 +16,8 @@ def get_business_client() -> Client:
 def _error(exc: Exception) -> HTTPException:
     if isinstance(exc, BusinessNotFoundError):
         return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
+    if isinstance(exc, ExistingAppointmentConflictError):
+        return HTTPException(status_code=status.HTTP_409_CONFLICT, detail=exc.details)
     if isinstance(exc, BusinessConflictError):
         return HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc))
     return HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="Business tool unavailable")

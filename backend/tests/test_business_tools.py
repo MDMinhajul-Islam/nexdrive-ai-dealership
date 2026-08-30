@@ -19,6 +19,7 @@ from app.services.business_tools import (
     BusinessConflictError,
     BusinessNotFoundError,
     BusinessToolError,
+    ExistingAppointmentConflictError,
     classify_lead_score,
     create_or_update_lead,
     create_test_drive,
@@ -69,11 +70,27 @@ def booking_request(**changes):
         "customer_id": "CUST-000001",
         "vehicle_id": "VEH-000001",
         "salesperson_id": "SP-001",
-        "appointment_date": "2026-08-26",
+        "appointment_date": "2026-09-02",
         "appointment_time": "09:00",
     }
     values.update(changes)
     return BookingRequest(**values)
+
+
+def persisted_appointment(**changes):
+    values = {
+        "appointment_id": "APT-000001",
+        "lead_id": "LEAD-000001",
+        "customer_id": "CUST-000001",
+        "vehicle_id": "VEH-000001",
+        "salesperson_id": "SP-001",
+        "appointment_date": "2026-09-02",
+        "appointment_time": "09:00:00",
+        "appointment_type": "Test Drive",
+        "status": "Confirmed",
+    }
+    values.update(changes)
+    return values
 
 
 def booking_success_results():
@@ -85,7 +102,7 @@ def booking_success_results():
         [{"working_days": ["Wednesday"], "shift_start": "09:00:00", "shift_end": "17:00:00", "active": True}],
         [],
         [],
-        [{"appointment_id": "APT-000001", "lead_id": "LEAD-000001", "status": "Confirmed"}],
+        [persisted_appointment()],
     ]
 
 
@@ -257,16 +274,61 @@ def test_lead_route_rejects_invalid_and_missing_input_before_writes():
         app.dependency_overrides.clear()
 
 
-def test_booking_retry_returns_existing_appointment():
-    client = MagicMock()
-    existing = {"appointment_id": "APT-000001", "lead_id": "LEAD-000001", "status": "Confirmed"}
-    client.table.return_value.select.return_value.eq.return_value.limit.return_value.execute.return_value = SimpleNamespace(data=[existing])
-    result = create_test_drive(BookingRequest(
-        lead_id="LEAD-000001", customer_id="CUST-000001", vehicle_id="VEH-000001",
-        salesperson_id="SP-001", appointment_date="2026-08-26", appointment_time="09:00",
-    ), client)
-    assert result.created is False
-    assert result.appointment["appointment_id"] == "APT-000001"
+def test_booking_exact_retry_returns_same_persisted_appointment():
+    first = create_test_drive(booking_request(), BookingClient(booking_success_results()))
+    retry_client = BookingClient([[first.appointment]])
+
+    second = create_test_drive(booking_request(), retry_client)
+
+    assert first.created is True
+    assert second.created is False
+    assert first.appointment["appointment_id"] == second.appointment["appointment_id"]
+    assert retry_client.tables == ["appointments"]
+
+
+@pytest.mark.parametrize(
+    "changes",
+    [
+        {"appointment_time": "10:00"},
+        {"appointment_date": "2026-09-03"},
+        {"vehicle_id": "VEH-000002"},
+        {"salesperson_id": "SP-002"},
+    ],
+)
+def test_booking_same_lead_different_active_request_is_not_a_duplicate(changes):
+    with pytest.raises(
+        ExistingAppointmentConflictError,
+        match="different active test-drive appointment",
+    ) as error:
+        create_test_drive(booking_request(**changes), BookingClient([[persisted_appointment()]]))
+
+    assert error.value.details["requested_booking_created"] is False
+    assert error.value.details["existing_appointment"]["appointment_id"] == "APT-000001"
+
+
+@pytest.mark.parametrize("status", ["Cancelled", "Completed", "No Show"])
+def test_booking_inactive_appointment_is_not_treated_as_exact_duplicate(status):
+    with pytest.raises(
+        ExistingAppointmentConflictError,
+        match="cannot be treated as an exact duplicate",
+    ):
+        create_test_drive(
+            booking_request(),
+            BookingClient([[persisted_appointment(status=status)]]),
+        )
+
+
+def test_booking_past_appointment_is_not_treated_as_exact_duplicate():
+    with pytest.raises(
+        ExistingAppointmentConflictError,
+        match="cannot be treated as an exact duplicate",
+    ):
+        create_test_drive(
+            booking_request(appointment_date="2026-08-01"),
+            BookingClient([[
+                persisted_appointment(appointment_date="2026-08-01")
+            ]]),
+        )
 
 
 def test_booking_persists_only_after_authoritative_checks_pass():
@@ -285,7 +347,7 @@ def test_booking_persists_only_after_authoritative_checks_pass():
     assert payload == {
         "lead_id": "LEAD-000001", "customer_id": "CUST-000001",
         "vehicle_id": "VEH-000001", "salesperson_id": "SP-001",
-        "appointment_date": "2026-08-26", "appointment_time": "09:00:00",
+        "appointment_date": "2026-09-02", "appointment_time": "09:00:00",
         "notes": "Retell booking", "appointment_id": "APT-000001",
         "appointment_type": "Test Drive", "status": "Confirmed",
         "created_by": "Voice Agent", "created_at": payload["created_at"],
@@ -331,6 +393,38 @@ def test_booking_database_failure_is_sanitized_by_route(monkeypatch):
         assert response.status_code == 503
         assert response.json() == {"detail": "Business tool unavailable"}
         assert "provider details" not in response.text
+    finally:
+        app.dependency_overrides.clear()
+
+
+def test_booking_route_returns_structured_conflict_for_different_active_appointment(monkeypatch):
+    existing = persisted_appointment()
+
+    def conflict(*_args):
+        raise ExistingAppointmentConflictError(
+            "This lead already has a different active test-drive appointment.",
+            existing,
+        )
+
+    app.dependency_overrides[get_business_client] = lambda: MagicMock()
+    monkeypatch.setattr(business_tool_routes, "create_test_drive", conflict)
+    try:
+        response = TestClient(app).post(
+            "/api/tools/create-test-drive",
+            json=booking_request(appointment_time="10:00").model_dump(mode="json"),
+        )
+        assert response.status_code == 409
+        assert response.json()["detail"] == {
+            "message": "This lead already has a different active test-drive appointment.",
+            "requested_booking_created": False,
+            "existing_appointment": {
+                key: existing.get(key)
+                for key in (
+                    "appointment_id", "lead_id", "vehicle_id", "salesperson_id",
+                    "appointment_date", "appointment_time", "status",
+                )
+            },
+        }
     finally:
         app.dependency_overrides.clear()
 
