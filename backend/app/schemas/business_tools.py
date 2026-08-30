@@ -15,6 +15,7 @@ class LeadUpsertRequest(BaseModel):
     purchase_timeline: Literal["Within 7 Days", "Within 30 Days", "1-3 Months", "3-6 Months", "Researching"]
     financing_needed: bool
     trade_in: bool
+    test_drive_requested: bool = False
     assigned_salesperson: str = Field(pattern=r"^SP-[0-9]{3}$")
     notes: str = Field(default="", max_length=1000)
 

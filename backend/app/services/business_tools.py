@@ -15,11 +15,25 @@ class BusinessConflictError(RuntimeError): pass
 class BusinessNotFoundError(RuntimeError): pass
 
 
+def classify_lead_score(score: int) -> str:
+    return "Hot" if score >= 70 else "Warm" if score >= 40 else "Cold"
+
+
 def score_lead(request: LeadUpsertRequest) -> tuple[int, str]:
-    timeline = {"Within 7 Days": 45, "Within 30 Days": 35, "1-3 Months": 25, "3-6 Months": 15, "Researching": 5}
-    score = timeline[request.purchase_timeline] + (20 if request.vehicle_interest else 0) + (10 if request.trade_in else 0) + (10 if request.financing_needed else 5) + min(15, request.budget // 10000)
+    timeline_points = {
+        "Within 7 Days": 30,
+        "Within 30 Days": 20,
+    }.get(request.purchase_timeline, 0)
+    score = (
+        timeline_points
+        + 15  # A validated, clearly established budget is required by the schema.
+        + (15 if request.vehicle_interest else 0)
+        + (20 if request.test_drive_requested else 0)
+        + (10 if request.financing_needed else 0)
+        + (5 if request.trade_in else 0)
+    )
     score = min(100, score)
-    return score, "Hot" if score >= 70 else "Warm" if score >= 40 else "Cold"
+    return score, classify_lead_score(score)
 
 
 def _next_id(client: Any, table: str, field: str, prefix: str) -> str:
@@ -44,7 +58,8 @@ def create_or_update_lead(request: LeadUpsertRequest, client: Any) -> LeadRespon
 
         score, temperature = score_lead(request)
         existing = client.table("leads").select("*").eq("customer_id", request.customer_id).not_.in_("lead_status", ["Won", "Lost"]).order("updated_at", desc=True).limit(1).execute().data
-        payload = request.model_dump()
+        # test_drive_requested is a scoring signal, not a column in public.leads.
+        payload = request.model_dump(exclude={"test_drive_requested"})
         payload.update({"lead_score": score, "lead_temperature": temperature, "updated_at": datetime.utcnow().isoformat(), "next_followup_date": date.today().isoformat()})
         if existing:
             lead_id = existing[0]["lead_id"]

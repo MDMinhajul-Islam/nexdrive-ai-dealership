@@ -19,6 +19,7 @@ from app.services.business_tools import (
     BusinessConflictError,
     BusinessNotFoundError,
     BusinessToolError,
+    classify_lead_score,
     create_or_update_lead,
     create_test_drive,
     estimate_financing,
@@ -91,6 +92,7 @@ def booking_success_results():
 def lead_request(**changes):
     values = dict(customer_id="CUST-000001", budget=30000, vehicle_interest="VEH-000001",
                   purchase_timeline="Within 7 Days", financing_needed=True, trade_in=True,
+                  test_drive_requested=True,
                   assigned_salesperson="SP-001")
     values.update(changes)
     return LeadUpsertRequest(**values)
@@ -105,38 +107,33 @@ def lead_create_results():
         [],
         [{
             "lead_id": "LEAD-000001", "lead_status": "New",
-            "lead_score": 88, "lead_temperature": "Hot",
+            "lead_score": 95, "lead_temperature": "Hot",
         }],
     ]
 
 
-def test_lead_scoring_is_deterministic_and_bucketed():
-    hot_score, hot = score_lead(lead_request())
-    cold_score, cold = score_lead(lead_request(
-        vehicle_interest=None, purchase_timeline="Researching", financing_needed=False,
-        trade_in=False, budget=3000,
+def test_lead_scoring_matches_assignment_examples():
+    example_a = score_lead(lead_request())
+    example_b = score_lead(lead_request(
+        purchase_timeline="Within 30 Days", vehicle_interest=None,
+        test_drive_requested=False, financing_needed=False, trade_in=False,
     ))
-    assert hot_score >= 70 and hot == "Hot"
-    assert cold_score <= 39 and cold == "Cold"
-
-
-def test_lead_scoring_classifies_exact_cold_warm_and_hot_boundaries():
-    cold_score, cold = score_lead(lead_request(
-        vehicle_interest=None, purchase_timeline="1-3 Months",
-        financing_needed=False, trade_in=False, budget=90_000,
-    ))
-    warm_score, warm = score_lead(lead_request(
-        vehicle_interest=None, purchase_timeline="Within 30 Days",
-        financing_needed=False, trade_in=False, budget=3_000,
-    ))
-    hot_score, hot = score_lead(lead_request(
-        vehicle_interest="VEH-000001", purchase_timeline="Within 7 Days",
-        financing_needed=False, trade_in=False, budget=3_000,
+    example_c = score_lead(lead_request(
+        purchase_timeline="Researching", vehicle_interest="VEH-000001",
+        test_drive_requested=True, financing_needed=False, trade_in=False,
     ))
 
-    assert (cold_score, cold) == (39, "Cold")
-    assert (warm_score, warm) == (40, "Warm")
-    assert (hot_score, hot) == (70, "Hot")
+    assert example_a == (95, "Hot")
+    assert example_b == (35, "Cold")
+    assert example_c == (50, "Warm")
+
+
+@pytest.mark.parametrize(
+    ("score", "temperature"),
+    [(39, "Cold"), (40, "Warm"), (69, "Warm"), (70, "Hot"), (100, "Hot")],
+)
+def test_lead_temperature_boundaries(score, temperature):
+    assert classify_lead_score(score) == temperature
 
 
 def test_lead_create_persists_backend_calculated_score_and_temperature():
@@ -150,8 +147,9 @@ def test_lead_create_persists_backend_calculated_score_and_temperature():
         "customers", "vehicles", "salespeople", "leads", "leads", "leads",
     ]
     payload = client.insert_payloads[0]
-    assert payload["lead_score"] == 88
+    assert payload["lead_score"] == 95
     assert payload["lead_temperature"] == "Hot"
+    assert "test_drive_requested" not in payload
     assert payload["lead_status"] == "New"
     assert payload["next_followup_date"]
     assert "created_at" in payload and "updated_at" in payload
@@ -159,7 +157,7 @@ def test_lead_create_persists_backend_calculated_score_and_temperature():
 
 def test_lead_update_uses_existing_active_customer_lead_without_duplicate_insert():
     existing = {"lead_id": "LEAD-000123", "lead_status": "Qualified"}
-    updated = {"lead_id": "LEAD-000123", "lead_score": 88, "lead_temperature": "Hot"}
+    updated = {"lead_id": "LEAD-000123", "lead_score": 95, "lead_temperature": "Hot"}
     client = BookingClient([
         [{"customer_id": "CUST-000001"}],
         [{"vehicle_id": "VEH-000001"}],
@@ -173,8 +171,9 @@ def test_lead_update_uses_existing_active_customer_lead_without_duplicate_insert
     assert result.created is False
     assert result.lead == updated
     assert client.insert_payloads == []
-    assert client.update_payloads[0]["lead_score"] == 88
+    assert client.update_payloads[0]["lead_score"] == 95
     assert client.update_payloads[0]["lead_temperature"] == "Hot"
+    assert "test_drive_requested" not in client.update_payloads[0]
 
 
 @pytest.mark.parametrize(
@@ -225,7 +224,7 @@ def test_lead_database_failure_is_sanitized_by_route(monkeypatch):
 
 
 def test_lead_route_returns_authoritative_persisted_response(monkeypatch):
-    lead = {"lead_id": "LEAD-000001", "lead_status": "New", "lead_score": 88, "lead_temperature": "Hot"}
+    lead = {"lead_id": "LEAD-000001", "lead_status": "New", "lead_score": 95, "lead_temperature": "Hot"}
     app.dependency_overrides[get_business_client] = lambda: MagicMock()
     monkeypatch.setattr(
         business_tool_routes,
