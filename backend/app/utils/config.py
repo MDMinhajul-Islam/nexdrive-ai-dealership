@@ -20,6 +20,8 @@ class Settings(BaseSettings):
     cors_origins: str = "http://localhost:5173"
     admin_auth_required: bool = False
     admin_emails: str = ""
+    # Server-only credential used by the controlled vehicle-image sync job.
+    carsxe_api_key: str = ""
 
     model_config = SettingsConfigDict(
         env_file=BACKEND_DIR / ".env",

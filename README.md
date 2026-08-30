@@ -98,7 +98,7 @@ cd backend; pytest
 cd ../frontend; npm install; npm run lint; npm run build
 ```
 
-Run database migrations in filename order (`01`–`10`). RLS denies direct browser access; only the
+Run database migrations in filename order (`01`–`11`). RLS denies direct browser access; only the
 trusted FastAPI backend uses the Supabase secret/service-role key. Never commit `.env` files.
 
 All people, contact details, vehicle identifiers, and business records in this project must be synthetic.
