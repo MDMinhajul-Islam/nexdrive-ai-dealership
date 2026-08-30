@@ -46,6 +46,15 @@ def _vehicle_details_response(vehicle_id: str, repository: InventoryRepository) 
         raise _safe_error(exc) from None
 
 
+def _vehicle_availability_response(vehicle_id: str, repository: InventoryRepository) -> VehicleAvailabilityResponse:
+    try:
+        return VehicleAvailabilityResponse(
+            availability=check_vehicle_availability(vehicle_id, repository)
+        )
+    except (InventoryVehicleNotFoundError, InventoryToolUnavailableError) as exc:
+        raise _safe_error(exc) from None
+
+
 @router.post("/search-inventory", response_model=InventorySearchResponse, summary="Search authoritative available inventory")
 def search_inventory_tool(filters: InventorySearchFilters, repository: Repository) -> InventorySearchResponse:
     try:
@@ -73,7 +82,10 @@ def get_vehicle_details_post_tool(request: VehicleDetailsRequest, repository: Re
 
 @router.get("/check-vehicle-availability/{vehicle_id}", response_model=VehicleAvailabilityResponse, summary="Check current vehicle availability")
 def check_vehicle_availability_tool(vehicle_id: VehicleId, repository: Repository) -> VehicleAvailabilityResponse:
-    try:
-        return VehicleAvailabilityResponse(availability=check_vehicle_availability(vehicle_id, repository))
-    except (InventoryVehicleNotFoundError, InventoryToolUnavailableError) as exc:
-        raise _safe_error(exc) from None
+    return _vehicle_availability_response(vehicle_id, repository)
+
+
+@router.post("/check-vehicle-availability", response_model=VehicleAvailabilityResponse, summary="Check vehicle availability by JSON body")
+def check_vehicle_availability_post_tool(request: VehicleDetailsRequest, repository: Repository) -> VehicleAvailabilityResponse:
+    """Retell-friendly alias for clients that send vehicle_id in a JSON body."""
+    return _vehicle_availability_response(request.vehicle_id, repository)

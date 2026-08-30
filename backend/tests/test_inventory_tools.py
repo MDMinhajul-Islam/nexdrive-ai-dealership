@@ -70,6 +70,12 @@ def test_tool_routes_use_repository_dependency(repository) -> None:
         availability = client.get("/api/tools/check-vehicle-availability/VEH-000002")
         assert availability.status_code == 200
         assert availability.json()["availability"]["can_book_test_drive"] is False
+
+        post_availability = client.post(
+            "/api/tools/check-vehicle-availability", json={"vehicle_id": "VEH-000002"}
+        )
+        assert post_availability.status_code == 200
+        assert post_availability.json() == availability.json()
     finally:
         app.dependency_overrides.clear()
 
@@ -142,5 +148,43 @@ def test_vehicle_details_query_route_returns_sanitized_database_error(monkeypatc
         assert post_response.status_code == 503
         assert post_response.json() == {"detail": "Inventory service unavailable"}
         assert "provider details" not in post_response.text
+    finally:
+        app.dependency_overrides.clear()
+
+
+def test_vehicle_availability_post_route_handles_not_found_and_invalid_input(repository) -> None:
+    app.dependency_overrides[get_inventory_repository] = lambda: repository
+    try:
+        client = TestClient(app)
+        not_found = client.post(
+            "/api/tools/check-vehicle-availability", json={"vehicle_id": "VEH-999999"}
+        )
+        assert not_found.status_code == 404
+        assert not_found.json() == {"detail": "Vehicle not found"}
+
+        invalid = client.post(
+            "/api/tools/check-vehicle-availability", json={"vehicle_id": "bad-id"}
+        )
+        assert invalid.status_code == 422
+
+        missing = client.post("/api/tools/check-vehicle-availability", json={})
+        assert missing.status_code == 422
+    finally:
+        app.dependency_overrides.clear()
+
+
+def test_vehicle_availability_post_route_returns_sanitized_database_error(monkeypatch, repository) -> None:
+    def unavailable(*_args):
+        raise InventoryToolUnavailableError("provider details must stay private")
+
+    app.dependency_overrides[get_inventory_repository] = lambda: repository
+    monkeypatch.setattr(inventory_tool_routes, "check_vehicle_availability", unavailable)
+    try:
+        response = TestClient(app).post(
+            "/api/tools/check-vehicle-availability", json={"vehicle_id": "VEH-000001"}
+        )
+        assert response.status_code == 503
+        assert response.json() == {"detail": "Inventory service unavailable"}
+        assert "provider details" not in response.text
     finally:
         app.dependency_overrides.clear()
