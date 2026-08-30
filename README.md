@@ -76,6 +76,21 @@ Use `--seed` and `--count` to create a reproducible alternative dataset. Run eit
 - `backend/app`: FastAPI application, routes, services, schemas, and utilities
 - `backend/scripts`: deterministic data generators and validation tools
 - `backend/docs`: backend architecture, ERD, testing, reports, and screenshots
-- `frontend`, `retell`: placeholders for future milestones
+- `frontend`: responsive React/Vite operations dashboard
+- `retell`: voice-agent prompt, tool contracts, confirmation and escalation rules
+- `docs`: architecture, tool reference, failure matrix, deployment and demo guides
+
+## Demo-readiness verification
+
+```powershell
+python backend/scripts/validate_seed_compatibility.py
+python backend/scripts/import_supabase.py --dry-run
+python backend/scripts/validate_retell_tools.py
+cd backend; pytest
+cd ../frontend; npm install; npm run lint; npm run build
+```
+
+Run database migrations in filename order (`01`–`09`). RLS denies direct browser access; only the
+trusted FastAPI backend uses the Supabase secret/service-role key. Never commit `.env` files.
 
 All people, contact details, vehicle identifiers, and business records in this project must be synthetic.

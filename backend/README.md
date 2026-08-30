@@ -104,3 +104,16 @@ remain under `database/`. The validation report is written to
 cd backend
 pytest
 ```
+
+## Supabase import and deployment
+
+Run migrations `01` through `09`, then validate and repeatably upsert seed data:
+
+```bash
+python scripts/validate_seed_compatibility.py
+python scripts/import_supabase.py --dry-run
+python scripts/import_supabase.py
+```
+
+Production can build from `backend/Dockerfile`. Configure secrets in the deployment platform,
+set `CORS_ORIGINS` to the dashboard origin, and verify both health endpoints before enabling Retell.

@@ -1,4 +1,5 @@
-# Frontend
+# NexDrive Admin Dashboard
 
-Reserved for the future client showcase. No frontend implementation is included in Milestone 1.
+Run `npm install`, copy `.env.example` to `.env`, then `npm run dev`. Set
+`VITE_API_BASE_URL` to the FastAPI origin. Views are read-only; writes remain confirmation-controlled tools.
 
