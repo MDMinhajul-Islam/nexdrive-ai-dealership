@@ -5,9 +5,14 @@ from fastapi.testclient import TestClient
 
 from app.main import app
 from app.repositories.inventory import CsvInventoryRepository
+from app.routes import inventory_tools as inventory_tool_routes
 from app.routes.inventory_tools import get_inventory_repository
 from app.schemas.inventory_tools import InventorySearchFilters
-from app.services.inventory_tools import check_vehicle_availability, search_inventory
+from app.services.inventory_tools import (
+    InventoryToolUnavailableError,
+    check_vehicle_availability,
+    search_inventory,
+)
 
 
 @pytest.fixture
@@ -50,6 +55,12 @@ def test_tool_routes_use_repository_dependency(repository) -> None:
         assert details.status_code == 200
         assert details.json()["vehicle"]["vehicle_id"] == "VEH-000001"
 
+        query_details = client.get(
+            "/api/tools/get-vehicle-details", params={"vehicle_id": "VEH-000001"}
+        )
+        assert query_details.status_code == 200
+        assert query_details.json() == details.json()
+
         availability = client.get("/api/tools/check-vehicle-availability/VEH-000002")
         assert availability.status_code == 200
         assert availability.json()["availability"]["can_book_test_drive"] is False
@@ -61,3 +72,41 @@ def test_search_contract_rejects_inverted_ranges() -> None:
     client = TestClient(app)
     response = client.post("/api/tools/search-inventory", json={"budget_min": 40000, "budget_max": 30000})
     assert response.status_code == 422
+
+
+def test_vehicle_details_query_route_handles_not_found_and_invalid_input(repository) -> None:
+    app.dependency_overrides[get_inventory_repository] = lambda: repository
+    try:
+        client = TestClient(app)
+        not_found = client.get(
+            "/api/tools/get-vehicle-details", params={"vehicle_id": "VEH-999999"}
+        )
+        assert not_found.status_code == 404
+        assert not_found.json() == {"detail": "Vehicle not found"}
+
+        invalid = client.get(
+            "/api/tools/get-vehicle-details", params={"vehicle_id": "bad-id"}
+        )
+        assert invalid.status_code == 422
+
+        missing = client.get("/api/tools/get-vehicle-details")
+        assert missing.status_code == 422
+    finally:
+        app.dependency_overrides.clear()
+
+
+def test_vehicle_details_query_route_returns_sanitized_database_error(monkeypatch, repository) -> None:
+    def unavailable(*_args):
+        raise InventoryToolUnavailableError("provider details must stay private")
+
+    app.dependency_overrides[get_inventory_repository] = lambda: repository
+    monkeypatch.setattr(inventory_tool_routes, "get_vehicle_details", unavailable)
+    try:
+        response = TestClient(app).get(
+            "/api/tools/get-vehicle-details", params={"vehicle_id": "VEH-000001"}
+        )
+        assert response.status_code == 503
+        assert response.json() == {"detail": "Inventory service unavailable"}
+        assert "provider details" not in response.text
+    finally:
+        app.dependency_overrides.clear()
