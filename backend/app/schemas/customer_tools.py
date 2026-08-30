@@ -3,7 +3,7 @@
 from datetime import date, time
 from typing import Any, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class CustomerHistory(BaseModel):
@@ -16,6 +16,12 @@ class CustomerHistoryResponse(BaseModel):
     success: bool = True
     source: Literal["database"] = "database"
     history: CustomerHistory
+
+
+class CustomerHistoryRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    customer_id: str = Field(pattern=r"^CUST-[0-9]{6}$")
 
 
 class TestDriveSlotQuery(BaseModel):

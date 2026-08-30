@@ -9,6 +9,7 @@ from app.database import get_supabase
 from app.repositories.customer_tools import CustomerToolsRepository, SupabaseCustomerToolsRepository
 from app.repositories.inventory import InventoryRepository, SupabaseInventoryRepository
 from app.schemas.customer_tools import (
+    CustomerHistoryRequest,
     CustomerHistoryResponse,
     TestDriveSlotDiscoveryRequest,
     TestDriveSlotQuery,
@@ -43,12 +44,26 @@ InventoryRepositoryDependency = Annotated[
 
 @router.get("/get-customer-history/{customer_id}", response_model=CustomerHistoryResponse)
 def customer_history_tool(customer_id: CustomerId, repository: Repository) -> CustomerHistoryResponse:
+    return _customer_history_response(customer_id, repository)
+
+
+def _customer_history_response(
+    customer_id: str, repository: CustomerToolsRepository
+) -> CustomerHistoryResponse:
     try:
         return CustomerHistoryResponse(history=get_customer_history(customer_id, repository))
     except CustomerNotFoundError:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Customer not found") from None
     except CustomerToolsUnavailableError:
         raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="Customer service unavailable") from None
+
+
+@router.post("/get-customer-history", response_model=CustomerHistoryResponse)
+def customer_history_post_tool(
+    request: CustomerHistoryRequest, repository: Repository
+) -> CustomerHistoryResponse:
+    """Retell-friendly, read-only customer history lookup."""
+    return _customer_history_response(request.customer_id, repository)
 
 
 @router.get("/get-test-drive-slots", response_model=TestDriveSlotsResponse)

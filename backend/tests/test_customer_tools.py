@@ -4,6 +4,7 @@ from pathlib import Path
 from fastapi.testclient import TestClient
 
 from app.main import app
+from app.repositories.customer_tools import CustomerToolsRepositoryError
 from app.repositories.inventory import CsvInventoryRepository
 from app.routes import customer_tools as customer_tool_routes
 from app.routes.customer_tools import (
@@ -39,6 +40,22 @@ class FakeRepository:
         }]
 
 
+class EmptyHistoryRepository(FakeRepository):
+    def customer_history(self, customer_id):
+        if customer_id != "CUST-000002":
+            return None
+        return {
+            "customer": {"customer_id": customer_id, "first_name": "Morgan"},
+            "leads": [],
+            "appointments": [],
+        }
+
+
+class FailingHistoryRepository(FakeRepository):
+    def customer_history(self, customer_id):
+        raise CustomerToolsRepositoryError("provider details must stay private")
+
+
 def test_customer_history_returns_related_records():
     result = get_customer_history("CUST-000001", FakeRepository())
     assert result.customer["customer_id"] == "CUST-000001"
@@ -61,6 +78,15 @@ def test_customer_tool_routes():
         assert history.status_code == 200
         assert history.json()["source"] == "database"
 
+        post_history = client.post(
+            "/api/tools/get-customer-history", json={"customer_id": "CUST-000001"}
+        )
+        assert post_history.status_code == 200
+        assert post_history.json() == history.json()
+        assert set(post_history.json()["history"]) == {
+            "customer", "leads", "appointments",
+        }
+
         missing = client.get("/api/tools/get-customer-history/CUST-999999")
         assert missing.status_code == 404
 
@@ -69,6 +95,51 @@ def test_customer_tool_routes():
         })
         assert slots.status_code == 200
         assert slots.json()["count"] == 2
+    finally:
+        app.dependency_overrides.clear()
+
+
+def test_customer_history_post_route_supports_empty_history():
+    app.dependency_overrides[get_customer_tools_repository] = EmptyHistoryRepository
+    try:
+        response = TestClient(app).post(
+            "/api/tools/get-customer-history", json={"customer_id": "CUST-000002"}
+        )
+        assert response.status_code == 200
+        assert response.json()["history"]["customer"]["customer_id"] == "CUST-000002"
+        assert response.json()["history"]["leads"] == []
+        assert response.json()["history"]["appointments"] == []
+    finally:
+        app.dependency_overrides.clear()
+
+
+def test_customer_history_post_route_rejects_invalid_missing_and_unknown_ids():
+    app.dependency_overrides[get_customer_tools_repository] = FakeRepository
+    try:
+        client = TestClient(app)
+        assert client.post(
+            "/api/tools/get-customer-history", json={"customer_id": "bad-id"}
+        ).status_code == 422
+        assert client.post("/api/tools/get-customer-history", json={}).status_code == 422
+
+        unknown = client.post(
+            "/api/tools/get-customer-history", json={"customer_id": "CUST-999999"}
+        )
+        assert unknown.status_code == 404
+        assert unknown.json() == {"detail": "Customer not found"}
+    finally:
+        app.dependency_overrides.clear()
+
+
+def test_customer_history_post_route_returns_sanitized_database_error():
+    app.dependency_overrides[get_customer_tools_repository] = FailingHistoryRepository
+    try:
+        response = TestClient(app).post(
+            "/api/tools/get-customer-history", json={"customer_id": "CUST-000001"}
+        )
+        assert response.status_code == 503
+        assert response.json() == {"detail": "Customer service unavailable"}
+        assert "provider details" not in response.text
     finally:
         app.dependency_overrides.clear()
 
