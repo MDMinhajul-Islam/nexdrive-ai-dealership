@@ -1,6 +1,6 @@
 # Client demo scenarios
 
-The automated catalog is `backend/tests/e2e_scenarios.json` (19 scenarios). Demo sequence:
+The automated catalog is `backend/tests/e2e_scenarios.json` (24 scenarios). Demo sequence:
 
 1. Ask for a used AWD SUV under $30,000 with Apple CarPlay.
 2. Compare up to three returned records and ask for details on one.

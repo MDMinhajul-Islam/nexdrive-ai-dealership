@@ -1,0 +1,16 @@
+erDiagram
+  VEHICLES ||--o{ VEHICLE_FEATURES : has
+  FEATURES ||--o{ VEHICLE_FEATURES : assigned
+  CUSTOMERS ||--o{ LEADS : creates
+  SALESPEOPLE ||--o{ LEADS : owns
+  VEHICLES ||--o{ LEADS : interests
+  LEADS ||--o| APPOINTMENTS : converts
+  CUSTOMERS ||--o{ APPOINTMENTS : books
+  VEHICLES ||--o{ APPOINTMENTS : scheduled_for
+  SALESPEOPLE ||--o{ APPOINTMENTS : hosts
+  LEADS ||--o| TRADE_INS : captures
+  CUSTOMERS ||--o{ TRADE_INS : owns
+  CONVERSATION_SESSIONS ||--o{ ESCALATION_EVENTS : escalates
+  CUSTOMERS ||--o{ CONVERSATION_SESSIONS : participates
+  LEADS ||--o{ CONVERSATION_SESSIONS : produces
+  APPOINTMENTS ||--o{ CONVERSATION_SESSIONS : confirms

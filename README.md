@@ -78,6 +78,14 @@ Use `--seed` and `--count` to create a reproducible alternative dataset. Run eit
 - `backend/docs`: backend architecture, ERD, testing, reports, and screenshots
 - `frontend`: responsive React/Vite operations dashboard
 - `retell`: voice-agent prompt, tool contracts, confirmation and escalation rules
+
+## Product experience
+
+The frontend now separates the customer dealership experience from dealership
+operations. `/`, `/inventory` and `/talk-to-ai` are customer-safe. `/admin/login`
+uses Supabase Auth and `/admin` exposes inventory management, CRM, appointments
+and traceable call analytics. Production must enable `ADMIN_AUTH_REQUIRED` and
+run migration `10_agent_operations.sql` before enabling the new voice outcomes.
 - `docs`: architecture, tool reference, failure matrix, deployment and demo guides
 
 ## Demo-readiness verification
@@ -90,7 +98,7 @@ cd backend; pytest
 cd ../frontend; npm install; npm run lint; npm run build
 ```
 
-Run database migrations in filename order (`01`–`09`). RLS denies direct browser access; only the
+Run database migrations in filename order (`01`–`10`). RLS denies direct browser access; only the
 trusted FastAPI backend uses the Supabase secret/service-role key. Never commit `.env` files.
 
 All people, contact details, vehicle identifiers, and business records in this project must be synthetic.

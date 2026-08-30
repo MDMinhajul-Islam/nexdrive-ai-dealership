@@ -11,6 +11,9 @@ TOOLS={
  "create_or_update_lead":("/api/tools/create-or-update-lead","post"),
  "create_test_drive":("/api/tools/create-test-drive","post"),
  "estimate_financing":("/api/tools/estimate-financing","post"),
+ "capture_trade_in":("/api/tools/capture-trade-in","post"),
+ "escalate_to_human":("/api/tools/escalate-to-human","post"),
+ "record_conversation_outcome":("/api/tools/record-conversation-outcome","post"),
 }
 SCENARIOS=json.loads((Path(__file__).parent/"e2e_scenarios.json").read_text(encoding="utf-8"))
 
