@@ -49,6 +49,13 @@ vehicle, salesperson shift, and slot immediately before insert. Financing respon
 use active database rules, and always return the lender-approval disclaimer. All API requests emit
 PII-safe structured audit logs and an `X-Request-ID` response header.
 
+All `/api/tools` requests require the server-to-server header
+`X-Retell-Tool-Key`, whose value must match backend-only
+`RETELL_TOOL_API_KEY`. Configure the same secret in Retell's tool request
+headers; never expose it to the browser. Customer-history requests also require
+`X-Retell-Verified-Customer-ID`, populated from the customer identity verified
+by the trusted Retell flow, and it must match the requested `customer_id`.
+
 `SUPABASE_PUBLISHABLE_KEY` is the public/client-safe key used for standard
 requests. `SUPABASE_SECRET_KEY` is privileged and must remain backend-only; do
 not include it in frontend configuration or API responses.

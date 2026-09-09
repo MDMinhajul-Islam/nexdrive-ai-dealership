@@ -7,8 +7,13 @@ from supabase import Client
 from app.database import get_supabase
 from app.schemas.operations import ConversationOutcomeRequest, EscalationRequest, TradeInCaptureRequest
 from app.services.business_tools import _next_id
+from app.tool_auth import require_retell_tool_auth
 
-router = APIRouter(prefix="/api/tools", tags=["Business Tools"])
+router = APIRouter(
+    prefix="/api/tools",
+    tags=["Business Tools"],
+    dependencies=[Depends(require_retell_tool_auth)],
+)
 
 
 @router.post("/capture-trade-in")

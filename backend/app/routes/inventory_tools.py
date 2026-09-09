@@ -2,7 +2,7 @@
 
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, Path, Query, status
+from fastapi import APIRouter, Depends, Path, Query, status
 
 from app.database import get_supabase
 from app.repositories.inventory import InventoryRepository, SupabaseInventoryRepository
@@ -20,8 +20,14 @@ from app.services.inventory_tools import (
     get_vehicle_details,
     search_inventory,
 )
+from app.tool_auth import require_retell_tool_auth
+from app.utils.tool_errors import ToolAPIError
 
-router = APIRouter(prefix="/api/tools", tags=["Inventory Tools"])
+router = APIRouter(
+    prefix="/api/tools",
+    tags=["Inventory Tools"],
+    dependencies=[Depends(require_retell_tool_auth)],
+)
 VehicleId = Annotated[str, Path(pattern=r"^VEH-[0-9]{6}$")]
 VehicleIdQuery = Annotated[str, Query(pattern=r"^VEH-[0-9]{6}$")]
 
@@ -33,10 +39,15 @@ def get_inventory_repository() -> InventoryRepository:
 Repository = Annotated[InventoryRepository, Depends(get_inventory_repository)]
 
 
-def _safe_error(exc: Exception) -> HTTPException:
+def _safe_error(exc: Exception) -> ToolAPIError:
     if isinstance(exc, InventoryVehicleNotFoundError):
-        return HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Vehicle not found")
-    return HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="Inventory service unavailable")
+        return ToolAPIError(status.HTTP_404_NOT_FOUND, "VEHICLE_NOT_FOUND", False, "Vehicle not found")
+    return ToolAPIError(
+        status.HTTP_503_SERVICE_UNAVAILABLE,
+        "INVENTORY_UNAVAILABLE",
+        True,
+        "Live inventory is temporarily unavailable",
+    )
 
 
 def _vehicle_details_response(vehicle_id: str, repository: InventoryRepository) -> ToolVehicleDetailsResponse:
@@ -57,6 +68,13 @@ def _vehicle_availability_response(vehicle_id: str, repository: InventoryReposit
 
 @router.post("/search-inventory", response_model=InventorySearchResponse, summary="Search authoritative available inventory")
 def search_inventory_tool(filters: InventorySearchFilters, repository: Repository) -> InventorySearchResponse:
+    if not filters.has_meaningful_criteria():
+        raise ToolAPIError(
+            status.HTTP_422_UNPROCESSABLE_ENTITY,
+            "MISSING_SEARCH_CRITERIA",
+            False,
+            "Vehicle search requires customer preferences",
+        )
     try:
         return search_inventory(filters, repository)
     except InventoryToolUnavailableError as exc:

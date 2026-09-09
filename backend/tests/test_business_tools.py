@@ -27,6 +27,8 @@ from app.services.business_tools import (
     score_lead,
 )
 
+TOOL_HEADERS = {"X-Retell-Tool-Key": "test-retell-tool-key"}
+
 
 class BookingQuery:
     def __init__(self, result, client):
@@ -70,7 +72,7 @@ def booking_request(**changes):
         "customer_id": "CUST-000001",
         "vehicle_id": "VEH-000001",
         "salesperson_id": "SP-001",
-        "appointment_date": "2026-09-02",
+        "appointment_date": "2099-09-02",
         "appointment_time": "09:00",
     }
     values.update(changes)
@@ -84,7 +86,7 @@ def persisted_appointment(**changes):
         "customer_id": "CUST-000001",
         "vehicle_id": "VEH-000001",
         "salesperson_id": "SP-001",
-        "appointment_date": "2026-09-02",
+        "appointment_date": "2099-09-02",
         "appointment_time": "09:00:00",
         "appointment_type": "Test Drive",
         "status": "Confirmed",
@@ -230,7 +232,7 @@ def test_lead_database_failure_is_sanitized_by_route(monkeypatch):
     app.dependency_overrides[get_business_client] = lambda: MagicMock()
     monkeypatch.setattr(business_tool_routes, "create_or_update_lead", unavailable)
     try:
-        response = TestClient(app).post(
+        response = TestClient(app, headers=TOOL_HEADERS).post(
             "/api/tools/create-or-update-lead", json=lead_request().model_dump(mode="json")
         )
         assert response.status_code == 503
@@ -249,12 +251,13 @@ def test_lead_route_returns_authoritative_persisted_response(monkeypatch):
         lambda *_args: LeadResponse(created=True, lead=lead),
     )
     try:
-        response = TestClient(app).post(
+        response = TestClient(app, headers=TOOL_HEADERS).post(
             "/api/tools/create-or-update-lead", json=lead_request().model_dump(mode="json")
         )
         assert response.status_code == 200
         assert response.json() == {
             "success": True, "source": "database", "created": True, "lead": lead,
+            "message": "", "data": {"created": True, "lead": lead},
         }
     finally:
         app.dependency_overrides.clear()
@@ -263,7 +266,7 @@ def test_lead_route_returns_authoritative_persisted_response(monkeypatch):
 def test_lead_route_rejects_invalid_and_missing_input_before_writes():
     app.dependency_overrides[get_business_client] = lambda: MagicMock()
     try:
-        client = TestClient(app)
+        client = TestClient(app, headers=TOOL_HEADERS)
         assert client.post("/api/tools/create-or-update-lead", json={}).status_code == 422
         invalid = client.post(
             "/api/tools/create-or-update-lead",
@@ -290,7 +293,7 @@ def test_booking_exact_retry_returns_same_persisted_appointment():
     "changes",
     [
         {"appointment_time": "10:00"},
-        {"appointment_date": "2026-09-03"},
+        {"appointment_date": "2099-09-03"},
         {"vehicle_id": "VEH-000002"},
         {"salesperson_id": "SP-002"},
     ],
@@ -347,7 +350,7 @@ def test_booking_persists_only_after_authoritative_checks_pass():
     assert payload == {
         "lead_id": "LEAD-000001", "customer_id": "CUST-000001",
         "vehicle_id": "VEH-000001", "salesperson_id": "SP-001",
-        "appointment_date": "2026-09-02", "appointment_time": "09:00:00",
+        "appointment_date": "2099-09-02", "appointment_time": "09:00:00",
         "notes": "Retell booking", "appointment_id": "APT-000001",
         "appointment_type": "Test Drive", "status": "Confirmed",
         "created_by": "Voice Agent", "created_at": payload["created_at"],
@@ -389,7 +392,7 @@ def test_booking_database_failure_is_sanitized_by_route(monkeypatch):
     app.dependency_overrides[get_business_client] = lambda: MagicMock()
     monkeypatch.setattr(business_tool_routes, "create_test_drive", unavailable)
     try:
-        response = TestClient(app).post("/api/tools/create-test-drive", json=booking_request().model_dump(mode="json"))
+        response = TestClient(app, headers=TOOL_HEADERS).post("/api/tools/create-test-drive", json=booking_request().model_dump(mode="json"))
         assert response.status_code == 503
         assert response.json() == {"detail": "Business tool unavailable"}
         assert "provider details" not in response.text
@@ -409,7 +412,7 @@ def test_booking_route_returns_structured_conflict_for_different_active_appointm
     app.dependency_overrides[get_business_client] = lambda: MagicMock()
     monkeypatch.setattr(business_tool_routes, "create_test_drive", conflict)
     try:
-        response = TestClient(app).post(
+        response = TestClient(app, headers=TOOL_HEADERS).post(
             "/api/tools/create-test-drive",
             json=booking_request(appointment_time="10:00").model_dump(mode="json"),
         )
@@ -438,11 +441,12 @@ def test_booking_route_returns_authoritative_created_appointment(monkeypatch):
         lambda *_args: BookingResponse(created=True, appointment=appointment),
     )
     try:
-        response = TestClient(app).post("/api/tools/create-test-drive", json=booking_request().model_dump(mode="json"))
+        response = TestClient(app, headers=TOOL_HEADERS).post("/api/tools/create-test-drive", json=booking_request().model_dump(mode="json"))
         assert response.status_code == 200
         assert response.json() == {
             "success": True, "source": "database", "created": True,
-            "appointment": appointment,
+            "appointment": appointment, "message": "",
+            "data": {"created": True, "appointment": appointment},
         }
     finally:
         app.dependency_overrides.clear()
@@ -479,9 +483,9 @@ def test_financing_rejects_insufficient_down_payment():
 def test_business_routes_validate_before_writes():
     app.dependency_overrides[get_business_client] = lambda: MagicMock()
     try:
-        response = TestClient(app).post("/api/tools/create-test-drive", json={"lead_id": "bad"})
+        response = TestClient(app, headers=TOOL_HEADERS).post("/api/tools/create-test-drive", json={"lead_id": "bad"})
         assert response.status_code == 422
         assert response.headers["X-Request-ID"]
-        assert TestClient(app).post("/api/tools/create-test-drive", json={}).status_code == 422
+        assert TestClient(app, headers=TOOL_HEADERS).post("/api/tools/create-test-drive", json={}).status_code == 422
     finally:
         app.dependency_overrides.clear()

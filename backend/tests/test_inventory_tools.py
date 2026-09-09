@@ -14,6 +14,8 @@ from app.services.inventory_tools import (
     search_inventory,
 )
 
+TOOL_HEADERS = {"X-Retell-Tool-Key": "test-retell-tool-key"}
+
 
 @pytest.fixture
 def repository() -> CsvInventoryRepository:
@@ -42,7 +44,7 @@ def test_check_availability_is_authoritative(repository) -> None:
 def test_tool_routes_use_repository_dependency(repository) -> None:
     app.dependency_overrides[get_inventory_repository] = lambda: repository
     try:
-        client = TestClient(app)
+        client = TestClient(app, headers=TOOL_HEADERS)
         response = client.post("/api/tools/search-inventory", json={
             "body_type": "SUV", "condition": "Used", "budget_max": 30000,
             "drivetrain": "AWD", "features": ["Apple CarPlay"], "limit": 5,
@@ -50,6 +52,8 @@ def test_tool_routes_use_repository_dependency(repository) -> None:
         assert response.status_code == 200
         assert response.json()["source"] == "database"
         assert response.json()["count"] == 1
+        assert response.json()["message"] == ""
+        assert response.json()["data"]["count"] == 1
 
         details = client.get("/api/tools/get-vehicle-details/VEH-000001")
         assert details.status_code == 200
@@ -81,20 +85,74 @@ def test_tool_routes_use_repository_dependency(repository) -> None:
 
 
 def test_search_contract_rejects_inverted_ranges() -> None:
-    client = TestClient(app)
+    client = TestClient(app, headers=TOOL_HEADERS)
     response = client.post("/api/tools/search-inventory", json={"budget_min": 40000, "budget_max": 30000})
     assert response.status_code == 422
+
+
+def test_search_route_requires_meaningful_customer_preferences(repository) -> None:
+    app.dependency_overrides[get_inventory_repository] = lambda: repository
+    try:
+        response = TestClient(app, headers=TOOL_HEADERS).post(
+            "/api/tools/search-inventory", json={}
+        )
+        assert response.status_code == 422
+        assert response.json() == {
+            "success": False,
+            "error_code": "MISSING_SEARCH_CRITERIA",
+            "retryable": False,
+            "message": "Vehicle search requires customer preferences",
+        }
+    finally:
+        app.dependency_overrides.clear()
+
+
+def test_search_normalizes_voice_input_case_and_spacing(repository) -> None:
+    result = search_inventory(
+        InventorySearchFilters(
+            make="  toyota ", model=" rav4 ", body_type="suv",
+            condition="used", drivetrain="awd", features=[" apple carplay "],
+        ),
+        repository,
+    )
+    assert result.count == 1
+    assert result.vehicles[0].vehicle_id == "VEH-000001"
+
+
+def test_search_route_returns_ai_friendly_inventory_failure(monkeypatch, repository) -> None:
+    def unavailable(*_args):
+        raise InventoryToolUnavailableError("private database diagnostics")
+
+    app.dependency_overrides[get_inventory_repository] = lambda: repository
+    monkeypatch.setattr(inventory_tool_routes, "search_inventory", unavailable)
+    try:
+        response = TestClient(app, headers=TOOL_HEADERS).post(
+            "/api/tools/search-inventory", json={"make": "Toyota"}
+        )
+        assert response.status_code == 503
+        assert response.json() == {
+            "success": False,
+            "error_code": "INVENTORY_UNAVAILABLE",
+            "retryable": True,
+            "message": "Live inventory is temporarily unavailable",
+        }
+        assert "private database diagnostics" not in response.text
+    finally:
+        app.dependency_overrides.clear()
 
 
 def test_vehicle_details_query_route_handles_not_found_and_invalid_input(repository) -> None:
     app.dependency_overrides[get_inventory_repository] = lambda: repository
     try:
-        client = TestClient(app)
+        client = TestClient(app, headers=TOOL_HEADERS)
         not_found = client.get(
             "/api/tools/get-vehicle-details", params={"vehicle_id": "VEH-999999"}
         )
         assert not_found.status_code == 404
-        assert not_found.json() == {"detail": "Vehicle not found"}
+        assert not_found.json() == {
+            "success": False, "error_code": "VEHICLE_NOT_FOUND",
+            "retryable": False, "message": "Vehicle not found",
+        }
 
         invalid = client.get(
             "/api/tools/get-vehicle-details", params={"vehicle_id": "bad-id"}
@@ -110,12 +168,12 @@ def test_vehicle_details_query_route_handles_not_found_and_invalid_input(reposit
 def test_vehicle_details_post_route_handles_not_found_and_invalid_input(repository) -> None:
     app.dependency_overrides[get_inventory_repository] = lambda: repository
     try:
-        client = TestClient(app)
+        client = TestClient(app, headers=TOOL_HEADERS)
         not_found = client.post(
             "/api/tools/get-vehicle-details", json={"vehicle_id": "VEH-999999"}
         )
         assert not_found.status_code == 404
-        assert not_found.json() == {"detail": "Vehicle not found"}
+        assert not_found.json()["error_code"] == "VEHICLE_NOT_FOUND"
 
         invalid = client.post(
             "/api/tools/get-vehicle-details", json={"vehicle_id": "bad-id"}
@@ -135,18 +193,21 @@ def test_vehicle_details_query_route_returns_sanitized_database_error(monkeypatc
     app.dependency_overrides[get_inventory_repository] = lambda: repository
     monkeypatch.setattr(inventory_tool_routes, "get_vehicle_details", unavailable)
     try:
-        response = TestClient(app).get(
+        response = TestClient(app, headers=TOOL_HEADERS).get(
             "/api/tools/get-vehicle-details", params={"vehicle_id": "VEH-000001"}
         )
         assert response.status_code == 503
-        assert response.json() == {"detail": "Inventory service unavailable"}
+        assert response.json() == {
+            "success": False, "error_code": "INVENTORY_UNAVAILABLE",
+            "retryable": True, "message": "Live inventory is temporarily unavailable",
+        }
         assert "provider details" not in response.text
 
-        post_response = TestClient(app).post(
+        post_response = TestClient(app, headers=TOOL_HEADERS).post(
             "/api/tools/get-vehicle-details", json={"vehicle_id": "VEH-000001"}
         )
         assert post_response.status_code == 503
-        assert post_response.json() == {"detail": "Inventory service unavailable"}
+        assert post_response.json() == response.json()
         assert "provider details" not in post_response.text
     finally:
         app.dependency_overrides.clear()
@@ -155,12 +216,12 @@ def test_vehicle_details_query_route_returns_sanitized_database_error(monkeypatc
 def test_vehicle_availability_post_route_handles_not_found_and_invalid_input(repository) -> None:
     app.dependency_overrides[get_inventory_repository] = lambda: repository
     try:
-        client = TestClient(app)
+        client = TestClient(app, headers=TOOL_HEADERS)
         not_found = client.post(
             "/api/tools/check-vehicle-availability", json={"vehicle_id": "VEH-999999"}
         )
         assert not_found.status_code == 404
-        assert not_found.json() == {"detail": "Vehicle not found"}
+        assert not_found.json()["error_code"] == "VEHICLE_NOT_FOUND"
 
         invalid = client.post(
             "/api/tools/check-vehicle-availability", json={"vehicle_id": "bad-id"}
@@ -180,11 +241,11 @@ def test_vehicle_availability_post_route_returns_sanitized_database_error(monkey
     app.dependency_overrides[get_inventory_repository] = lambda: repository
     monkeypatch.setattr(inventory_tool_routes, "check_vehicle_availability", unavailable)
     try:
-        response = TestClient(app).post(
+        response = TestClient(app, headers=TOOL_HEADERS).post(
             "/api/tools/check-vehicle-availability", json={"vehicle_id": "VEH-000001"}
         )
         assert response.status_code == 503
-        assert response.json() == {"detail": "Inventory service unavailable"}
+        assert response.json()["error_code"] == "INVENTORY_UNAVAILABLE"
         assert "provider details" not in response.text
     finally:
         app.dependency_overrides.clear()

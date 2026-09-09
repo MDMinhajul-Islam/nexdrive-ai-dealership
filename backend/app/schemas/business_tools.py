@@ -2,7 +2,7 @@
 
 from datetime import date, time
 from typing import Any, Literal
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
 class LeadUpsertRequest(BaseModel):
@@ -25,6 +25,13 @@ class LeadResponse(BaseModel):
     source: Literal["database"] = "database"
     created: bool
     lead: dict[str, Any]
+    message: str = ""
+    data: dict[str, Any] = Field(default_factory=dict)
+
+    @model_validator(mode="after")
+    def populate_data(self) -> "LeadResponse":
+        self.data = {"created": self.created, "lead": self.lead}
+        return self
 
 
 class BookingRequest(BaseModel):
@@ -42,6 +49,13 @@ class BookingResponse(BaseModel):
     source: Literal["database"] = "database"
     created: bool
     appointment: dict[str, Any]
+    message: str = ""
+    data: dict[str, Any] = Field(default_factory=dict)
+
+    @model_validator(mode="after")
+    def populate_data(self) -> "BookingResponse":
+        self.data = {"created": self.created, "appointment": self.appointment}
+        return self
 
 
 class FinancingEstimateRequest(BaseModel):

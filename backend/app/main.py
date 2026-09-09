@@ -1,7 +1,8 @@
 """FastAPI application entry point."""
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 from app.routes.health import router as health_router
 from app.routes.customer_tools import router as customer_tools_router
@@ -14,6 +15,7 @@ from app.routes.vehicles import router as vehicles_router
 from app.routes.public import router as public_router
 from app.routes.operations import router as operations_router
 from app.routes.retell import router as retell_router
+from app.utils.tool_errors import ToolAPIError
 
 
 app = FastAPI(
@@ -21,6 +23,14 @@ app = FastAPI(
     version="0.1.0",
     description="Backend API for NexDrive dealership workflows.",
 )
+
+
+@app.exception_handler(ToolAPIError)
+async def tool_api_error_handler(request: Request, exc: ToolAPIError) -> JSONResponse:
+    request.state.tool_error_code = exc.error_code
+    return JSONResponse(status_code=exc.status_code, content=exc.payload())
+
+
 app.include_router(health_router)
 app.middleware("http")(audit_middleware)
 app.add_middleware(CORSMiddleware,allow_origins=[x.strip() for x in get_settings().cors_origins.split(",") if x.strip()],allow_credentials=False,allow_methods=["GET","POST","PATCH","OPTIONS"],allow_headers=["Content-Type","Authorization","X-Request-ID","Idempotency-Key"])

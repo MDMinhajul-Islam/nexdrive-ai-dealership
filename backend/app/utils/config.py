@@ -25,6 +25,8 @@ class Settings(BaseSettings):
     # Server-only Retell credential; never expose this value to a client.
     retell_api_key: str = ""
     retell_agent_id: str = ""
+    # Shared only by Retell and this backend for calls to /api/tools.
+    retell_tool_api_key: str = ""
 
     model_config = SettingsConfigDict(
         env_file=BACKEND_DIR / ".env",

@@ -15,6 +15,12 @@ from app.schemas.customer_tools import TestDriveSlotQuery as SlotQuery
 from app.services.customer_tools import get_customer_history, get_test_drive_slots
 from app.services.inventory_tools import InventoryToolUnavailableError
 
+TOOL_HEADERS = {"X-Retell-Tool-Key": "test-retell-tool-key"}
+
+
+def verified_customer(customer_id: str) -> dict[str, str]:
+    return {"X-Retell-Verified-Customer-ID": customer_id}
+
 
 class FakeRepository:
     def customer_history(self, customer_id):
@@ -73,21 +79,29 @@ def test_slots_follow_shift_and_exclude_booked_time():
 def test_customer_tool_routes():
     app.dependency_overrides[get_customer_tools_repository] = FakeRepository
     try:
-        client = TestClient(app)
-        history = client.get("/api/tools/get-customer-history/CUST-000001")
+        client = TestClient(app, headers=TOOL_HEADERS)
+        history = client.get(
+            "/api/tools/get-customer-history/CUST-000001",
+            headers=verified_customer("CUST-000001"),
+        )
         assert history.status_code == 200
         assert history.json()["source"] == "database"
 
         post_history = client.post(
-            "/api/tools/get-customer-history", json={"customer_id": "CUST-000001"}
+            "/api/tools/get-customer-history", json={"customer_id": "CUST-000001"},
+            headers=verified_customer("CUST-000001"),
         )
         assert post_history.status_code == 200
         assert post_history.json() == history.json()
+        assert post_history.json()["data"]["history"] == post_history.json()["history"]
         assert set(post_history.json()["history"]) == {
             "customer", "leads", "appointments",
         }
 
-        missing = client.get("/api/tools/get-customer-history/CUST-999999")
+        missing = client.get(
+            "/api/tools/get-customer-history/CUST-999999",
+            headers=verified_customer("CUST-999999"),
+        )
         assert missing.status_code == 404
 
         slots = client.get("/api/tools/get-test-drive-slots", params={
@@ -102,8 +116,9 @@ def test_customer_tool_routes():
 def test_customer_history_post_route_supports_empty_history():
     app.dependency_overrides[get_customer_tools_repository] = EmptyHistoryRepository
     try:
-        response = TestClient(app).post(
-            "/api/tools/get-customer-history", json={"customer_id": "CUST-000002"}
+        response = TestClient(app, headers=TOOL_HEADERS).post(
+            "/api/tools/get-customer-history", json={"customer_id": "CUST-000002"},
+            headers=verified_customer("CUST-000002"),
         )
         assert response.status_code == 200
         assert response.json()["history"]["customer"]["customer_id"] == "CUST-000002"
@@ -116,17 +131,22 @@ def test_customer_history_post_route_supports_empty_history():
 def test_customer_history_post_route_rejects_invalid_missing_and_unknown_ids():
     app.dependency_overrides[get_customer_tools_repository] = FakeRepository
     try:
-        client = TestClient(app)
+        client = TestClient(app, headers=TOOL_HEADERS)
         assert client.post(
-            "/api/tools/get-customer-history", json={"customer_id": "bad-id"}
+            "/api/tools/get-customer-history", json={"customer_id": "bad-id"},
+            headers=verified_customer("CUST-000001"),
         ).status_code == 422
-        assert client.post("/api/tools/get-customer-history", json={}).status_code == 422
+        assert client.post(
+            "/api/tools/get-customer-history", json={},
+            headers=verified_customer("CUST-000001"),
+        ).status_code == 422
 
         unknown = client.post(
-            "/api/tools/get-customer-history", json={"customer_id": "CUST-999999"}
+            "/api/tools/get-customer-history", json={"customer_id": "CUST-999999"},
+            headers=verified_customer("CUST-999999"),
         )
         assert unknown.status_code == 404
-        assert unknown.json() == {"detail": "Customer not found"}
+        assert unknown.json()["error_code"] == "CUSTOMER_NOT_FOUND"
     finally:
         app.dependency_overrides.clear()
 
@@ -134,11 +154,15 @@ def test_customer_history_post_route_rejects_invalid_missing_and_unknown_ids():
 def test_customer_history_post_route_returns_sanitized_database_error():
     app.dependency_overrides[get_customer_tools_repository] = FailingHistoryRepository
     try:
-        response = TestClient(app).post(
-            "/api/tools/get-customer-history", json={"customer_id": "CUST-000001"}
+        response = TestClient(app, headers=TOOL_HEADERS).post(
+            "/api/tools/get-customer-history", json={"customer_id": "CUST-000001"},
+            headers=verified_customer("CUST-000001"),
         )
         assert response.status_code == 503
-        assert response.json() == {"detail": "Customer service unavailable"}
+        assert response.json() == {
+            "success": False, "error_code": "CUSTOMER_HISTORY_UNAVAILABLE",
+            "retryable": True, "message": "Customer history is temporarily unavailable",
+        }
         assert "provider details" not in response.text
     finally:
         app.dependency_overrides.clear()
@@ -149,7 +173,7 @@ def test_test_drive_slots_post_route_uses_authoritative_vehicle_and_slots():
     app.dependency_overrides[get_customer_tools_repository] = FakeRepository
     app.dependency_overrides[get_test_drive_inventory_repository] = lambda: inventory
     try:
-        client = TestClient(app)
+        client = TestClient(app, headers=TOOL_HEADERS)
         get_response = client.get("/api/tools/get-test-drive-slots", params={
             "start_date": "2026-08-25", "days": 1, "salesperson_id": "SP-001",
         })
@@ -172,7 +196,7 @@ def test_test_drive_slots_post_route_uses_authoritative_vehicle_and_slots():
 
 
 def test_test_drive_slots_post_route_rejects_invalid_or_missing_input():
-    client = TestClient(app)
+    client = TestClient(app, headers=TOOL_HEADERS)
     invalid_vehicle = client.post("/api/tools/get-test-drive-slots", json={
         "vehicle_id": "bad-id", "start_date": "2026-08-25",
     })
@@ -194,7 +218,7 @@ def test_test_drive_slots_post_route_returns_not_found_and_safe_service_errors(m
     app.dependency_overrides[get_customer_tools_repository] = FakeRepository
     app.dependency_overrides[get_test_drive_inventory_repository] = lambda: inventory
     try:
-        client = TestClient(app)
+        client = TestClient(app, headers=TOOL_HEADERS)
         not_found = client.post("/api/tools/get-test-drive-slots", json={
             "vehicle_id": "VEH-999999", "start_date": "2026-08-25",
         })
@@ -209,7 +233,7 @@ def test_test_drive_slots_post_route_returns_not_found_and_safe_service_errors(m
             "vehicle_id": "VEH-000001", "start_date": "2026-08-25",
         })
         assert failed.status_code == 503
-        assert failed.json() == {"detail": "Inventory service unavailable"}
+        assert failed.json()["error_code"] == "INVENTORY_UNAVAILABLE"
         assert "provider details" not in failed.text
     finally:
         app.dependency_overrides.clear()

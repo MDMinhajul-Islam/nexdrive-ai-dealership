@@ -60,13 +60,18 @@ class SupabaseInventoryRepository:
         feature_result = (
             self.client.table("features")
             .select("feature_id,name")
-            .in_("name", required_features)
             .execute()
         )
         feature_rows = feature_result.data or []
-        if {row["name"] for row in feature_rows} != set(required_features):
+        features_by_name = {
+            " ".join(row["name"].split()).casefold(): row
+            for row in feature_rows
+            if isinstance(row.get("name"), str)
+        }
+        requested_names = {" ".join(name.split()).casefold() for name in required_features}
+        if not requested_names <= features_by_name.keys():
             return []
-        feature_ids = [row["feature_id"] for row in feature_rows]
+        feature_ids = [features_by_name[name]["feature_id"] for name in requested_names]
         relation_result = (
             self.client.table("vehicle_features")
             .select("vehicle_id,feature_id")
@@ -85,8 +90,12 @@ class SupabaseInventoryRepository:
                 return []
             columns = f"{VEHICLE_COLUMNS},vehicle_features(features(name))"
             query = self.client.table("vehicles").select(columns).eq("vehicle_status", "Available")
+            text_filters = {"make": filters.make, "model": filters.model}
+            for field, value in text_filters.items():
+                if value is not None:
+                    query = query.ilike(field, value)
             exact_filters = {
-                "make": filters.make, "model": filters.model, "body_type": filters.body_type,
+                "body_type": filters.body_type,
                 "condition": filters.condition, "drivetrain": filters.drivetrain,
                 "fuel_type": filters.fuel_type,
             }
@@ -154,7 +163,7 @@ class CsvInventoryRepository:
 
     def search(self, filters: InventorySearchFilters) -> list[dict[str, Any]]:
         matches: list[dict[str, Any]] = []
-        required = set(filters.features)
+        required = {name.casefold() for name in filters.features}
         for raw in self._vehicles:
             if raw["vehicle_status"] != "Available":
                 continue
@@ -163,7 +172,10 @@ class CsvInventoryRepository:
                 "condition": filters.condition, "drivetrain": filters.drivetrain,
                 "fuel_type": filters.fuel_type,
             }
-            if any(value is not None and raw[field] != value for field, value in exact.items()):
+            if any(
+                value is not None and raw[field].casefold() != value.casefold()
+                for field, value in exact.items()
+            ):
                 continue
             if filters.budget_min is not None and int(raw["sale_price"]) < filters.budget_min: continue
             if filters.budget_max is not None and int(raw["sale_price"]) > filters.budget_max: continue
@@ -171,7 +183,10 @@ class CsvInventoryRepository:
             if filters.year_max is not None and int(raw["year"]) > filters.year_max: continue
             if filters.mileage_max is not None and int(raw["mileage"]) > filters.mileage_max: continue
             if filters.seating_capacity_min is not None and int(raw["seating_capacity"]) < filters.seating_capacity_min: continue
-            if not required <= self._feature_map[raw["vehicle_id"]]: continue
+            available_features = {
+                name.casefold() for name in self._feature_map[raw["vehicle_id"]]
+            }
+            if not required <= available_features: continue
             matches.append(self._typed(raw, self._feature_map[raw["vehicle_id"]]))
         matches.sort(key=lambda row: (row["sale_price"], row["mileage"], row["vehicle_id"]))
         return matches[: filters.limit]

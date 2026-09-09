@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import Any, Literal
 
 from pydantic import BaseModel, Field, field_validator, model_validator
 
@@ -28,15 +28,30 @@ class InventorySearchFilters(BaseModel):
     @field_validator("make", "model")
     @classmethod
     def normalize_text(cls, value: str | None) -> str | None:
-        return value.strip() if value is not None else None
+        return " ".join(value.split()) if value is not None else None
+
+    @field_validator("body_type", "condition", "drivetrain", "fuel_type", mode="before")
+    @classmethod
+    def normalize_choice_formatting(cls, value: object) -> object:
+        if not isinstance(value, str):
+            return value
+        choices = {
+            "suv": "SUV", "sedan": "Sedan", "truck": "Truck", "hatchback": "Hatchback",
+            "new": "New", "used": "Used", "certified pre-owned": "Certified Pre-Owned",
+            "fwd": "FWD", "rwd": "RWD", "awd": "AWD", "4wd": "4WD",
+            "gasoline": "Gasoline", "diesel": "Diesel", "hybrid": "Hybrid",
+            "plug-in hybrid": "Plug-in Hybrid", "electric": "Electric",
+        }
+        normalized = " ".join(value.split()).casefold()
+        return choices.get(normalized, value)
 
     @field_validator("features")
     @classmethod
     def normalize_features(cls, values: list[str]) -> list[str]:
-        normalized = [value.strip() for value in values]
+        normalized = [" ".join(value.split()) for value in values]
         if any(not value for value in normalized):
             raise ValueError("Feature names cannot be blank")
-        if len(set(normalized)) != len(normalized):
+        if len({value.casefold() for value in normalized}) != len(normalized):
             raise ValueError("Feature names must be unique")
         return normalized
 
@@ -47,6 +62,13 @@ class InventorySearchFilters(BaseModel):
         if self.year_min is not None and self.year_max is not None and self.year_min > self.year_max:
             raise ValueError("year_min cannot exceed year_max")
         return self
+
+    def has_meaningful_criteria(self) -> bool:
+        return any(
+            value not in (None, [])
+            for field, value in self.model_dump().items()
+            if field != "limit"
+        )
 
 
 class InventorySearchVehicle(BaseModel):
@@ -73,12 +95,26 @@ class InventorySearchResponse(BaseModel):
     source: Literal["database"] = "database"
     count: int
     vehicles: list[InventorySearchVehicle]
+    message: str = ""
+    data: dict[str, Any] = Field(default_factory=dict)
+
+    @model_validator(mode="after")
+    def populate_data(self) -> "InventorySearchResponse":
+        self.data = {"count": self.count, "vehicles": self.vehicles}
+        return self
 
 
 class ToolVehicleDetailsResponse(BaseModel):
     success: bool = True
     source: Literal["database"] = "database"
     vehicle: VehicleDetails
+    message: str = ""
+    data: dict[str, Any] = Field(default_factory=dict)
+
+    @model_validator(mode="after")
+    def populate_data(self) -> "ToolVehicleDetailsResponse":
+        self.data = {"vehicle": self.vehicle}
+        return self
 
 
 class VehicleDetailsRequest(BaseModel):
@@ -97,3 +133,10 @@ class VehicleAvailabilityResponse(BaseModel):
     success: bool = True
     source: Literal["database"] = "database"
     availability: VehicleAvailability
+    message: str = ""
+    data: dict[str, Any] = Field(default_factory=dict)
+
+    @model_validator(mode="after")
+    def populate_data(self) -> "VehicleAvailabilityResponse":
+        self.data = {"availability": self.availability}
+        return self
