@@ -2,7 +2,7 @@
 
 from datetime import date, time
 from typing import Any, Literal
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 
 class LeadUpsertRequest(BaseModel):
@@ -35,6 +35,8 @@ class LeadResponse(BaseModel):
 
 
 class BookingRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     lead_id: str = Field(pattern=r"^LEAD-[0-9]{6}$")
     customer_id: str = Field(pattern=r"^CUST-[0-9]{6}$")
     vehicle_id: str = Field(pattern=r"^VEH-[0-9]{6}$")
@@ -42,6 +44,20 @@ class BookingRequest(BaseModel):
     appointment_date: date
     appointment_time: time
     notes: str = Field(default="", max_length=1000)
+
+    @field_validator("appointment_date")
+    @classmethod
+    def reject_past_appointment_date(cls, value: date) -> date:
+        if value < date.today():
+            raise ValueError("appointment_date cannot be in the past")
+        return value
+
+    @field_validator("appointment_time")
+    @classmethod
+    def require_bookable_time_boundary(cls, value: time) -> time:
+        if value.minute not in (0, 30) or value.second or value.microsecond:
+            raise ValueError("appointment_time must be on a 30-minute boundary")
+        return value
 
 
 class BookingResponse(BaseModel):

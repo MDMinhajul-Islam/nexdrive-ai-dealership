@@ -1,3 +1,4 @@
+import json
 from types import SimpleNamespace
 
 from fastapi.testclient import TestClient
@@ -77,6 +78,73 @@ def test_authenticated_tool_request_is_accepted(monkeypatch) -> None:
         assert response.status_code == 200
     finally:
         app.dependency_overrides.clear()
+
+
+def test_tool_execution_log_contains_safe_trace_fields(monkeypatch, caplog) -> None:
+    monkeypatch.setattr(
+        tool_auth,
+        "get_settings",
+        lambda: SimpleNamespace(retell_tool_api_key="expected-tool-key"),
+    )
+    app.dependency_overrides[get_inventory_repository] = MinimalInventoryRepository
+    caplog.set_level("INFO", logger="nexdrive.audit")
+    try:
+        response = TestClient(app).post(
+            "/api/tools/search-inventory",
+            json={"make": "Toyota"},
+            headers={
+                "X-Retell-Tool-Key": "expected-tool-key",
+                "X-Retell-Call-ID": "call-123",
+                "X-Request-ID": "tool-request-123",
+            },
+        )
+        assert response.status_code == 200
+        events = [
+            json.loads(record.message)
+            for record in caplog.records
+            if record.message.startswith("{")
+        ]
+        event = next(item for item in events if item["event"] == "retell_tool_request")
+        assert event["retell_call_id"] == "call-123"
+        assert event["request_id"] == "tool-request-123"
+        assert event["tool_name"] == "search_inventory"
+        assert event["success"] is True
+        assert event["error_code"] is None
+        assert event["duration_ms"] >= 0
+        assert "received_at" in event
+        assert "completed_at" in event
+        assert "expected-tool-key" not in caplog.text
+        assert "Toyota" not in caplog.text
+    finally:
+        app.dependency_overrides.clear()
+
+
+def test_failed_tool_execution_log_has_safe_failure_reason(monkeypatch, caplog) -> None:
+    monkeypatch.setattr(
+        tool_auth,
+        "get_settings",
+        lambda: SimpleNamespace(retell_tool_api_key="expected-tool-key"),
+    )
+    caplog.set_level("INFO", logger="nexdrive.audit")
+
+    response = TestClient(app).post(
+        "/api/tools/search-inventory",
+        json={"make": "Toyota"},
+        headers={"X-Retell-Call-ID": "call-456"},
+    )
+
+    assert response.status_code == 401
+    events = [
+        json.loads(record.message)
+        for record in caplog.records
+        if record.message.startswith("{")
+    ]
+    event = next(item for item in events if item["event"] == "retell_tool_request")
+    assert event["retell_call_id"] == "call-456"
+    assert event["success"] is False
+    assert event["error_code"] == "UNAUTHORIZED"
+    assert "expected-tool-key" not in caplog.text
+    assert "Toyota" not in caplog.text
 
 
 def test_customer_history_requires_matching_verified_identity(monkeypatch) -> None:

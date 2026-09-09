@@ -15,3 +15,8 @@ class DatabaseHealthResponse(BaseModel):
     status: Literal["ok"] = "ok"
     database: Literal["connected"] = "connected"
     source: Literal["supabase"] = "supabase"
+
+
+class ReadinessResponse(BaseModel):
+    status: Literal["ready"] = "ready"
+    checks: dict[str, Literal["ok"]]

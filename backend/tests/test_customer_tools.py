@@ -41,7 +41,7 @@ class FakeRepository:
 
     def appointments_between(self, start, end):
         return [{
-            "salesperson_id": "SP-001", "appointment_date": "2026-08-25",
+            "salesperson_id": "SP-001", "appointment_date": "2099-09-01",
             "appointment_time": "09:30:00", "status": "Confirmed",
         }]
 
@@ -71,13 +71,15 @@ def test_customer_history_returns_related_records():
 
 def test_slots_follow_shift_and_exclude_booked_time():
     result = get_test_drive_slots(SlotQuery(
-        start_date=date(2026, 8, 25), days=1, salesperson_id="SP-001", limit=10,
+        requested_date=date(2099, 9, 1), days=1, salesperson_id="SP-001", limit=10,
     ), FakeRepository())
     assert [slot.appointment_time.strftime("%H:%M") for slot in result.slots] == ["09:00", "10:00"]
 
 
 def test_customer_tool_routes():
+    inventory = CsvInventoryRepository(Path(__file__).parent / "fixtures" / "inventory")
     app.dependency_overrides[get_customer_tools_repository] = FakeRepository
+    app.dependency_overrides[get_test_drive_inventory_repository] = lambda: inventory
     try:
         client = TestClient(app, headers=TOOL_HEADERS)
         history = client.get(
@@ -105,7 +107,8 @@ def test_customer_tool_routes():
         assert missing.status_code == 404
 
         slots = client.get("/api/tools/get-test-drive-slots", params={
-            "start_date": "2026-08-25", "days": 1, "salesperson_id": "SP-001",
+            "vehicle_id": "VEH-000001", "requested_date": "2099-09-01",
+            "days": 1, "salesperson_id": "SP-001",
         })
         assert slots.status_code == 200
         assert slots.json()["count"] == 2
@@ -175,10 +178,11 @@ def test_test_drive_slots_post_route_uses_authoritative_vehicle_and_slots():
     try:
         client = TestClient(app, headers=TOOL_HEADERS)
         get_response = client.get("/api/tools/get-test-drive-slots", params={
-            "start_date": "2026-08-25", "days": 1, "salesperson_id": "SP-001",
+            "vehicle_id": "VEH-000001", "requested_date": "2099-09-01",
+            "days": 1, "salesperson_id": "SP-001",
         })
         response = client.post("/api/tools/get-test-drive-slots", json={
-            "vehicle_id": "VEH-000001", "start_date": "2026-08-25",
+            "vehicle_id": "VEH-000001", "requested_date": "2099-09-01",
             "days": 1, "salesperson_id": "SP-001",
         })
         assert response.status_code == 200
@@ -186,11 +190,20 @@ def test_test_drive_slots_post_route_uses_authoritative_vehicle_and_slots():
         assert response.json()["count"] == 2
 
         ineligible = client.post("/api/tools/get-test-drive-slots", json={
-            "vehicle_id": "VEH-000002", "start_date": "2026-08-25",
+            "vehicle_id": "VEH-000002", "requested_date": "2099-09-01",
         })
         assert ineligible.status_code == 409
-        assert ineligible.json()["detail"]["vehicle_status"] == "Sold"
-        assert "cannot be recommended" in ineligible.json()["detail"]["reason"]
+        assert ineligible.json() == {
+            "success": False,
+            "error_code": "VEHICLE_NOT_AVAILABLE_FOR_TEST_DRIVE",
+            "retryable": False,
+            "message": "This vehicle is not currently available for a test drive",
+        }
+        ineligible_get = client.get("/api/tools/get-test-drive-slots", params={
+            "vehicle_id": "VEH-000002", "requested_date": "2099-09-01",
+        })
+        assert ineligible_get.status_code == 409
+        assert ineligible_get.json() == ineligible.json()
     finally:
         app.dependency_overrides.clear()
 
@@ -198,19 +211,59 @@ def test_test_drive_slots_post_route_uses_authoritative_vehicle_and_slots():
 def test_test_drive_slots_post_route_rejects_invalid_or_missing_input():
     client = TestClient(app, headers=TOOL_HEADERS)
     invalid_vehicle = client.post("/api/tools/get-test-drive-slots", json={
-        "vehicle_id": "bad-id", "start_date": "2026-08-25",
+        "vehicle_id": "bad-id", "requested_date": "2099-09-01",
     })
     assert invalid_vehicle.status_code == 422
 
     missing_vehicle = client.post("/api/tools/get-test-drive-slots", json={
-        "start_date": "2026-08-25",
+        "requested_date": "2099-09-01",
     })
     assert missing_vehicle.status_code == 422
 
     invalid_date = client.post("/api/tools/get-test-drive-slots", json={
-        "vehicle_id": "VEH-000001", "start_date": "not-a-date",
+        "vehicle_id": "VEH-000001", "requested_date": "not-a-date",
     })
     assert invalid_date.status_code == 422
+
+    missing_get_vehicle = client.get(
+        "/api/tools/get-test-drive-slots",
+        params={"requested_date": "2099-09-01"},
+    )
+    assert missing_get_vehicle.status_code == 422
+
+
+def test_test_drive_slots_post_keeps_start_date_alias_compatible():
+    inventory = CsvInventoryRepository(Path(__file__).parent / "fixtures" / "inventory")
+    app.dependency_overrides[get_customer_tools_repository] = FakeRepository
+    app.dependency_overrides[get_test_drive_inventory_repository] = lambda: inventory
+    try:
+        response = TestClient(app, headers=TOOL_HEADERS).post(
+            "/api/tools/get-test-drive-slots",
+            json={
+                "vehicle_id": "VEH-000001",
+                "start_date": "2099-09-01",
+                "days": 1,
+            },
+        )
+        assert response.status_code == 200
+        assert response.json()["count"] == 2
+    finally:
+        app.dependency_overrides.clear()
+
+
+def test_test_drive_slots_get_rejects_past_date_before_returning_slots():
+    inventory = CsvInventoryRepository(Path(__file__).parent / "fixtures" / "inventory")
+    app.dependency_overrides[get_customer_tools_repository] = FakeRepository
+    app.dependency_overrides[get_test_drive_inventory_repository] = lambda: inventory
+    try:
+        response = TestClient(app, headers=TOOL_HEADERS).get(
+            "/api/tools/get-test-drive-slots",
+            params={"vehicle_id": "VEH-000001", "requested_date": "2026-08-01"},
+        )
+        assert response.status_code == 422
+        assert response.json()["error_code"] == "PAST_REQUESTED_DATE"
+    finally:
+        app.dependency_overrides.clear()
 
 
 def test_test_drive_slots_post_route_returns_not_found_and_safe_service_errors(monkeypatch):
@@ -220,17 +273,17 @@ def test_test_drive_slots_post_route_returns_not_found_and_safe_service_errors(m
     try:
         client = TestClient(app, headers=TOOL_HEADERS)
         not_found = client.post("/api/tools/get-test-drive-slots", json={
-            "vehicle_id": "VEH-999999", "start_date": "2026-08-25",
+            "vehicle_id": "VEH-999999", "requested_date": "2099-09-01",
         })
         assert not_found.status_code == 404
-        assert not_found.json() == {"detail": "Vehicle not found"}
+        assert not_found.json()["error_code"] == "VEHICLE_NOT_FOUND"
 
         def unavailable(*_args):
             raise InventoryToolUnavailableError("provider details must stay private")
 
         monkeypatch.setattr(customer_tool_routes, "check_vehicle_availability", unavailable)
         failed = client.post("/api/tools/get-test-drive-slots", json={
-            "vehicle_id": "VEH-000001", "start_date": "2026-08-25",
+            "vehicle_id": "VEH-000001", "requested_date": "2099-09-01",
         })
         assert failed.status_code == 503
         assert failed.json()["error_code"] == "INVENTORY_UNAVAILABLE"

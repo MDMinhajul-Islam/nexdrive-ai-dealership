@@ -1,6 +1,6 @@
 """Frontend-safe Retell Web SDK endpoints."""
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 
 from app.schemas.retell import RetellWebCallRequest, RetellWebCallResponse
 from app.services.retell import (
@@ -10,25 +10,35 @@ from app.services.retell import (
     RetellUpstreamRequestError,
     create_web_call,
 )
+from app.utils.rate_limit import enforce_web_call_rate_limit
 
 
 router = APIRouter(prefix="/api/retell", tags=["Retell"])
 
 
-@router.post("/create-web-call", response_model=RetellWebCallResponse)
+@router.post(
+    "/create-web-call",
+    response_model=RetellWebCallResponse,
+    dependencies=[Depends(enforce_web_call_rate_limit)],
+)
 async def create_retell_web_call(
-    request: RetellWebCallRequest,
+    body: RetellWebCallRequest,
+    request: Request,
 ) -> RetellWebCallResponse:
     """Create a temporary web-call token using server-owned credentials."""
 
     try:
-        return await create_web_call(request)
+        response = await create_web_call(body)
+        request.state.retell_call_id = response.call_id
+        return response
     except RetellConfigurationError:
+        request.state.error_code = "RETELL_CONFIGURATION_ERROR"
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="Retell service is not configured",
         ) from None
     except RetellUpstreamRequestError as exc:
+        request.state.error_code = "RETELL_UPSTREAM_REJECTED"
         detail = {"message": "Retell rejected the web call request."}
         if exc.upstream_status is not None:
             detail["upstream_status"] = exc.upstream_status
@@ -37,6 +47,7 @@ async def create_retell_web_call(
             detail=detail,
         ) from None
     except RetellUnavailableError as exc:
+        request.state.error_code = "RETELL_UNAVAILABLE"
         detail: str | dict[str, str | int] = "Retell service unavailable"
         if exc.upstream_status is not None:
             detail = {
@@ -48,6 +59,7 @@ async def create_retell_web_call(
             detail=detail,
         ) from None
     except RetellInvalidResponseError:
+        request.state.error_code = "RETELL_INVALID_RESPONSE"
         raise HTTPException(
             status_code=status.HTTP_502_BAD_GATEWAY,
             detail="Retell returned an invalid response",

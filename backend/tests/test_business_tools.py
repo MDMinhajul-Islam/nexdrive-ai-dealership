@@ -16,6 +16,7 @@ from app.schemas.business_tools import (
     LeadUpsertRequest,
 )
 from app.services.business_tools import (
+    AppointmentSlotUnavailableError,
     BusinessConflictError,
     BusinessNotFoundError,
     BusinessToolError,
@@ -64,6 +65,26 @@ class BookingClient:
     def table(self, name):
         self.tables.append(name)
         return BookingQuery(next(self.results), self)
+
+
+class AtomicRpcQuery:
+    def __init__(self, result):
+        self.result = result
+
+    def execute(self):
+        if isinstance(self.result, Exception):
+            raise self.result
+        return SimpleNamespace(data=self.result)
+
+
+class AtomicClient:
+    def __init__(self, results):
+        self.results = iter(results)
+        self.calls = []
+
+    def rpc(self, function_name, parameters):
+        self.calls.append((function_name, parameters))
+        return AtomicRpcQuery(next(self.results))
 
 
 def booking_request(**changes):
@@ -195,6 +216,50 @@ def test_lead_update_uses_existing_active_customer_lead_without_duplicate_insert
     assert "test_drive_requested" not in client.update_payloads[0]
 
 
+def test_atomic_lead_upsert_serializes_create_then_update_to_same_lead():
+    created_lead = {
+        "lead_id": "LEAD-000321", "lead_status": "New",
+        "lead_score": 95, "lead_temperature": "Hot",
+    }
+    updated_lead = created_lead | {"lead_status": "Qualified"}
+    client = AtomicClient([
+        {"success": True, "created": True, "lead": created_lead},
+        {"success": True, "created": False, "lead": updated_lead},
+    ])
+
+    first = create_or_update_lead(lead_request(), client)
+    concurrent_retry = create_or_update_lead(lead_request(), client)
+
+    assert first.created is True
+    assert concurrent_retry.created is False
+    assert first.lead["lead_id"] == concurrent_retry.lead["lead_id"]
+    assert [call[0] for call in client.calls] == [
+        "upsert_lead_atomic", "upsert_lead_atomic",
+    ]
+
+
+def test_atomic_lead_update_does_not_send_empty_optional_values():
+    lead = {"lead_id": "LEAD-000321", "lead_score": 50, "lead_temperature": "Warm"}
+    client = AtomicClient([{"success": True, "created": False, "lead": lead}])
+
+    create_or_update_lead(
+        lead_request(
+            vehicle_interest=None,
+            purchase_timeline="Researching",
+            test_drive_requested=True,
+            financing_needed=False,
+            trade_in=False,
+        ),
+        client,
+    )
+
+    payload = client.calls[0][1]["p_request"]
+    assert "vehicle_interest" not in payload
+    assert "notes" not in payload
+    assert "source" not in payload
+    assert payload["lead_score"] == 35
+
+
 @pytest.mark.parametrize(
     ("results", "message"),
     [
@@ -240,7 +305,6 @@ def test_lead_database_failure_is_sanitized_by_route(monkeypatch):
         assert "provider details" not in response.text
     finally:
         app.dependency_overrides.clear()
-
 
 def test_lead_route_returns_authoritative_persisted_response(monkeypatch):
     lead = {"lead_id": "LEAD-000001", "lead_status": "New", "lead_score": 95, "lead_temperature": "Hot"}
@@ -321,17 +385,63 @@ def test_booking_inactive_appointment_is_not_treated_as_exact_duplicate(status):
         )
 
 
-def test_booking_past_appointment_is_not_treated_as_exact_duplicate():
-    with pytest.raises(
-        ExistingAppointmentConflictError,
-        match="cannot be treated as an exact duplicate",
-    ):
+def test_booking_rejects_past_date_before_database_access():
+    with pytest.raises(ValidationError, match="appointment_date cannot be in the past"):
+        booking_request(appointment_date="2026-08-01")
+
+
+def test_booking_rejects_time_outside_slot_increment():
+    with pytest.raises(ValidationError, match="30-minute boundary"):
+        booking_request(appointment_time="09:15:00")
+
+
+def test_atomic_booking_uses_persisted_rpc_result_and_idempotency():
+    appointment = persisted_appointment()
+    client = AtomicClient([
+        {"success": True, "created": True, "appointment": appointment},
+        {"success": True, "created": False, "appointment": appointment},
+    ])
+
+    first = create_test_drive(booking_request(), client)
+    duplicate = create_test_drive(booking_request(), client)
+
+    assert first.created is True
+    assert duplicate.created is False
+    assert duplicate.appointment["appointment_id"] == first.appointment["appointment_id"]
+    assert [call[0] for call in client.calls] == [
+        "create_test_drive_atomic", "create_test_drive_atomic",
+    ]
+
+
+def test_two_customers_attempting_same_slot_get_one_safe_conflict():
+    winner = persisted_appointment()
+    client = AtomicClient([
+        {"success": True, "created": True, "appointment": winner},
+        {
+            "success": False,
+            "error_code": "APPOINTMENT_SLOT_UNAVAILABLE",
+            "retryable": True,
+            "message": "The requested appointment time is no longer available",
+        },
+    ])
+
+    assert create_test_drive(booking_request(), client).created is True
+    with pytest.raises(AppointmentSlotUnavailableError):
         create_test_drive(
-            booking_request(appointment_date="2026-08-01"),
-            BookingClient([[
-                persisted_appointment(appointment_date="2026-08-01")
-            ]]),
+            booking_request(lead_id="LEAD-000002", customer_id="CUST-000002"),
+            client,
         )
+
+
+def test_atomic_booking_maps_unknown_vehicle_without_false_success():
+    client = AtomicClient([{
+        "success": False,
+        "error_code": "VEHICLE_NOT_FOUND",
+        "retryable": False,
+        "message": "Vehicle not found",
+    }])
+    with pytest.raises(BusinessNotFoundError, match="Vehicle not found"):
+        create_test_drive(booking_request(vehicle_id="VEH-999999"), client)
 
 
 def test_booking_persists_only_after_authoritative_checks_pass():
@@ -381,7 +491,7 @@ def test_booking_rejects_unavailable_vehicle_and_occupied_slot():
         create_test_drive(booking_request(), BookingClient(unavailable_vehicle))
 
     occupied_slot = booking_success_results()[:5] + [[{"appointment_id": "APT-999999"}]]
-    with pytest.raises(BusinessConflictError, match="slot is no longer available"):
+    with pytest.raises(BusinessConflictError, match="appointment time is no longer available"):
         create_test_drive(booking_request(), BookingClient(occupied_slot))
 
 
@@ -394,7 +504,11 @@ def test_booking_database_failure_is_sanitized_by_route(monkeypatch):
     try:
         response = TestClient(app, headers=TOOL_HEADERS).post("/api/tools/create-test-drive", json=booking_request().model_dump(mode="json"))
         assert response.status_code == 503
-        assert response.json() == {"detail": "Business tool unavailable"}
+        assert response.json() == {
+            "success": False, "error_code": "BOOKING_UNAVAILABLE",
+            "retryable": True,
+            "message": "Test-drive booking is temporarily unavailable",
+        }
         assert "provider details" not in response.text
     finally:
         app.dependency_overrides.clear()
@@ -417,16 +531,11 @@ def test_booking_route_returns_structured_conflict_for_different_active_appointm
             json=booking_request(appointment_time="10:00").model_dump(mode="json"),
         )
         assert response.status_code == 409
-        assert response.json()["detail"] == {
+        assert response.json() == {
+            "success": False,
+            "error_code": "EXISTING_APPOINTMENT_CONFLICT",
+            "retryable": False,
             "message": "This lead already has a different active test-drive appointment.",
-            "requested_booking_created": False,
-            "existing_appointment": {
-                key: existing.get(key)
-                for key in (
-                    "appointment_id", "lead_id", "vehicle_id", "salesperson_id",
-                    "appointment_date", "appointment_time", "status",
-                )
-            },
         }
     finally:
         app.dependency_overrides.clear()
@@ -448,6 +557,75 @@ def test_booking_route_returns_authoritative_created_appointment(monkeypatch):
             "appointment": appointment, "message": "",
             "data": {"created": True, "appointment": appointment},
         }
+    finally:
+        app.dependency_overrides.clear()
+
+
+def test_booking_route_returns_standardized_slot_conflict(monkeypatch):
+    def conflict(*_args):
+        raise AppointmentSlotUnavailableError()
+
+    app.dependency_overrides[get_business_client] = lambda: MagicMock()
+    monkeypatch.setattr(business_tool_routes, "create_test_drive", conflict)
+    try:
+        response = TestClient(app, headers=TOOL_HEADERS).post(
+            "/api/tools/create-test-drive",
+            json=booking_request().model_dump(mode="json"),
+        )
+        assert response.status_code == 409
+        assert response.json() == {
+            "success": False,
+            "error_code": "APPOINTMENT_SLOT_UNAVAILABLE",
+            "retryable": True,
+            "message": "The requested appointment time is no longer available",
+        }
+    finally:
+        app.dependency_overrides.clear()
+
+
+def test_booking_route_returns_standardized_unknown_vehicle(monkeypatch):
+    def not_found(*_args):
+        raise BusinessNotFoundError("Vehicle not found", "VEHICLE_NOT_FOUND")
+
+    app.dependency_overrides[get_business_client] = lambda: MagicMock()
+    monkeypatch.setattr(business_tool_routes, "create_test_drive", not_found)
+    try:
+        response = TestClient(app, headers=TOOL_HEADERS).post(
+            "/api/tools/create-test-drive",
+            json=booking_request(vehicle_id="VEH-999999").model_dump(mode="json"),
+        )
+        assert response.status_code == 404
+        assert response.json() == {
+            "success": False,
+            "error_code": "VEHICLE_NOT_FOUND",
+            "retryable": False,
+            "message": "Vehicle not found",
+        }
+    finally:
+        app.dependency_overrides.clear()
+
+
+def test_booking_logging_contains_operational_context_without_customer_id(
+    monkeypatch, caplog
+):
+    appointment = {"appointment_id": "APT-000001", "status": "Confirmed"}
+    app.dependency_overrides[get_business_client] = lambda: MagicMock()
+    monkeypatch.setattr(
+        business_tool_routes,
+        "create_test_drive",
+        lambda *_args: BookingResponse(created=True, appointment=appointment),
+    )
+    try:
+        response = TestClient(app, headers=TOOL_HEADERS).post(
+            "/api/tools/create-test-drive",
+            json=booking_request().model_dump(mode="json"),
+        )
+        assert response.status_code == 200
+        assert "vehicle_id=VEH-000001" in caplog.text
+        assert "appointment_date=2099-09-02" in caplog.text
+        assert "appointment_time=09:00:00" in caplog.text
+        assert "CUST-000001" not in caplog.text
+        assert '"received_at"' in caplog.text
     finally:
         app.dependency_overrides.clear()
 
@@ -486,6 +664,12 @@ def test_business_routes_validate_before_writes():
         response = TestClient(app, headers=TOOL_HEADERS).post("/api/tools/create-test-drive", json={"lead_id": "bad"})
         assert response.status_code == 422
         assert response.headers["X-Request-ID"]
+        assert response.json() == {
+            "success": False,
+            "error_code": "INVALID_BOOKING_REQUEST",
+            "retryable": False,
+            "message": "The booking request contains missing or invalid information",
+        }
         assert TestClient(app, headers=TOOL_HEADERS).post("/api/tools/create-test-drive", json={}).status_code == 422
     finally:
         app.dependency_overrides.clear()

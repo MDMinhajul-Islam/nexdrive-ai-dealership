@@ -7,7 +7,7 @@ TOOLS={
  "get_vehicle_details":("/api/tools/get-vehicle-details/{vehicle_id}","get"),
  "check_vehicle_availability":("/api/tools/check-vehicle-availability/{vehicle_id}","get"),
  "get_customer_history":("/api/tools/get-customer-history/{customer_id}","get"),
- "get_test_drive_slots":("/api/tools/get-test-drive-slots","get"),
+ "get_test_drive_slots":("/api/tools/get-test-drive-slots","post"),
  "create_or_update_lead":("/api/tools/create-or-update-lead","post"),
  "create_test_drive":("/api/tools/create-test-drive","post"),
  "estimate_financing":("/api/tools/estimate-financing","post"),

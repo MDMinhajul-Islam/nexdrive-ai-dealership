@@ -2,11 +2,13 @@
 
 from fastapi import APIRouter, HTTPException, status
 
-from app.schemas.health import DatabaseHealthResponse, HealthResponse
+from app.schemas.health import DatabaseHealthResponse, HealthResponse, ReadinessResponse
 from app.services.health import (
     DatabaseUnavailableError,
+    ReadinessConfigurationError,
     database_health_status,
     health_status,
+    readiness_status,
 )
 
 
@@ -34,4 +36,15 @@ def database_health() -> DatabaseHealthResponse:
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail={"status": "error", "database": "disconnected"},
+        ) from None
+
+
+@router.get("/health/readiness", response_model=ReadinessResponse)
+def readiness() -> ReadinessResponse:
+    try:
+        return readiness_status()
+    except ReadinessConfigurationError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail={"status": "not_ready", "checks": exc.checks},
         ) from None

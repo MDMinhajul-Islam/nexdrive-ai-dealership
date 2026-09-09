@@ -1,6 +1,8 @@
 """FastAPI application entry point."""
 
 from fastapi import FastAPI, Request
+from fastapi.exception_handlers import request_validation_exception_handler
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
@@ -28,12 +30,33 @@ app = FastAPI(
 @app.exception_handler(ToolAPIError)
 async def tool_api_error_handler(request: Request, exc: ToolAPIError) -> JSONResponse:
     request.state.tool_error_code = exc.error_code
-    return JSONResponse(status_code=exc.status_code, content=exc.payload())
+    request.state.error_code = exc.error_code
+    return JSONResponse(
+        status_code=exc.status_code,
+        content=exc.payload(),
+        headers=dict(exc.headers or {}),
+    )
+
+
+@app.exception_handler(RequestValidationError)
+async def request_validation_handler(request: Request, exc: RequestValidationError):
+    if request.url.path == "/api/tools/create-test-drive":
+        request.state.tool_error_code = "INVALID_BOOKING_REQUEST"
+        return JSONResponse(
+            status_code=422,
+            content={
+                "success": False,
+                "error_code": "INVALID_BOOKING_REQUEST",
+                "retryable": False,
+                "message": "The booking request contains missing or invalid information",
+            },
+        )
+    return await request_validation_exception_handler(request, exc)
 
 
 app.include_router(health_router)
 app.middleware("http")(audit_middleware)
-app.add_middleware(CORSMiddleware,allow_origins=[x.strip() for x in get_settings().cors_origins.split(",") if x.strip()],allow_credentials=False,allow_methods=["GET","POST","PATCH","OPTIONS"],allow_headers=["Content-Type","Authorization","X-Request-ID","Idempotency-Key"])
+app.add_middleware(CORSMiddleware,allow_origins=[x.strip() for x in get_settings().cors_origins.split(",") if x.strip()],allow_credentials=False,allow_methods=["GET","POST","PATCH","OPTIONS"],allow_headers=["Content-Type","Authorization","X-Request-ID","X-Session-ID","Idempotency-Key"])
 app.include_router(public_router)
 app.include_router(admin_router)
 app.include_router(operations_router)

@@ -29,10 +29,10 @@ def _parse_time(value: str | time) -> time:
 
 
 def get_test_drive_slots(query: TestDriveSlotQuery, repository: CustomerToolsRepository) -> TestDriveSlotsResponse:
-    end_date = query.start_date + timedelta(days=query.days - 1)
+    end_date = query.requested_date + timedelta(days=query.days - 1)
     try:
         salespeople = repository.salespeople(query.salesperson_id)
-        appointments = repository.appointments_between(query.start_date, end_date)
+        appointments = repository.appointments_between(query.requested_date, end_date)
     except CustomerToolsRepositoryError:
         raise CustomerToolsUnavailableError from None
 
@@ -42,7 +42,7 @@ def get_test_drive_slots(query: TestDriveSlotQuery, repository: CustomerToolsRep
     }
     slots: list[TestDriveSlot] = []
     for offset in range(query.days):
-        slot_date = query.start_date + timedelta(days=offset)
+        slot_date = query.requested_date + timedelta(days=offset)
         for person in salespeople:
             if slot_date.strftime("%A") not in person["working_days"]:
                 continue

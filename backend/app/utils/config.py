@@ -3,6 +3,7 @@
 from functools import lru_cache
 from pathlib import Path
 
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -27,6 +28,10 @@ class Settings(BaseSettings):
     retell_agent_id: str = ""
     # Shared only by Retell and this backend for calls to /api/tools.
     retell_tool_api_key: str = ""
+    retell_web_call_rate_limit_requests: int = Field(default=5, ge=1, le=100)
+    retell_web_call_rate_limit_window_seconds: int = Field(
+        default=60, ge=1, le=3600
+    )
 
     model_config = SettingsConfigDict(
         env_file=BACKEND_DIR / ".env",

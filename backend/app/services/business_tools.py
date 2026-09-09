@@ -11,13 +11,29 @@ logger = logging.getLogger("nexdrive.audit")
 
 
 class BusinessToolError(RuntimeError): pass
-class BusinessConflictError(RuntimeError): pass
-class BusinessNotFoundError(RuntimeError): pass
+
+
+class BusinessConflictError(RuntimeError):
+    def __init__(self, message: str, error_code: str = "BUSINESS_CONFLICT", retryable: bool = False):
+        super().__init__(message)
+        self.error_code = error_code
+        self.retryable = retryable
+
+
+class BusinessNotFoundError(RuntimeError):
+    def __init__(self, message: str, error_code: str = "BOOKING_REFERENCE_NOT_FOUND"):
+        super().__init__(message)
+        self.error_code = error_code
+
+
+class AppointmentSlotUnavailableError(BusinessConflictError):
+    def __init__(self, message: str = "The requested appointment time is no longer available"):
+        super().__init__(message, "APPOINTMENT_SLOT_UNAVAILABLE", True)
 
 
 class ExistingAppointmentConflictError(BusinessConflictError):
     def __init__(self, message: str, appointment: dict[str, Any]):
-        super().__init__(message)
+        super().__init__(message, "EXISTING_APPOINTMENT_CONFLICT")
         self.details = {
             "message": message,
             "requested_booking_created": False,
@@ -98,8 +114,61 @@ def _next_id(client: Any, table: str, field: str, prefix: str) -> str:
     return f"{prefix}-{number:06d}"
 
 
+def _rpc_result(client: Any, function_name: str, payload: dict[str, Any]) -> dict[str, Any]:
+    response = client.rpc(function_name, {"p_request": payload}).execute()
+    result = response.data
+    if isinstance(result, list) and len(result) == 1:
+        result = result[0]
+    if not isinstance(result, dict):
+        raise BusinessToolError("Atomic write returned an invalid response")
+    return result
+
+
+def _raise_atomic_error(result: dict[str, Any]) -> None:
+    code = str(result.get("error_code", "WRITE_FAILED"))
+    message = str(result.get("message", "The requested write could not be completed"))
+    if code in {
+        "CUSTOMER_NOT_FOUND", "VEHICLE_NOT_FOUND", "SALESPERSON_NOT_FOUND",
+        "LEAD_NOT_FOUND",
+    }:
+        raise BusinessNotFoundError(message, code)
+    if code == "APPOINTMENT_SLOT_UNAVAILABLE":
+        raise AppointmentSlotUnavailableError(message)
+    if code == "EXISTING_APPOINTMENT_CONFLICT":
+        appointment = result.get("existing_appointment")
+        raise ExistingAppointmentConflictError(
+            message, appointment if isinstance(appointment, dict) else {}
+        )
+    raise BusinessConflictError(message, code, bool(result.get("retryable", False)))
+
+
 def create_or_update_lead(request: LeadUpsertRequest, client: Any) -> LeadResponse:
     try:
+        if callable(getattr(client, "rpc", None)):
+            score, temperature = score_lead(request)
+            payload = request.model_dump(
+                mode="json",
+                exclude={"test_drive_requested"},
+                exclude_unset=True,
+                exclude_none=True,
+            )
+            if not payload.get("notes", "").strip():
+                payload.pop("notes", None)
+            payload.update({"lead_score": score, "lead_temperature": temperature})
+            atomic = _rpc_result(client, "upsert_lead_atomic", payload)
+            if not atomic.get("success"):
+                _raise_atomic_error(atomic)
+            result = atomic.get("lead")
+            if not isinstance(result, dict) or not result.get("lead_id"):
+                raise BusinessToolError("Lead write was not persisted")
+            created = bool(atomic.get("created"))
+            logger.info(
+                "lead_upsert success=True created=%s lead_id=%s",
+                created,
+                result["lead_id"],
+            )
+            return LeadResponse(created=created, lead=result)
+
         if not client.table("customers").select("customer_id").eq("customer_id", request.customer_id).limit(1).execute().data:
             raise BusinessNotFoundError("Customer not found")
 
@@ -118,6 +187,12 @@ def create_or_update_lead(request: LeadUpsertRequest, client: Any) -> LeadRespon
         payload = request.model_dump(exclude={"test_drive_requested"})
         payload.update({"lead_score": score, "lead_temperature": temperature, "updated_at": datetime.utcnow().isoformat(), "next_followup_date": date.today().isoformat()})
         if existing:
+            if request.vehicle_interest is None:
+                payload.pop("vehicle_interest", None)
+            if not request.notes.strip():
+                payload.pop("notes", None)
+            if "source" not in request.model_fields_set:
+                payload.pop("source", None)
             lead_id = existing[0]["lead_id"]
             result = client.table("leads").update(payload).eq("lead_id", lead_id).execute().data[0]
             created = False
@@ -133,6 +208,25 @@ def create_or_update_lead(request: LeadUpsertRequest, client: Any) -> LeadRespon
 
 def create_test_drive(request: BookingRequest, client: Any) -> BookingResponse:
     try:
+        if callable(getattr(client, "rpc", None)):
+            atomic = _rpc_result(
+                client,
+                "create_test_drive_atomic",
+                request.model_dump(mode="json"),
+            )
+            if not atomic.get("success"):
+                _raise_atomic_error(atomic)
+            result = atomic.get("appointment")
+            if not isinstance(result, dict) or not result.get("appointment_id"):
+                raise BusinessToolError("Appointment write was not persisted")
+            created = bool(atomic.get("created"))
+            logger.info(
+                "booking_create success=True created=%s appointment_id=%s",
+                created,
+                result["appointment_id"],
+            )
+            return BookingResponse(created=created, appointment=result)
+
         existing = client.table("appointments").select("*").eq("lead_id", request.lead_id).limit(1).execute().data
         if existing:
             appointment = existing[0]
@@ -173,7 +267,10 @@ def create_test_drive(request: BookingRequest, client: Any) -> BookingResponse:
         if request.appointment_date.strftime("%A") not in person[0]["working_days"] or not (str(person[0]["shift_start"])[:5] <= slot_time < str(person[0]["shift_end"])[:5]):
             raise BusinessConflictError("Requested time is outside the salesperson shift")
         clash = client.table("appointments").select("appointment_id").eq("salesperson_id", request.salesperson_id).eq("appointment_date", request.appointment_date.isoformat()).eq("appointment_time", slot_time).in_("status", ["Requested", "Confirmed", "Rescheduled"]).limit(1).execute().data
-        if clash: raise BusinessConflictError("Requested slot is no longer available")
+        if clash:
+            raise AppointmentSlotUnavailableError(
+                "The requested appointment time is no longer available"
+            )
         payload = request.model_dump(mode="json")
         payload.update({"appointment_id": _next_id(client, "appointments", "appointment_id", "APT"), "appointment_type": "Test Drive", "status": "Confirmed", "created_by": "Voice Agent", "created_at": datetime.utcnow().isoformat()})
         result = client.table("appointments").insert(payload).execute().data[0]

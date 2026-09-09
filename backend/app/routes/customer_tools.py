@@ -3,7 +3,7 @@
 from datetime import date
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Header, HTTPException, Path, Query, status
+from fastapi import APIRouter, Depends, Header, Path, Query, status
 
 from app.database import get_supabase
 from app.repositories.customer_tools import CustomerToolsRepository, SupabaseCustomerToolsRepository
@@ -92,18 +92,31 @@ def customer_history_post_tool(
 @router.get("/get-test-drive-slots", response_model=TestDriveSlotsResponse)
 def test_drive_slots_tool(
     repository: Repository,
-    start_date: date = Query(...), days: int = Query(7, ge=1, le=14),
+    inventory_repository: InventoryRepositoryDependency,
+    vehicle_id: str = Query(..., pattern=r"^VEH-[0-9]{6}$"),
+    requested_date: date = Query(...),
+    days: int = Query(7, ge=1, le=14),
     salesperson_id: str | None = Query(None, pattern=r"^SP-[0-9]{3}$"),
     limit: int = Query(20, ge=1, le=50),
 ) -> TestDriveSlotsResponse:
-    return _test_drive_slots_response(
-        TestDriveSlotQuery(
-            start_date=start_date,
-            days=days,
-            salesperson_id=salesperson_id,
-            limit=limit,
-        ),
+    if requested_date < date.today():
+        raise ToolAPIError(
+            status.HTTP_422_UNPROCESSABLE_ENTITY,
+            "PAST_REQUESTED_DATE",
+            False,
+            "Requested test-drive date cannot be in the past",
+        )
+    request = TestDriveSlotDiscoveryRequest(
+        vehicle_id=vehicle_id,
+        requested_date=requested_date,
+        days=days,
+        salesperson_id=salesperson_id,
+        limit=limit,
+    )
+    return _vehicle_test_drive_slots_response(
+        request,
         repository,
+        inventory_repository,
     )
 
 
@@ -113,22 +126,25 @@ def _test_drive_slots_response(
     try:
         return get_test_drive_slots(query, repository)
     except CustomerToolsUnavailableError:
-        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="Scheduling service unavailable") from None
+        raise ToolAPIError(
+            status.HTTP_503_SERVICE_UNAVAILABLE,
+            "SCHEDULING_UNAVAILABLE",
+            True,
+            "Test-drive scheduling is temporarily unavailable",
+        ) from None
 
 
-@router.post("/get-test-drive-slots", response_model=TestDriveSlotsResponse)
-def test_drive_slots_post_tool(
+def _vehicle_test_drive_slots_response(
     request: TestDriveSlotDiscoveryRequest,
-    repository: Repository,
-    inventory_repository: InventoryRepositoryDependency,
+    repository: CustomerToolsRepository,
+    inventory_repository: InventoryRepository,
 ) -> TestDriveSlotsResponse:
-    """Retell-friendly, read-only vehicle-specific test-drive slot discovery."""
     try:
-        availability = check_vehicle_availability(
-            request.vehicle_id, inventory_repository
-        )
+        availability = check_vehicle_availability(request.vehicle_id, inventory_repository)
     except InventoryVehicleNotFoundError:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Vehicle not found") from None
+        raise ToolAPIError(
+            status.HTTP_404_NOT_FOUND, "VEHICLE_NOT_FOUND", False, "Vehicle not found"
+        ) from None
     except InventoryToolUnavailableError:
         raise ToolAPIError(
             status.HTTP_503_SERVICE_UNAVAILABLE,
@@ -138,13 +154,22 @@ def test_drive_slots_post_tool(
         ) from None
 
     if not availability.can_book_test_drive:
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail={
-                "vehicle_id": availability.vehicle_id,
-                "vehicle_status": availability.vehicle_status,
-                "reason": availability.reason,
-            },
+        raise ToolAPIError(
+            status.HTTP_409_CONFLICT,
+            "VEHICLE_NOT_AVAILABLE_FOR_TEST_DRIVE",
+            False,
+            "This vehicle is not currently available for a test drive",
         )
-
     return _test_drive_slots_response(request, repository)
+
+
+@router.post("/get-test-drive-slots", response_model=TestDriveSlotsResponse)
+def test_drive_slots_post_tool(
+    request: TestDriveSlotDiscoveryRequest,
+    repository: Repository,
+    inventory_repository: InventoryRepositoryDependency,
+) -> TestDriveSlotsResponse:
+    """Retell-friendly, read-only vehicle-specific test-drive slot discovery."""
+    return _vehicle_test_drive_slots_response(
+        request, repository, inventory_repository
+    )

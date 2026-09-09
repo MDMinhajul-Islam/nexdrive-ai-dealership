@@ -1,6 +1,7 @@
 """Safe, machine-readable errors for Retell-facing tool endpoints."""
 
 from dataclasses import dataclass
+from typing import Mapping
 
 
 @dataclass(slots=True)
@@ -9,6 +10,7 @@ class ToolAPIError(Exception):
     error_code: str
     retryable: bool
     message: str
+    headers: Mapping[str, str] | None = None
 
     def payload(self) -> dict[str, str | bool]:
         return {

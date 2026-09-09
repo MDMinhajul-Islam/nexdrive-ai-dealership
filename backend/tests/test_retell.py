@@ -20,6 +20,8 @@ from app.services.retell import (
     create_web_call,
 )
 from app.utils.config import Settings
+from app.utils import rate_limit
+from app.utils.rate_limit import web_call_rate_limiter
 
 
 REQUEST_BODY = {
@@ -27,6 +29,13 @@ REQUEST_BODY = {
     "assigned_salesperson": "SP-001",
 }
 TEST_API_KEY = "test-retell-secret"
+
+
+@pytest.fixture(autouse=True)
+def reset_web_call_rate_limiter():
+    web_call_rate_limiter.reset()
+    yield
+    web_call_rate_limiter.reset()
 
 
 def _settings(api_key: str = TEST_API_KEY, agent_id: str = "agent-test") -> Settings:
@@ -137,6 +146,97 @@ def test_retell_route_returns_only_frontend_fields_and_never_api_key(monkeypatch
         "call_id": "call-123",
     }
     assert TEST_API_KEY not in response.text
+
+
+def test_retell_route_rate_limits_abusive_client(monkeypatch):
+    calls = 0
+
+    async def successful_call(_request):
+        nonlocal calls
+        calls += 1
+        return RetellWebCallResponse(
+            access_token="temporary-token", call_id=f"call-{calls}"
+        )
+
+    monkeypatch.setattr(retell_routes, "create_web_call", successful_call)
+    monkeypatch.setattr(
+        rate_limit,
+        "get_settings",
+        lambda: Settings(
+            retell_web_call_rate_limit_requests=2,
+            retell_web_call_rate_limit_window_seconds=60,
+        ),
+    )
+    client = TestClient(app)
+
+    first = client.post("/api/retell/create-web-call", json=REQUEST_BODY)
+    second = client.post("/api/retell/create-web-call", json=REQUEST_BODY)
+    limited = client.post("/api/retell/create-web-call", json=REQUEST_BODY)
+
+    assert first.status_code == 200
+    assert second.status_code == 200
+    assert calls == 2
+    assert limited.status_code == 429
+    assert limited.json() == {
+        "success": False,
+        "error_code": "RATE_LIMITED",
+        "retryable": True,
+        "message": "Too many requests. Please try again later.",
+    }
+    assert int(limited.headers["Retry-After"]) > 0
+
+
+def test_web_call_rate_limit_uses_session_without_overblocking_shared_ip():
+    for index in range(6):
+        decision = web_call_rate_limiter.check(
+            ip_address="shared-proxy",
+            session_id=f"session-{index:08d}",
+            limit=1,
+            window_seconds=60,
+        )
+        assert decision.allowed is True
+
+    repeated = web_call_rate_limiter.check(
+        ip_address="shared-proxy",
+        session_id="session-00000000",
+        limit=1,
+        window_seconds=60,
+    )
+    assert repeated.allowed is False
+    assert repeated.retry_after > 0
+
+
+def test_retell_web_call_log_is_structured_and_secret_safe(monkeypatch, caplog):
+    async def successful_call(_request):
+        return RetellWebCallResponse(
+            access_token="temporary-token-must-not-log", call_id="call-123"
+        )
+
+    monkeypatch.setattr(retell_routes, "create_web_call", successful_call)
+    caplog.set_level("INFO", logger="nexdrive.audit")
+
+    response = TestClient(app).post(
+        "/api/retell/create-web-call",
+        json=REQUEST_BODY,
+        headers={"X-Request-ID": "request-123"},
+    )
+
+    assert response.status_code == 200
+    events = [
+        json.loads(record.message)
+        for record in caplog.records
+        if record.message.startswith("{")
+    ]
+    event = next(item for item in events if item["event"] == "retell_web_call_request")
+    assert event["request_id"] == "request-123"
+    assert event["retell_call_id"] == "call-123"
+    assert event["success"] is True
+    assert event["error_code"] is None
+    assert event["duration_ms"] >= 0
+    assert "received_at" in event
+    assert "completed_at" in event
+    assert "temporary-token-must-not-log" not in caplog.text
+    assert REQUEST_BODY["customer_id"] not in caplog.text
 
 
 @pytest.mark.parametrize(

@@ -3,7 +3,7 @@
 from datetime import date, time
 from typing import Any, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import AliasChoices, BaseModel, ConfigDict, Field, field_validator, model_validator
 
 
 class CustomerHistory(BaseModel):
@@ -32,10 +32,21 @@ class CustomerHistoryRequest(BaseModel):
 
 
 class TestDriveSlotQuery(BaseModel):
-    start_date: date
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+
+    requested_date: date = Field(
+        validation_alias=AliasChoices("requested_date", "start_date")
+    )
     days: int = Field(default=7, ge=1, le=14)
     salesperson_id: str | None = Field(default=None, pattern=r"^SP-[0-9]{3}$")
     limit: int = Field(default=20, ge=1, le=50)
+
+    @field_validator("requested_date")
+    @classmethod
+    def reject_past_requested_date(cls, value: date) -> date:
+        if value < date.today():
+            raise ValueError("requested_date cannot be in the past")
+        return value
 
 
 class TestDriveSlotDiscoveryRequest(TestDriveSlotQuery):
