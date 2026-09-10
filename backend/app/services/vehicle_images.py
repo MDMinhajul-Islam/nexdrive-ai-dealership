@@ -1,57 +1,123 @@
-"""Attach cached, licensed representative photos without exposing provider keys."""
+"""Attach ordered Supabase Storage images without exposing service credentials."""
 
 from __future__ import annotations
 
-from threading import Lock
-from time import monotonic
+import re
 from typing import Any
+from urllib.parse import quote
 
 from supabase import Client
 
-_LOCK = Lock()
-_CACHE: dict[str, dict[str, Any]] = {}
-_LOADED_AT = 0.0
-_TTL_SECONDS = 300
+from app.utils.config import get_settings
+
+VEHICLE_IMAGE_BUCKET = "vehicle-images"
 
 
-def _key(make: object, model: object, year: object | None = None) -> str:
-    prefix = f"{year}|" if year else ""
-    return f"{prefix}{str(make).strip().lower()}|{str(model).strip().lower()}"
+def _public_url(storage_path: str) -> str | None:
+    base_url = get_settings().supabase_url.rstrip("/")
+    if not base_url:
+        return None
+    return (
+        f"{base_url}/storage/v1/object/public/{VEHICLE_IMAGE_BUCKET}/"
+        f"{quote(storage_path, safe='/')}"
+    )
 
 
-def _load(db: Client) -> dict[str, dict[str, Any]]:
-    global _CACHE, _LOADED_AT
-    now = monotonic()
-    if _CACHE and now - _LOADED_AT < _TTL_SECONDS:
-        return _CACHE
-    with _LOCK:
-        if _CACHE and now - _LOADED_AT < _TTL_SECONDS:
-            return _CACHE
-        try:
-            rows = db.table("vehicle_images").select(
-                "image_key,make,model,model_year,image_url,thumbnail_url,source_url,usage_license,provider"
-            ).execute().data or []
-        except Exception:
-            # Migration is optional during rollout; public inventory must still work.
-            return _CACHE
-        _CACHE = {str(row["image_key"]): row for row in rows}
-        _LOADED_AT = now
-        return _CACHE
+def _valid_storage_path(vehicle_id: str, storage_path: object) -> bool:
+    if not isinstance(storage_path, str):
+        return False
+    return (
+        re.fullmatch(
+            rf"vehicles/{re.escape(vehicle_id)}/"
+            r"[A-Za-z0-9][A-Za-z0-9._/-]*\.(webp|jpg|jpeg|png|avif)",
+            storage_path,
+        )
+        is not None
+        and ".." not in storage_path.split("/")
+    )
 
 
 def attach_vehicle_images(db: Client, vehicles: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    images = _load(db)
+    """Attach exact vehicle images; missing metadata never blocks inventory."""
+    vehicle_ids = [
+        str(vehicle["vehicle_id"])
+        for vehicle in vehicles
+        if vehicle.get("vehicle_id")
+    ]
     for vehicle in vehicles:
-        exact = _key(vehicle.get("make"), vehicle.get("model"), vehicle.get("year"))
-        generic = _key(vehicle.get("make"), vehicle.get("model"))
-        image = images.get(exact) or images.get(generic)
-        if image:
-            vehicle.update({
-                "image_url": image["image_url"],
-                "image_thumbnail_url": image.get("thumbnail_url"),
-                "image_source_url": image.get("source_url"),
-                "image_license": image.get("usage_license"),
-                "image_provider": image.get("provider"),
-                "image_is_representative": True,
-            })
+        vehicle.update({
+            "primary_image_url": None,
+            "images": [],
+            "image_url": None,
+            "image_thumbnail_url": None,
+            "image_source_url": None,
+            "image_license": None,
+            "image_provider": None,
+            "image_is_representative": False,
+        })
+    if not vehicle_ids:
+        return vehicles
+
+    try:
+        rows = (
+            db.table("vehicle_images")
+            .select("id,vehicle_id,storage_path,sort_order,is_primary")
+            .in_("vehicle_id", vehicle_ids)
+            .order("is_primary", desc=True)
+            .order("sort_order")
+            .order("id")
+            .execute()
+            .data
+            or []
+        )
+    except Exception:
+        # Image metadata is optional during rollout; inventory remains authoritative.
+        return vehicles
+
+    images_by_vehicle: dict[str, list[dict[str, Any]]] = {}
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        vehicle_id = str(row.get("vehicle_id", ""))
+        storage_path = row.get("storage_path")
+        if vehicle_id not in vehicle_ids or not _valid_storage_path(
+            vehicle_id, storage_path
+        ):
+            continue
+        url = _public_url(storage_path)
+        if not url:
+            continue
+        try:
+            sort_order = int(row["sort_order"])
+        except (KeyError, TypeError, ValueError):
+            continue
+        if sort_order < 0 or not isinstance(row.get("is_primary"), bool):
+            continue
+        images_by_vehicle.setdefault(vehicle_id, []).append({
+            "url": url,
+            "is_primary": row["is_primary"],
+            "sort_order": sort_order,
+        })
+
+    for vehicle in vehicles:
+        images = sorted(
+            images_by_vehicle.get(str(vehicle.get("vehicle_id")), []),
+            key=lambda image: (
+                not image["is_primary"],
+                image["sort_order"],
+                image["url"],
+            ),
+        )
+        primary_url = images[0]["url"] if images else None
+        vehicle.update({
+            "primary_image_url": primary_url,
+            "images": images,
+            # Preserve the existing public response fields for older clients.
+            "image_url": primary_url,
+            "image_thumbnail_url": primary_url,
+            "image_source_url": None,
+            "image_license": None,
+            "image_provider": None,
+            "image_is_representative": False,
+        })
     return vehicles

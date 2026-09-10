@@ -9,6 +9,7 @@ from collections.abc import Callable
 from typing import Any, Protocol
 
 from app.schemas.inventory_tools import InventorySearchFilters
+from app.services.vehicle_images import attach_vehicle_images
 
 VEHICLE_COLUMNS = ",".join((
     "vehicle_id", "vin", "stock_number", "make", "model", "year", "trim",
@@ -119,7 +120,7 @@ class SupabaseInventoryRepository:
                 row = dict(raw)
                 row["features"] = _feature_names(row.pop("vehicle_features", []))
                 rows.append(row)
-            return rows
+            return attach_vehicle_images(self.client, rows)
         except Exception as exc:
             raise InventoryRepositoryError("Inventory search failed") from exc
 
@@ -131,7 +132,7 @@ class SupabaseInventoryRepository:
                 return None
             row = dict(result.data[0])
             row["features"] = _feature_names(row.pop("vehicle_features", []))
-            return row
+            return attach_vehicle_images(self.client, [row])[0]
         except Exception as exc:
             raise InventoryRepositoryError("Inventory lookup failed") from exc
 

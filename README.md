@@ -95,11 +95,12 @@ python backend/scripts/validate_seed_compatibility.py
 python backend/scripts/import_supabase.py --dry-run
 python backend/scripts/validate_retell_tools.py
 cd backend; pytest
-cd ../frontend; npm install; npm run lint; npm run build
+cd ../frontend; npm install; npm run lint; npm run test; npm run build
 ```
 
-Run database migrations in filename order (`01`–`12`). Migration 12 adds atomic lead and booking
-RPCs plus active-slot uniqueness. RLS denies direct browser access; only the
+Run database migrations in filename order (`01`–`13`). Migration 12 adds atomic lead and booking
+RPCs plus active-slot uniqueness; migration 13 adds per-vehicle Supabase Storage
+image metadata. RLS denies direct browser access; only the
 trusted FastAPI backend uses the Supabase secret/service-role key. Never commit `.env` files.
 
 All people, contact details, vehicle identifiers, and business records in this project must be synthetic.

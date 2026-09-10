@@ -1,6 +1,6 @@
 """Fetch licensed representative model photos from CarsXE into Supabase.
 
-Run from the backend container after migration 11. The provider key stays in the
+Run from the backend container after migration 13. The provider key stays in the
 backend environment and is never returned to the browser.
 """
 
@@ -113,7 +113,7 @@ def main() -> int:
                     "height": int(selected.get("height") or 0) or None,
                     "fetched_at": datetime.now(timezone.utc).isoformat(),
                 }
-                db.table("vehicle_images").upsert(record, on_conflict="image_key").execute()
+                db.table("vehicle_model_images").upsert(record, on_conflict="image_key").execute()
                 synced += 1
                 print(f"OK   {index}/{len(items)} {item['make']} {item['model']}")
             except Exception as exc:

@@ -4,6 +4,7 @@ from typing import Any
 
 from app.database import get_supabase
 from app.schemas.vehicle import VehicleDetails
+from app.services.vehicle_images import attach_vehicle_images
 
 
 VEHICLE_COLUMNS = ",".join(
@@ -81,6 +82,7 @@ def get_vehicle_details(vehicle_id: str) -> VehicleDetails:
         )
         vehicle = dict(vehicle_rows[0])
         vehicle["features"] = _feature_names(feature_result.data or [])
+        vehicle = attach_vehicle_images(client, [vehicle])[0]
         return VehicleDetails.model_validate(vehicle)
     except Exception:
         raise VehicleDatabaseError("Vehicle database lookup failed") from None

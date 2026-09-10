@@ -6,7 +6,7 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, Field, field_validator, model_validator
 
-from app.schemas.vehicle import VehicleDetails
+from app.schemas.vehicle import VehicleDetails, VehicleImage
 
 
 class InventorySearchFilters(BaseModel):
@@ -88,6 +88,14 @@ class InventorySearchVehicle(BaseModel):
     test_drive_available: bool
     dealership_location: str
     features: list[str]
+    primary_image_url: str | None = None
+    images: list[VehicleImage] = Field(default_factory=list)
+    image_url: str | None = None
+    image_thumbnail_url: str | None = None
+    image_source_url: str | None = None
+    image_license: str | None = None
+    image_provider: str | None = None
+    image_is_representative: bool = False
 
 
 class InventorySearchResponse(BaseModel):

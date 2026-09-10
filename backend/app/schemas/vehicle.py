@@ -3,6 +3,12 @@
 from pydantic import BaseModel, Field
 
 
+class VehicleImage(BaseModel):
+    url: str
+    is_primary: bool
+    sort_order: int
+
+
 class VehicleDetails(BaseModel):
     vehicle_id: str
     vin: str
@@ -28,6 +34,15 @@ class VehicleDetails(BaseModel):
     certification: str
     dealership_location: str
     features: list[str] = Field(default_factory=list)
+    primary_image_url: str | None = None
+    images: list[VehicleImage] = Field(default_factory=list)
+    # Backward-compatible image aliases used by older public clients.
+    image_url: str | None = None
+    image_thumbnail_url: str | None = None
+    image_source_url: str | None = None
+    image_license: str | None = None
+    image_provider: str | None = None
+    image_is_representative: bool = False
 
 
 class VehicleDetailsResponse(BaseModel):

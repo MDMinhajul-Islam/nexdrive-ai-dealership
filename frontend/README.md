@@ -16,6 +16,11 @@ requires the public Supabase URL and publishable key. Voice calls obtain a
 short-lived access token from `POST /api/retell/create-web-call`; Retell API
 keys and agent configuration remain exclusively on the backend.
 
+Inventory cards and details consume `primary_image_url` and the ordered
+`images` array returned by the backend. Supabase Storage credentials are not
+needed in the browser. Generic body-type artwork remains a visibly labelled
+fallback when no verified per-vehicle photo is available.
+
 ## Dokploy
 
 Use build path `/frontend`, Dockerfile `Dockerfile`, context `/frontend`, domain

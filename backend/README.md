@@ -86,13 +86,18 @@ configuration groups without returning secret values. In production it also
 checks that admin authentication is enabled and CORS is not wildcard. It
 returns HTTP 503 with group-level status when configuration is incomplete.
 
-Retrieve authoritative vehicle details and normalized feature names with:
+Retrieve authoritative vehicle details, normalized feature names, and ordered
+Supabase Storage image metadata with:
 
 ```text
 GET http://127.0.0.1:8000/api/vehicles/VEH-000001
 ```
 
 Unknown valid-format IDs return HTTP 404, while malformed IDs return HTTP 422.
+Inventory records expose `primary_image_url` and `images`; the older
+`image_url` and `image_thumbnail_url` fields remain compatible aliases. See
+`docs/vehicle_images_storage.md` for the public `vehicle-images` bucket rollout
+and upload mapping rules.
 
 ## Data scripts
 
@@ -130,9 +135,9 @@ pytest
 
 ## Supabase import and deployment
 
-Run migrations `01` through `12`, then validate and repeatably upsert seed data. To add licensed
+Run migrations `01` through `13`, then validate and repeatably upsert seed data. To add licensed
 representative make/model photography, configure `CARSXE_API_KEY` only in the backend environment
-and run the controlled sync after migration 11:
+and run the controlled legacy-cache sync after migration 13:
 
 ```powershell
 python scripts/sync_vehicle_images.py --dry-run
