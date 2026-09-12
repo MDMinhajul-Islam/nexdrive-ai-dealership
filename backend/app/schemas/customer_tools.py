@@ -5,6 +5,8 @@ from typing import Any, Literal
 
 from pydantic import AliasChoices, BaseModel, ConfigDict, Field, field_validator, model_validator
 
+from app.utils.dealership_time import dealership_today
+
 
 class CustomerHistory(BaseModel):
     customer: dict[str, Any]
@@ -44,7 +46,7 @@ class TestDriveSlotQuery(BaseModel):
     @field_validator("requested_date")
     @classmethod
     def reject_past_requested_date(cls, value: date) -> date:
-        if value < date.today():
+        if value < dealership_today():
             raise ValueError("requested_date cannot be in the past")
         return value
 

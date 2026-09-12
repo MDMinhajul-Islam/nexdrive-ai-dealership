@@ -22,6 +22,7 @@ from app.services.inventory_tools import (
     check_vehicle_availability,
 )
 from app.tool_auth import require_retell_tool_auth, require_verified_customer_identity
+from app.utils.dealership_time import dealership_today
 from app.utils.tool_errors import ToolAPIError
 
 router = APIRouter(
@@ -99,7 +100,7 @@ def test_drive_slots_tool(
     salesperson_id: str | None = Query(None, pattern=r"^SP-[0-9]{3}$"),
     limit: int = Query(20, ge=1, le=50),
 ) -> TestDriveSlotsResponse:
-    if requested_date < date.today():
+    if requested_date < dealership_today():
         raise ToolAPIError(
             status.HTTP_422_UNPROCESSABLE_ENTITY,
             "PAST_REQUESTED_DATE",

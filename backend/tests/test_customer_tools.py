@@ -1,6 +1,8 @@
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
+import pytest
 from fastapi.testclient import TestClient
 
 from app.main import app
@@ -11,8 +13,14 @@ from app.routes.customer_tools import (
     get_customer_tools_repository,
     get_test_drive_inventory_repository,
 )
+from app.schemas import customer_tools as customer_tool_schemas
 from app.schemas.customer_tools import TestDriveSlotQuery as SlotQuery
-from app.services.customer_tools import get_customer_history, get_test_drive_slots
+from app.services import customer_tools as customer_tools_service
+from app.services.customer_tools import (
+    CustomerToolsUnavailableError,
+    get_customer_history,
+    get_test_drive_slots,
+)
 from app.services.inventory_tools import InventoryToolUnavailableError
 
 TOOL_HEADERS = {"X-Retell-Tool-Key": "test-retell-tool-key"}
@@ -62,6 +70,37 @@ class FailingHistoryRepository(FakeRepository):
         raise CustomerToolsRepositoryError("provider details must stay private")
 
 
+class SameDaySchedulingRepository(FakeRepository):
+    def salespeople(self, salesperson_id=None):
+        people = [{
+            "salesperson_id": "SP-001", "name": "Jordan Ellis", "active": True,
+            "working_days": ["Saturday"], "shift_start": "13:00:00", "shift_end": "16:00:00",
+        }]
+        return [person for person in people if salesperson_id is None or person["salesperson_id"] == salesperson_id]
+
+    def appointments_between(self, start, end):
+        return []
+
+
+class NoSameDaySlotsRepository(SameDaySchedulingRepository):
+    def salespeople(self, salesperson_id=None):
+        return [{
+            "salesperson_id": "SP-001", "name": "Jordan Ellis", "active": True,
+            "working_days": ["Saturday"], "shift_start": "14:30:00", "shift_end": "15:00:00",
+        }]
+
+    def appointments_between(self, start, end):
+        return [{
+            "salesperson_id": "SP-001", "appointment_date": "2026-09-12",
+            "appointment_time": "14:30:00", "status": "Confirmed",
+        }]
+
+
+class FailingSchedulingRepository(FakeRepository):
+    def salespeople(self, salesperson_id=None):
+        raise CustomerToolsRepositoryError("Salesperson schedule lookup failed")
+
+
 def test_customer_history_returns_related_records():
     result = get_customer_history("CUST-000001", FakeRepository())
     assert result.customer["customer_id"] == "CUST-000001"
@@ -74,6 +113,125 @@ def test_slots_follow_shift_and_exclude_booked_time():
         requested_date=date(2099, 9, 1), days=1, salesperson_id="SP-001", limit=10,
     ), FakeRepository())
     assert [slot.appointment_time.strftime("%H:%M") for slot in result.slots] == ["09:00", "10:00"]
+
+
+def test_same_day_slots_use_texas_time_exclude_past_and_keep_future(monkeypatch):
+    texas_time = datetime(2026, 9, 12, 14, 5, tzinfo=ZoneInfo("America/Chicago"))
+    monkeypatch.setattr(customer_tool_schemas, "dealership_today", lambda: texas_time.date())
+    monkeypatch.setattr(customer_tools_service, "dealership_now", lambda: texas_time)
+
+    result = get_test_drive_slots(
+        SlotQuery(requested_date=date(2026, 9, 12), days=1, limit=20),
+        SameDaySchedulingRepository(),
+    )
+
+    times = [slot.appointment_time.strftime("%H:%M") for slot in result.slots]
+    assert times == ["14:30", "15:00", "15:30"]
+    assert all(slot.appointment_time.minute in {0, 30} for slot in result.slots)
+
+
+def test_same_day_slots_exclude_230_when_it_has_already_passed(monkeypatch):
+    texas_time = datetime(2026, 9, 12, 14, 31, tzinfo=ZoneInfo("America/Chicago"))
+    monkeypatch.setattr(customer_tool_schemas, "dealership_today", lambda: texas_time.date())
+    monkeypatch.setattr(customer_tools_service, "dealership_now", lambda: texas_time)
+
+    result = get_test_drive_slots(
+        SlotQuery(requested_date=date(2026, 9, 12), days=1, limit=20),
+        SameDaySchedulingRepository(),
+    )
+
+    assert [slot.appointment_time.strftime("%H:%M") for slot in result.slots] == ["15:00", "15:30"]
+
+
+def test_no_same_day_slots_is_a_successful_empty_response(monkeypatch):
+    texas_time = datetime(2026, 9, 12, 14, 5, tzinfo=ZoneInfo("America/Chicago"))
+    monkeypatch.setattr(customer_tool_schemas, "dealership_today", lambda: texas_time.date())
+    monkeypatch.setattr(customer_tools_service, "dealership_now", lambda: texas_time)
+
+    result = get_test_drive_slots(
+        SlotQuery(requested_date=date(2026, 9, 12), days=1, limit=20),
+        NoSameDaySlotsRepository(),
+    )
+
+    assert result.success is True
+    assert result.count == 0
+    assert result.slots == []
+    assert result.message == "No test-drive slots are available for that date."
+
+
+def test_scheduling_repository_failure_keeps_internal_cause_for_logging():
+    with pytest.raises(CustomerToolsUnavailableError) as error:
+        get_test_drive_slots(
+            SlotQuery(requested_date=date(2099, 9, 1), days=1, limit=20),
+            FailingSchedulingRepository(),
+        )
+
+    assert isinstance(error.value.__cause__, CustomerToolsRepositoryError)
+
+
+@pytest.mark.parametrize("date_field", ["requested_date", "start_date"])
+def test_production_vehicle_slot_route_accepts_both_date_fields(monkeypatch, date_field):
+    texas_time = datetime(2026, 9, 12, 14, 5, tzinfo=ZoneInfo("America/Chicago"))
+    monkeypatch.setattr(customer_tool_schemas, "dealership_today", lambda: texas_time.date())
+    monkeypatch.setattr(customer_tools_service, "dealership_now", lambda: texas_time)
+    inventory = CsvInventoryRepository(
+        Path(__file__).resolve().parents[2] / "database" / "seed"
+    )
+    app.dependency_overrides[get_customer_tools_repository] = SameDaySchedulingRepository
+    app.dependency_overrides[get_test_drive_inventory_repository] = lambda: inventory
+    try:
+        response = TestClient(app, headers=TOOL_HEADERS).post(
+            "/api/tools/get-test-drive-slots",
+            json={
+                "vehicle_id": "VEH-004163",
+                date_field: "2026-09-12",
+                "days": 1,
+                "limit": 20,
+            },
+        )
+        assert response.status_code == 200
+        payload = response.json()
+        assert payload["success"] is True
+        assert payload["count"] == 3
+        assert [slot["appointment_time"] for slot in payload["slots"]] == [
+            "14:30:00", "15:00:00", "15:30:00",
+        ]
+    finally:
+        app.dependency_overrides.clear()
+
+
+def test_post_rejects_dates_past_in_texas(monkeypatch):
+    monkeypatch.setattr(customer_tool_schemas, "dealership_today", lambda: date(2026, 9, 12))
+
+    response = TestClient(app, headers=TOOL_HEADERS).post(
+        "/api/tools/get-test-drive-slots",
+        json={"vehicle_id": "VEH-000001", "requested_date": "2026-09-11"},
+    )
+
+    assert response.status_code == 422
+
+
+def test_slot_route_returns_sanitized_503_and_logs_repository_failure(caplog):
+    inventory = CsvInventoryRepository(Path(__file__).parent / "fixtures" / "inventory")
+    app.dependency_overrides[get_customer_tools_repository] = FailingSchedulingRepository
+    app.dependency_overrides[get_test_drive_inventory_repository] = lambda: inventory
+    caplog.set_level("ERROR", logger="app.services.customer_tools")
+    try:
+        response = TestClient(app, headers=TOOL_HEADERS).post(
+            "/api/tools/get-test-drive-slots",
+            json={"vehicle_id": "VEH-000001", "requested_date": "2099-09-01"},
+        )
+        assert response.status_code == 503
+        assert response.json() == {
+            "success": False,
+            "error_code": "SCHEDULING_UNAVAILABLE",
+            "retryable": True,
+            "message": "Test-drive scheduling is temporarily unavailable",
+        }
+        assert "Salesperson schedule lookup failed" in caplog.text
+        assert "Salesperson schedule lookup failed" not in response.text
+    finally:
+        app.dependency_overrides.clear()
 
 
 def test_customer_tool_routes():
