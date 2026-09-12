@@ -56,7 +56,7 @@ async def request_validation_handler(request: Request, exc: RequestValidationErr
 
 app.include_router(health_router)
 app.middleware("http")(audit_middleware)
-app.add_middleware(CORSMiddleware,allow_origins=[x.strip() for x in get_settings().cors_origins.split(",") if x.strip()],allow_credentials=False,allow_methods=["GET","POST","PATCH","OPTIONS"],allow_headers=["Content-Type","Authorization","X-Request-ID","X-Session-ID","Idempotency-Key"])
+app.add_middleware(CORSMiddleware,allow_origins=[x.strip() for x in get_settings().cors_origins.split(",") if x.strip()],allow_credentials=False,allow_methods=["GET","POST","PATCH","DELETE","OPTIONS"],allow_headers=["Content-Type","Authorization","X-Request-ID","X-Session-ID","Idempotency-Key"])
 app.include_router(public_router)
 app.include_router(admin_router)
 app.include_router(operations_router)

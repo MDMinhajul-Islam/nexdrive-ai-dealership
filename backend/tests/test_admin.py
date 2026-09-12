@@ -4,6 +4,42 @@ from app.main import app
 from app.routes.admin import client as admin_client
 from app.utils.config import Settings
 from app import auth as admin_auth
+from fastapi.middleware.cors import CORSMiddleware
+import pytest
+
+
+def test_admin_delete_cors_preflight_allows_configured_origin_only():
+ cors = next(m for m in app.user_middleware if m.cls is CORSMiddleware)
+ origin = cors.kwargs["allow_origins"][0]
+ headers = {"Origin": origin, "Access-Control-Request-Method": "DELETE", "Access-Control-Request-Headers": "authorization,content-type"}
+ client = TestClient(app)
+ response = client.options("/api/admin/appointments/APT-000321", headers=headers)
+ assert response.status_code == 200
+ assert response.headers["access-control-allow-origin"] == origin
+ assert "DELETE" in response.headers["access-control-allow-methods"]
+ assert "access-control-allow-credentials" not in response.headers
+ rejected = client.options("/api/admin/appointments/APT-000321", headers={**headers, "Origin": "https://untrusted.invalid"})
+ assert rejected.status_code == 400
+ assert "access-control-allow-origin" not in rejected.headers
+
+
+@pytest.mark.parametrize("failure_stage", ["lookup", "delete"])
+def test_admin_delete_database_failure_is_sanitized(failure_stage):
+ class FailingQuery(MutableQuery):
+  def execute(self):
+   if failure_stage == "lookup" or self.operation == "delete":
+    raise RuntimeError("private database failure details")
+   return super().execute()
+ class FailingClient(MutableClient):
+  def table(self, name): return FailingQuery(self.store, name)
+ fake = FailingClient()
+ app.dependency_overrides[admin_client] = lambda: fake
+ try:
+  response = TestClient(app).delete("/api/admin/appointments/APT-000001")
+  assert response.status_code == 503
+  assert response.json() == {"detail": "Booking deletion unavailable"}
+  assert len(fake.store["appointments"]) == 1
+ finally: app.dependency_overrides.clear()
 
 class Query:
  def __init__(self): self.filters=[]

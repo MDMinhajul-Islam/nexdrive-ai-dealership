@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 
 import '@testing-library/jest-dom/vitest';
-import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const mocks = vi.hoisted(() => ({
@@ -32,6 +32,23 @@ beforeEach(() => {
 afterEach(cleanup);
 
 describe('admin dashboard', () => {
+  it('retains the modal and row until deletion is confirmed by the backend', async () => {
+    let resolveDelete;
+    mocks.api.mockResolvedValueOnce(summary)
+      .mockResolvedValueOnce({ records: [{ appointment_id: 'APT-000321', status: 'Confirmed' }] })
+      .mockReturnValueOnce(new Promise(resolve => { resolveDelete = resolve; }));
+    render(<AdminDashboard />);
+    await screen.findByText('Available inventory');
+    fireEvent.click(screen.getByRole('button', { name: 'Bookings' }));
+    fireEvent.click(await screen.findByRole('button', { name: 'Delete' }));
+    fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'Delete' }));
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    expect(screen.getByRole('cell', { name: 'APT-000321' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Deleting…' })).toBeDisabled();
+    await act(async () => resolveDelete({ success: true }));
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    expect(screen.queryByRole('cell', { name: 'APT-000321' })).not.toBeInTheDocument();
+  });
   it('renders real overview values after its loading state', async () => {
     let resolveSummary;
     mocks.api.mockReturnValueOnce(new Promise(resolve => { resolveSummary = resolve; }));

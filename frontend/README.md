@@ -35,3 +35,17 @@ VITE_SUPABASE_PUBLISHABLE_KEY=public-key
 After the frontend domain is live, set the exact HTTPS origin in backend
 `CORS_ORIGINS` and rebuild the backend. Production voice calls require HTTPS
 so the browser can grant microphone access securely.
+
+For separate frontend/backend services, `VITE_API_BASE_URL` must be the backend
+HTTPS origin only (no `/api` suffix). For example, `https://api.example.com`
+produces `https://api.example.com/api/admin/appointments/APT-000321` for deletion.
+Vite embeds this value at build time; changing an nginx runtime environment
+variable does not update an existing bundle. Rebuild the frontend after changes.
+An unset value uses same-origin `/api/...` requests, which requires an explicitly
+configured API reverse proxy. The supplied nginx configuration serves the SPA
+only, so separate Dokploy services require the build argument above.
+
+Set backend `CORS_ORIGINS=https://your-frontend-domain` (comma-separated for
+multiple approved origins, no path or trailing slash). Admin DELETE preflight
+must allow `DELETE`, `Authorization`, and `Content-Type` for that origin.
+Keep `ADMIN_AUTH_REQUIRED=true` and the existing `ADMIN_EMAILS` allowlist.

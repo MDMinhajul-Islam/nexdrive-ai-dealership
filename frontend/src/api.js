@@ -22,12 +22,20 @@ export async function api(path, options = {}, admin = false) {
   const session = getSession();
   const headers = { 'Content-Type': 'application/json', ...(options.headers || {}) };
   if (admin && session?.access_token) headers.Authorization = `Bearer ${session.access_token}`;
-  const response = await fetch(`${API}${path}`, { ...options, headers });
+  let response;
+  try {
+    response = await fetch(`${API}${path}`, { ...options, headers });
+  } catch {
+    throw new Error('Could not reach the server. Please try again.');
+  }
   const data = await response.json().catch(() => ({}));
   if (response.status === 401 && admin) clearSession();
   if (!response.ok) {
     const detail = typeof data.detail === 'string' ? data.detail : data.detail?.message;
-    const error = new Error(detail || 'The request could not be completed.');
+    const message = admin && response.status === 401
+      ? 'Your admin session has expired or is invalid. Please sign in again.'
+      : detail || 'The request could not be completed.';
+    const error = new Error(message);
     error.status = response.status;
     throw error;
   }
