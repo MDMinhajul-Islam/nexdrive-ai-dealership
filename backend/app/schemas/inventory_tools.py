@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any, Literal
 
-from pydantic import BaseModel, Field, field_validator, model_validator
+from pydantic import AliasChoices, BaseModel, Field, field_validator, model_validator
 
 from app.schemas.vehicle import VehicleDetails, VehicleImage
 
@@ -21,7 +21,12 @@ class InventorySearchFilters(BaseModel):
     mileage_max: int | None = Field(default=None, ge=0, le=220_000)
     drivetrain: Literal["FWD", "RWD", "AWD", "4WD"] | None = None
     fuel_type: Literal["Gasoline", "Diesel", "Hybrid", "Plug-in Hybrid", "Electric"] | None = None
-    seating_capacity_min: int | None = Field(default=None, ge=1, le=8)
+    seating_capacity_min: int | None = Field(
+        default=None,
+        ge=1,
+        le=8,
+        validation_alias=AliasChoices("seating_capacity_min", "seating_capacity"),
+    )
     features: list[str] = Field(default_factory=list, max_length=10)
     limit: int = Field(default=5, ge=1, le=20)
 
@@ -38,12 +43,23 @@ class InventorySearchFilters(BaseModel):
         choices = {
             "suv": "SUV", "sedan": "Sedan", "truck": "Truck", "hatchback": "Hatchback",
             "new": "New", "used": "Used", "certified pre-owned": "Certified Pre-Owned",
-            "fwd": "FWD", "rwd": "RWD", "awd": "AWD", "4wd": "4WD",
+            "certified pre owned": "Certified Pre-Owned", "certified": "Certified Pre-Owned",
+            "cpo": "Certified Pre-Owned", "pre-owned": "Certified Pre-Owned",
+            "preowned": "Certified Pre-Owned",
+            "fwd": "FWD", "front-wheel drive": "FWD", "front wheel drive": "FWD",
+            "rwd": "RWD", "rear-wheel drive": "RWD", "rear wheel drive": "RWD",
+            "awd": "AWD", "all-wheel drive": "AWD", "all wheel drive": "AWD",
+            "4wd": "4WD", "four-wheel drive": "4WD", "four wheel drive": "4WD",
             "gasoline": "Gasoline", "diesel": "Diesel", "hybrid": "Hybrid",
             "plug-in hybrid": "Plug-in Hybrid", "electric": "Electric",
         }
         normalized = " ".join(value.split()).casefold()
         return choices.get(normalized, value)
+
+    @field_validator("features", mode="before")
+    @classmethod
+    def allow_null_features(cls, values: object) -> object:
+        return [] if values is None else values
 
     @field_validator("features")
     @classmethod
@@ -55,12 +71,39 @@ class InventorySearchFilters(BaseModel):
             raise ValueError("Feature names must be unique")
         return normalized
 
+    @field_validator("limit", mode="before")
+    @classmethod
+    def allow_null_limit(cls, value: object) -> object:
+        return 5 if value is None else value
+
     @model_validator(mode="after")
     def validate_ranges(self) -> "InventorySearchFilters":
         if self.budget_min is not None and self.budget_max is not None and self.budget_min > self.budget_max:
             raise ValueError("budget_min cannot exceed budget_max")
         if self.year_min is not None and self.year_max is not None and self.year_min > self.year_max:
             raise ValueError("year_min cannot exceed year_max")
+        drivetrain_aliases = {
+            "fwd": "FWD", "front-wheel drive": "FWD", "front wheel drive": "FWD",
+            "rwd": "RWD", "rear-wheel drive": "RWD", "rear wheel drive": "RWD",
+            "awd": "AWD", "all-wheel drive": "AWD", "all wheel drive": "AWD",
+            "4wd": "4WD", "four-wheel drive": "4WD", "four wheel drive": "4WD",
+        }
+        feature_drivetrains = {
+            drivetrain_aliases[" ".join(feature.split()).casefold()]
+            for feature in self.features
+            if " ".join(feature.split()).casefold() in drivetrain_aliases
+        }
+        if len(feature_drivetrains) > 1:
+            raise ValueError("Feature list contains conflicting drivetrain requirements")
+        if feature_drivetrains:
+            feature_drivetrain = next(iter(feature_drivetrains))
+            if self.drivetrain is not None and self.drivetrain != feature_drivetrain:
+                raise ValueError("drivetrain conflicts with drivetrain supplied as a feature")
+            self.drivetrain = feature_drivetrain
+            self.features = [
+                feature for feature in self.features
+                if " ".join(feature.split()).casefold() not in drivetrain_aliases
+            ]
         return self
 
     def has_meaningful_criteria(self) -> bool:

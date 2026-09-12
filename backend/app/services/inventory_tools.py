@@ -26,7 +26,13 @@ def search_inventory(filters: InventorySearchFilters, repository: InventoryRepos
         vehicles = [InventorySearchVehicle.model_validate(row) for row in rows]
     except (InventoryRepositoryError, ValueError):
         raise InventoryToolUnavailableError("Authoritative inventory search failed") from None
-    return InventorySearchResponse(count=len(vehicles), vehicles=vehicles)
+    message = ""
+    if not vehicles:
+        message = (
+            "No vehicles matched all hard filters. Remove optional preferences and search again, "
+            "but keep the customer's explicit must-have requirements."
+        )
+    return InventorySearchResponse(count=len(vehicles), vehicles=vehicles, message=message)
 
 
 def get_vehicle_details(vehicle_id: str, repository: InventoryRepository) -> VehicleDetails:

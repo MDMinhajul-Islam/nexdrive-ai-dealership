@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 import pytest
@@ -31,6 +32,137 @@ def test_search_inventory_applies_all_filters_and_excludes_sold(repository) -> N
     assert result.vehicles[0].vehicle_id == "VEH-000001"
     assert result.vehicles[0].vehicle_status == "Available"
     assert "Apple CarPlay" in result.vehicles[0].features
+
+
+def test_search_inventory_supports_suv_budget_and_seating_alias(repository) -> None:
+    filters = InventorySearchFilters.model_validate({
+        "body_type": "SUV",
+        "budget_max": 40_000,
+        "seating_capacity": 5,
+    })
+
+    result = search_inventory(filters, repository)
+
+    assert filters.seating_capacity_min == 5
+    assert result.count == 1
+    assert result.vehicles[0].vehicle_id == "VEH-000001"
+
+
+def test_awd_aliases_are_one_canonical_drivetrain_filter(repository) -> None:
+    filters = InventorySearchFilters(
+        body_type="SUV",
+        drivetrain="AWD",
+        features=["AWD", "All-Wheel Drive", "Apple CarPlay"],
+    )
+
+    result = search_inventory(filters, repository)
+
+    assert filters.drivetrain == "AWD"
+    assert filters.features == ["Apple CarPlay"]
+    assert result.count == 1
+    assert result.vehicles[0].vehicle_id == "VEH-000001"
+
+
+def test_awd_feature_alias_populates_canonical_drivetrain(repository) -> None:
+    filters = InventorySearchFilters(features=["All-Wheel Drive"])
+
+    result = search_inventory(filters, repository)
+
+    assert filters.drivetrain == "AWD"
+    assert filters.features == []
+    assert result.count == 1
+
+
+def test_null_features_and_drivetrain_mean_no_filter(repository) -> None:
+    filters = InventorySearchFilters.model_validate({
+        "body_type": "SUV",
+        "features": None,
+        "drivetrain": None,
+    })
+
+    result = search_inventory(filters, repository)
+
+    assert filters.features == []
+    assert filters.drivetrain is None
+    assert result.count == 1
+
+
+def test_search_route_accepts_real_retell_null_relaxation_payload(repository) -> None:
+    app.dependency_overrides[get_inventory_repository] = lambda: repository
+    try:
+        response = TestClient(app, headers=TOOL_HEADERS).post(
+            "/api/tools/search-inventory",
+            json={
+                "budget_max": 40_000,
+                "features": None,
+                "body_type": "SUV",
+                "drivetrain": None,
+                "seating_capacity": 5,
+            },
+        )
+        assert response.status_code == 200
+        assert response.json()["count"] == 1
+    finally:
+        app.dependency_overrides.clear()
+
+
+@pytest.mark.parametrize(
+    "field",
+    [
+        "make", "model", "body_type", "condition", "budget_min", "budget_max",
+        "year_min", "year_max", "mileage_max", "drivetrain", "fuel_type",
+        "seating_capacity_min", "seating_capacity", "features", "limit",
+    ],
+)
+def test_each_optional_search_field_safely_accepts_null(field) -> None:
+    filters = InventorySearchFilters.model_validate({field: None})
+
+    assert filters.features == []
+    assert filters.limit == 5
+
+
+def test_no_match_response_supports_safe_preference_relaxation(repository) -> None:
+    no_match = search_inventory(
+        InventorySearchFilters(body_type="SUV", features=["Unknown Feature"]),
+        repository,
+    )
+    relaxed = search_inventory(
+        InventorySearchFilters(body_type="SUV", features=None, drivetrain=None),
+        repository,
+    )
+
+    assert no_match.count == 0
+    assert "matched all hard filters" in no_match.message
+    assert "explicit must-have" in no_match.message
+    assert relaxed.count == 1
+
+
+def test_cpo_condition_alias_maps_to_production_value() -> None:
+    repository = CsvInventoryRepository(
+        Path(__file__).resolve().parents[2] / "database" / "seed"
+    )
+
+    filters = InventorySearchFilters(
+        body_type="SUV", condition="CPO", budget_max=40_000, seating_capacity_min=5,
+    )
+    result = search_inventory(filters, repository)
+
+    assert filters.condition == "Certified Pre-Owned"
+    assert result.count > 0
+    assert all(vehicle.condition == "Certified Pre-Owned" for vehicle in result.vehicles)
+
+
+def test_retell_search_contract_documents_hard_filters_and_nullable_fields() -> None:
+    tools_path = Path(__file__).resolve().parents[2] / "retell" / "tools.json"
+    tools = json.loads(tools_path.read_text(encoding="utf-8"))["tools"]
+    contract = next(tool for tool in tools if tool["name"] == "search_inventory")
+    properties = contract["body"]["properties"]
+
+    assert "AND hard filter" in contract["description"]
+    assert "never in features" in contract["description"]
+    assert properties["features"]["type"] == ["array", "null"]
+    assert properties["drivetrain"]["type"] == ["string", "null"]
+    assert properties["seating_capacity"]["description"] == "Minimum required seating capacity."
 
 
 def test_check_availability_is_authoritative(repository) -> None:
@@ -103,6 +235,12 @@ def test_search_route_requires_meaningful_customer_preferences(repository) -> No
             "retryable": False,
             "message": "Vehicle search requires customer preferences",
         }
+        all_null = TestClient(app, headers=TOOL_HEADERS).post(
+            "/api/tools/search-inventory",
+            json={"features": None, "drivetrain": None, "body_type": None, "limit": None},
+        )
+        assert all_null.status_code == 422
+        assert all_null.json()["error_code"] == "MISSING_SEARCH_CRITERIA"
     finally:
         app.dependency_overrides.clear()
 
