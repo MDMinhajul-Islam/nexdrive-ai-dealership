@@ -8,7 +8,7 @@ from app.database import get_supabase
 from app.repositories.inventory import InventoryRepository, SupabaseInventoryRepository
 from app.schemas.inventory_tools import (
     InventorySearchFilters,
-    InventorySearchResponse,
+    RetellInventorySearchResponse,
     VehicleDetailsRequest,
     ToolVehicleDetailsResponse,
     VehicleAvailabilityResponse,
@@ -66,8 +66,8 @@ def _vehicle_availability_response(vehicle_id: str, repository: InventoryReposit
         raise _safe_error(exc) from None
 
 
-@router.post("/search-inventory", response_model=InventorySearchResponse, summary="Search authoritative available inventory")
-def search_inventory_tool(filters: InventorySearchFilters, repository: Repository) -> InventorySearchResponse:
+@router.post("/search-inventory", response_model=RetellInventorySearchResponse, summary="Search authoritative available inventory")
+def search_inventory_tool(filters: InventorySearchFilters, repository: Repository) -> RetellInventorySearchResponse:
     if not filters.has_meaningful_criteria():
         raise ToolAPIError(
             status.HTTP_422_UNPROCESSABLE_ENTITY,
@@ -76,7 +76,8 @@ def search_inventory_tool(filters: InventorySearchFilters, repository: Repositor
             "Vehicle search requires customer preferences",
         )
     try:
-        return search_inventory(filters, repository)
+        result = search_inventory(filters, repository)
+        return RetellInventorySearchResponse.from_inventory_response(result)
     except InventoryToolUnavailableError as exc:
         raise _safe_error(exc) from None
 

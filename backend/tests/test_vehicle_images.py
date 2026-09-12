@@ -215,7 +215,6 @@ def test_inventory_tool_endpoints_return_image_contract():
 
     assert search_response.status_code == 200
     assert detail_response.status_code == 200
-    assert search_response.json()["vehicles"][0]["primary_image_url"] == row[
-        "primary_image_url"
-    ]
+    assert "primary_image_url" not in search_response.json()["vehicles"][0]
+    assert "images" not in search_response.json()["vehicles"][0]
     assert detail_response.json()["vehicle"]["images"] == row["images"]

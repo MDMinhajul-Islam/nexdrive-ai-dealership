@@ -155,6 +155,53 @@ class InventorySearchResponse(BaseModel):
         return self
 
 
+class RetellInventorySearchVehicle(BaseModel):
+    """Compact, verified inventory facts needed during a voice recommendation."""
+
+    vehicle_id: str
+    make: str
+    model: str
+    year: int
+    trim: str
+    body_type: str
+    condition: str
+    mileage: int
+    fuel_type: str
+    drivetrain: str
+    seating_capacity: int
+    sale_price: float
+    dealership_location: str
+    features: list[str]
+    test_drive_available: bool
+
+
+class RetellInventorySearchResponse(BaseModel):
+    """HTTP response for Retell without duplicate or visual-only inventory data."""
+
+    success: bool = True
+    source: Literal["database"] = "database"
+    count: int
+    vehicles: list[RetellInventorySearchVehicle]
+    message: str = ""
+
+    @classmethod
+    def from_inventory_response(
+        cls, response: InventorySearchResponse
+    ) -> "RetellInventorySearchResponse":
+        return cls(
+            success=response.success,
+            source=response.source,
+            count=response.count,
+            vehicles=[
+                RetellInventorySearchVehicle.model_validate(
+                    vehicle, from_attributes=True
+                )
+                for vehicle in response.vehicles
+            ],
+            message=response.message,
+        )
+
+
 class ToolVehicleDetailsResponse(BaseModel):
     success: bool = True
     source: Literal["database"] = "database"

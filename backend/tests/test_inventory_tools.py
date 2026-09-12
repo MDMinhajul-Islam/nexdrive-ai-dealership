@@ -185,7 +185,13 @@ def test_tool_routes_use_repository_dependency(repository) -> None:
         assert response.json()["source"] == "database"
         assert response.json()["count"] == 1
         assert response.json()["message"] == ""
-        assert response.json()["data"]["count"] == 1
+        assert "data" not in response.json()
+        assert set(response.json()["vehicles"][0]) == {
+            "vehicle_id", "make", "model", "year", "trim", "body_type",
+            "condition", "mileage", "fuel_type", "drivetrain",
+            "seating_capacity", "sale_price", "dealership_location", "features",
+            "test_drive_available",
+        }
 
         details = client.get("/api/tools/get-vehicle-details/VEH-000001")
         assert details.status_code == 200
