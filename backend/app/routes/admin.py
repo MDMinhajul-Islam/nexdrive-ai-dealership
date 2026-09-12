@@ -1,5 +1,6 @@
 """Authenticated operations endpoints for the internal dealership dashboard."""
 from datetime import datetime, timezone
+import logging
 import random
 
 from fastapi import APIRouter, Depends, HTTPException, Query
@@ -9,6 +10,7 @@ from app.database import get_supabase
 from app.schemas.admin import AppointmentAdminUpdateRequest, LeadAdminUpdateRequest, VehicleCreateRequest, VehicleUpdateRequest
 
 router=APIRouter(prefix="/api/admin",tags=["Admin Dashboard"],dependencies=[Depends(require_admin)])
+logger = logging.getLogger("nexdrive.audit")
 def client(): return get_supabase()
 def run(query):
  try: return {"success":True,"source":"database","records":query.execute().data or []}
@@ -169,3 +171,78 @@ def update_appointment(appointment_id:str,body:AppointmentAdminUpdateRequest,db:
   return {"success":True,"source":"database","appointment":record}
  except HTTPException: raise
  except Exception: raise HTTPException(503,"Appointment update failed") from None
+
+
+def _requested_booking(appointment_id: str, db: Client) -> dict:
+ try:
+  rows = db.table("appointments").select("appointment_id,status").eq("appointment_id", appointment_id).limit(1).execute().data or []
+ except Exception:
+  logger.exception("admin_booking_lookup_failed appointment_id=%s", appointment_id)
+  raise HTTPException(503, "Booking operation unavailable") from None
+ if not rows:
+  raise HTTPException(404, "Booking not found")
+ if rows[0].get("status") != "Requested":
+  raise HTTPException(409, "Only requested bookings can be changed this way")
+ return rows[0]
+
+
+@router.patch("/appointments/{appointment_id}/approve")
+def approve_booking(appointment_id: str, db: Client = Depends(client)):
+ _requested_booking(appointment_id, db)
+ try:
+  records = db.table("appointments").update({"status": "Confirmed", "updated_at": datetime.now(timezone.utc).isoformat()}).eq("appointment_id", appointment_id).eq("status", "Requested").execute().data or []
+  if not records:
+   raise HTTPException(409, "This booking was changed before it could be approved")
+  record = records[0]
+  return {"success": True, "source": "database", "booking": record, "message": "Booking approved"}
+ except HTTPException: raise
+ except Exception:
+  logger.exception("admin_booking_approve_failed appointment_id=%s", appointment_id)
+  raise HTTPException(503, "Booking approval unavailable") from None
+
+
+@router.patch("/appointments/{appointment_id}/reject")
+def reject_booking(appointment_id: str, db: Client = Depends(client)):
+ _requested_booking(appointment_id, db)
+ try:
+  records = db.table("appointments").update({"status": "Cancelled", "updated_at": datetime.now(timezone.utc).isoformat()}).eq("appointment_id", appointment_id).eq("status", "Requested").execute().data or []
+  if not records:
+   raise HTTPException(409, "This booking was changed before it could be rejected")
+  record = records[0]
+  return {"success": True, "source": "database", "booking": record, "message": "Booking rejected"}
+ except HTTPException: raise
+ except Exception:
+  logger.exception("admin_booking_reject_failed appointment_id=%s", appointment_id)
+  raise HTTPException(503, "Booking rejection unavailable") from None
+
+
+@router.delete("/appointments/{appointment_id}")
+def delete_booking(appointment_id: str, db: Client = Depends(client)):
+ try:
+  rows = db.table("appointments").select("appointment_id").eq("appointment_id", appointment_id).limit(1).execute().data or []
+  if not rows:
+   raise HTTPException(404, "Booking not found")
+  db.table("appointments").delete().eq("appointment_id", appointment_id).execute()
+  return {"success": True, "source": "database", "deleted": {"appointment_id": appointment_id}}
+ except HTTPException: raise
+ except Exception:
+  logger.exception("admin_booking_delete_failed appointment_id=%s", appointment_id)
+  raise HTTPException(503, "Booking deletion unavailable") from None
+
+
+@router.delete("/leads/{lead_id}")
+def delete_lead(lead_id: str, db: Client = Depends(client)):
+ try:
+  rows = db.table("leads").select("lead_id").eq("lead_id", lead_id).limit(1).execute().data or []
+  if not rows:
+   raise HTTPException(404, "Lead not found")
+  appointment = db.table("appointments").select("appointment_id").eq("lead_id", lead_id).limit(1).execute().data or []
+  trade_in = db.table("trade_ins").select("trade_in_id").eq("lead_id", lead_id).limit(1).execute().data or []
+  if appointment or trade_in:
+   raise HTTPException(409, "Lead cannot be deleted while related bookings or trade-ins exist")
+  db.table("leads").delete().eq("lead_id", lead_id).execute()
+  return {"success": True, "source": "database", "deleted": {"lead_id": lead_id}}
+ except HTTPException: raise
+ except Exception:
+  logger.exception("admin_lead_delete_failed lead_id=%s", lead_id)
+  raise HTTPException(503, "Lead deletion unavailable") from None

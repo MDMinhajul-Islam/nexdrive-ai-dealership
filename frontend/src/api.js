@@ -1,4 +1,4 @@
-export const API = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
+export const API = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '');
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || '';
 const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || '';
 const SESSION_KEY = 'nexdrive_admin_session';
@@ -26,7 +26,8 @@ export async function api(path, options = {}, admin = false) {
   const data = await response.json().catch(() => ({}));
   if (response.status === 401 && admin) clearSession();
   if (!response.ok) {
-    const error = new Error(data.detail || 'The request could not be completed.');
+    const detail = typeof data.detail === 'string' ? data.detail : data.detail?.message;
+    const error = new Error(detail || 'The request could not be completed.');
     error.status = response.status;
     throw error;
   }
