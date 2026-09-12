@@ -73,5 +73,12 @@ describe('Retell voice-first active call', () => {
     expect(mocks.mute).toHaveBeenCalledOnce();
     expect(screen.getByRole('button', { name: 'Unmute' })).toHaveAttribute('aria-pressed', 'true');
     expect(screen.getByRole('button', { name: 'End Call' })).toBeEnabled();
+
+    act(() => mocks.listeners.get('call_ended')());
+    expect(screen.getByRole('status')).toHaveTextContent('Call Ended');
+    expect(screen.getByRole('button', { name: 'Start New Call' })).toBeEnabled();
+    expect(screen.queryByText('Intro content')).not.toBeInTheDocument();
+    expect(screen.queryByText('TRY SAYING')).not.toBeInTheDocument();
+    expect(screen.queryByText(/This must not appear/)).not.toBeInTheDocument();
   });
 });

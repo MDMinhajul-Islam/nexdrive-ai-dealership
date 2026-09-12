@@ -144,6 +144,7 @@ export function RetellVoiceExperience({
 
   const active = callState === 'connected' || callState === 'agent-speaking';
   const callInProgress = ACTIVE_STATES.has(callState);
+  const focusedCallView = callInProgress || callState === 'ended';
   const canStart = !ACTIVE_STATES.has(callState);
   const helperText = callState === 'error'
     ? errorMessage
@@ -154,9 +155,10 @@ export function RetellVoiceExperience({
         : 'Start a private voice conversation with the NexDrive AI sales assistant.';
 
   return <>
-    <section className={`voice-stage ${callInProgress ? 'active-call' : ''}`}>
-      {!callInProgress && children}
+    <section className={`voice-stage ${focusedCallView ? 'voice-focus' : ''}`}>
+      {!focusedCallView && children}
       <div className={`voice-console ${callState}`}>
+        <span className="voice-agent-label"><b>N</b>NEXDRIVE VOICE</span>
         <div className="voice-rings">
           <i/><i/><i/>
           <button
@@ -174,7 +176,7 @@ export function RetellVoiceExperience({
         {!callInProgress && <p>{helperText}</p>}
         <div className="voice-controls">
           {canStart
-            ? <button className="gold voice-start" onClick={startCall}>{callState === 'error' ? 'Try Again' : 'Start Call'}</button>
+            ? <button className="gold voice-start" onClick={startCall}>{callState === 'error' ? 'Try Again' : callState === 'ended' ? 'Start New Call' : 'Start Call'}</button>
             : callState === 'connecting'
               ? <button className="gold voice-start" disabled>Connecting...</button>
               : <>
@@ -182,10 +184,12 @@ export function RetellVoiceExperience({
                 <button className="voice-end" onClick={endCall} disabled={!active}>End Call</button>
               </>}
         </div>
-        {!callInProgress && <small>No appointment is created until you explicitly confirm a valid slot.</small>}
+        {!callInProgress && <small>{callState === 'ended'
+          ? 'Microphone access is used only while a voice call is active.'
+          : 'No appointment is created until you explicitly confirm a valid slot.'}</small>}
       </div>
     </section>
-    {!callInProgress && <section className="conversation-prompts">
+    {!focusedCallView && <section className="conversation-prompts">
       <span>TRY SAYING</span>
       {prompts.map(prompt => <button key={prompt} onClick={startCall} disabled={!canStart}>“{prompt}”</button>)}
     </section>}
