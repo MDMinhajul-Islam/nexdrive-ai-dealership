@@ -12,24 +12,11 @@ const SAFE_CONNECTION_ERROR = 'Unable to start the voice call. Please try again.
 const STATUS_LABELS = {
   idle: 'Ready to talk',
   connecting: 'Connecting...',
-  connected: 'Listening',
-  'agent-speaking': 'AI Sales Agent Speaking',
+  connected: 'Listening...',
+  'agent-speaking': 'Speaking...',
   ended: 'Call Ended',
   error: 'Unable to Start Call',
 };
-
-function recentTranscript(transcript) {
-  if (typeof transcript === 'string') return transcript.trim();
-  if (!Array.isArray(transcript)) return '';
-  return transcript.slice(-3).map(turn => {
-    if (typeof turn === 'string') return turn;
-    if (!turn || typeof turn !== 'object') return '';
-    const words = turn.content || turn.text || turn.transcript;
-    if (typeof words !== 'string') return '';
-    const speaker = turn.role === 'agent' ? 'Nex' : turn.role === 'user' ? 'You' : '';
-    return speaker ? `${speaker}: ${words}` : words;
-  }).filter(Boolean).join('\n');
-}
 
 async function microphoneIsDenied(error) {
   if (error?.name === 'NotAllowedError' || error?.name === 'PermissionDeniedError') return true;
@@ -50,8 +37,8 @@ export function RetellVoiceExperience({
 }) {
   const [callState, setCallState] = useState('idle');
   const [muted, setMuted] = useState(false);
-  const [transcript, setTranscript] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const latestTranscript = useRef(null);
   const startInProgress = useRef(false);
   const mounted = useRef(true);
   const requestController = useRef(null);
@@ -67,8 +54,7 @@ export function RetellVoiceExperience({
     const agentStopped = () => mounted.current && setCallState('connected');
     const updated = update => {
       if (!mounted.current) return;
-      const latest = recentTranscript(update?.transcript);
-      if (latest) setTranscript(latest);
+      if (update?.transcript !== undefined) latestTranscript.current = update.transcript;
     };
     const ended = () => {
       if (!mounted.current) return;
@@ -118,7 +104,7 @@ export function RetellVoiceExperience({
 
     startInProgress.current = true;
     setErrorMessage('');
-    setTranscript('');
+    latestTranscript.current = null;
     setMuted(false);
     setCallState('connecting');
 
@@ -157,6 +143,7 @@ export function RetellVoiceExperience({
   };
 
   const active = callState === 'connected' || callState === 'agent-speaking';
+  const callInProgress = ACTIVE_STATES.has(callState);
   const canStart = !ACTIVE_STATES.has(callState);
   const helperText = callState === 'error'
     ? errorMessage
@@ -167,38 +154,40 @@ export function RetellVoiceExperience({
         : 'Start a private voice conversation with the NexDrive AI sales assistant.';
 
   return <>
-    <section className="voice-stage">
-      {children}
+    <section className={`voice-stage ${callInProgress ? 'active-call' : ''}`}>
+      {!callInProgress && children}
       <div className={`voice-console ${callState}`}>
         <div className="voice-rings">
           <i/><i/><i/>
-          <button onClick={startCall} disabled={!canStart} aria-label="Start voice call">
+          <button
+            onClick={startCall}
+            disabled={!canStart}
+            aria-label={callInProgress ? (muted ? 'Microphone muted' : 'Voice call active') : 'Start voice call'}
+          >
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3Zm-7 9a7 7 0 0 0 14 0m-7 7v3"/></svg>
           </button>
         </div>
-        <span className="voice-status">Status: {STATUS_LABELS[callState]}</span>
+        <span className="voice-status" role="status" aria-live="polite">
+          {muted && active ? 'Microphone muted' : STATUS_LABELS[callState]}
+        </span>
         <h2>Talk to AI Sales Agent</h2>
-        <p>{helperText}</p>
+        {!callInProgress && <p>{helperText}</p>}
         <div className="voice-controls">
           {canStart
             ? <button className="gold voice-start" onClick={startCall}>{callState === 'error' ? 'Try Again' : 'Start Call'}</button>
             : callState === 'connecting'
               ? <button className="gold voice-start" disabled>Connecting...</button>
               : <>
-                <button className="outline" onClick={toggleMute}>{muted ? 'Unmute' : 'Mute'}</button>
+                <button className="outline" onClick={toggleMute} aria-pressed={muted}>{muted ? 'Unmute' : 'Mute'}</button>
                 <button className="voice-end" onClick={endCall} disabled={!active}>End Call</button>
               </>}
         </div>
-        {transcript && <div className="voice-transcript" aria-live="polite">
-          <small>RECENT CONVERSATION</small>
-          <p>{transcript}</p>
-        </div>}
-        <small>No appointment is created until you explicitly confirm a valid slot.</small>
+        {!callInProgress && <small>No appointment is created until you explicitly confirm a valid slot.</small>}
       </div>
     </section>
-    <section className="conversation-prompts">
+    {!callInProgress && <section className="conversation-prompts">
       <span>TRY SAYING</span>
       {prompts.map(prompt => <button key={prompt} onClick={startCall} disabled={!canStart}>“{prompt}”</button>)}
-    </section>
+    </section>}
   </>;
 }
