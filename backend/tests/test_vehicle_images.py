@@ -28,6 +28,9 @@ class ImageQuery:
         self.ordering.append((column, options))
         return self
 
+    def range(self, _start, _end):
+        return self
+
     def execute(self):
         if self.error:
             raise self.error
@@ -41,6 +44,53 @@ class ImageDatabase:
     def table(self, name):
         assert name == "vehicle_images"
         return self.query
+
+
+class ModelImageDatabase:
+    def __init__(self, models, storage=None, storage_error=None):
+        self.models = ImageQuery(models)
+        self.storage = ImageQuery(storage, storage_error)
+
+    def table(self, name):
+        return self.storage if name == "vehicle_images" else self.models
+
+
+def test_carsxe_fallback_matches_year_make_model_without_cross_vehicle_leakage(monkeypatch):
+    _configure_url(monkeypatch)
+    vehicles = [
+        {"vehicle_id": "VEH-000001", "stock_number": "NX-000001", "year": 2024, "make": "Toyota", "model": "Camry"},
+        {"vehicle_id": "VEH-000002", "year": 2024, "make": "Toyota", "model": "RAV4"},
+        {"vehicle_id": "VEH-000003", "year": 2024, "make": "BMW", "model": "X5"},
+        {"vehicle_id": "VEH-000004", "year": 2024, "make": "Ford", "model": "Mustang"},
+        {"vehicle_id": "VEH-000005", "year": 2024, "make": "Tesla", "model": "Model 3"},
+        {"vehicle_id": "VEH-000006", "year": 2025, "make": "Toyota", "model": "Camry"},
+        {"vehicle_id": "VEH-000007", "year": 2024, "make": "BMW", "model": "Unknown"},
+    ]
+    models = [{"make": v["make"], "model": v["model"], "model_year": 2024,
+               "image_url": f"https://photos.example/{v['vehicle_id']}.jpg", "provider": "CarsXE"}
+              for v in vehicles[:5]]
+    models.append({"make": "Toyota", "model": "Camry", "model_year": None,
+                   "image_url": "https://photos.example/camry.jpg", "provider": "CarsXE"})
+    db = ModelImageDatabase(models)
+    result = attach_vehicle_images(db, vehicles)
+    assert len({v["image_url"] for v in result[:5]}) == 5
+    assert result[5]["image_url"] == "https://photos.example/camry.jpg"
+    assert result[6]["image_url"] is None
+    assert result[0]["stock_number"] == "NX-000001"
+    expected = {v["vehicle_id"]: v["image_url"] for v in result}
+    assert {v["vehicle_id"]: v["image_url"] for v in attach_vehicle_images(db, list(reversed(result)))} == expected
+    assert attach_vehicle_images(db, [result[0]])[0]["image_url"] == expected["VEH-000001"]
+
+
+def test_storage_has_priority_but_carsxe_survives_storage_rollout_failure(monkeypatch):
+    _configure_url(monkeypatch)
+    vehicle = {"vehicle_id": "VEH-000001", "make": "Toyota", "model": "Camry", "year": 2024}
+    models = [{"make": "Toyota", "model": "Camry", "model_year": None,
+               "image_url": "https://photos.example/camry.jpg", "provider": "CarsXE"}]
+    storage = [{"id": 1, "vehicle_id": "VEH-000001", "storage_path": "vehicles/VEH-000001/front.webp",
+                "sort_order": 0, "is_primary": True}]
+    assert "/storage/" in attach_vehicle_images(ModelImageDatabase(models, storage), [dict(vehicle)])[0]["image_url"]
+    assert attach_vehicle_images(ModelImageDatabase(models, storage_error=RuntimeError()), [dict(vehicle)])[0]["image_is_representative"] is True
 
 
 def _configure_url(monkeypatch):

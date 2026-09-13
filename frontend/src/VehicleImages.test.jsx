@@ -11,6 +11,17 @@ const vehicle={vehicle_id:'VEH-000001',year:2026,make:'Toyota',model:'RAV4',body
 afterEach(cleanup);
 
 describe('vehicle listing image',()=>{
+  it('keeps model photos associated with vehicles after filtering and rerendering',()=>{
+    const camry={...vehicle,model:'Camry',image_url:'https://photos.example/camry.jpg',image_is_representative:true};
+    const rav4={...vehicle,vehicle_id:'VEH-000002',image_url:'https://photos.example/rav4.jpg',image_is_representative:true};
+    const {rerender}=render(<VehiclePhoto vehicle={camry} alt="Toyota Camry"/>);
+    expect(screen.getByRole('img')).toHaveAttribute('src',camry.image_url);
+    fireEvent.error(screen.getByRole('img'));
+    rerender(<VehiclePhoto vehicle={rav4} alt="Toyota RAV4"/>);
+    expect(screen.getByRole('img')).toHaveAttribute('src',rav4.image_url);
+    rerender(<VehicleGallery vehicle={rav4}/>);
+    expect(screen.getByRole('img')).toHaveAttribute('src',rav4.image_url);
+  });
   it('renders the backend primary image',()=>{
     render(<VehiclePhoto vehicle={{...vehicle,primary_image_url:'https://project.supabase.co/storage/front.webp'}} alt="Toyota RAV4"/>);
 

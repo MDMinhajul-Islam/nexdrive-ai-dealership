@@ -13,6 +13,53 @@ from app.utils.config import get_settings
 VEHICLE_IMAGE_BUCKET = "vehicle-images"
 
 
+def _model_key(make: object, model: object, year: object = None) -> tuple[str, str, str]:
+    return (str(make or "").strip().casefold(), str(model or "").strip().casefold(),
+            str(year) if year is not None else "")
+
+
+def _attach_model_fallback(db: Client, vehicles: list[dict[str, Any]]) -> None:
+    """Read the existing CarsXE cache only for vehicles without Storage photos."""
+    missing = [v for v in vehicles if not v.get("primary_image_url") and v.get("make") and v.get("model")]
+    if not missing:
+        return
+    try:
+        rows = []
+        offset = 0
+        while True:
+            batch = (db.table("vehicle_model_images")
+                     .select("make,model,model_year,image_url,thumbnail_url,source_url,usage_license,provider")
+                     .in_("make", list({v["make"] for v in missing}))
+                     .in_("model", list({v["model"] for v in missing}))
+                     .range(offset, offset + 999).execute().data or [])
+            rows.extend(batch)
+            if len(batch) < 1000:
+                break
+            offset += 1000
+    except Exception:
+        return  # Optional provider metadata must never block inventory.
+    by_model = {}
+    for row in rows:
+        if not isinstance(row, dict) or not isinstance(row.get("image_url"), str):
+            continue
+        if not row["image_url"].startswith("https://") or row.get("provider") != "CarsXE":
+            continue
+        by_model[_model_key(row.get("make"), row.get("model"), row.get("model_year"))] = row
+    for vehicle in missing:
+        image = (by_model.get(_model_key(vehicle["make"], vehicle["model"], vehicle.get("year")))
+                 or by_model.get(_model_key(vehicle["make"], vehicle["model"])))
+        if image:
+            vehicle.update({
+                "primary_image_url": image["image_url"],
+                "image_url": image["image_url"],
+                "image_thumbnail_url": image.get("thumbnail_url"),
+                "image_source_url": image.get("source_url"),
+                "image_license": image.get("usage_license"),
+                "image_provider": image["provider"],
+                "image_is_representative": True,
+            })
+
+
 def _public_url(storage_path: str) -> str | None:
     base_url = get_settings().supabase_url.rstrip("/")
     if not base_url:
@@ -72,6 +119,7 @@ def attach_vehicle_images(db: Client, vehicles: list[dict[str, Any]]) -> list[di
         )
     except Exception:
         # Image metadata is optional during rollout; inventory remains authoritative.
+        _attach_model_fallback(db, vehicles)
         return vehicles
 
     images_by_vehicle: dict[str, list[dict[str, Any]]] = {}
@@ -120,4 +168,5 @@ def attach_vehicle_images(db: Client, vehicles: list[dict[str, Any]]) -> list[di
             "image_provider": None,
             "image_is_representative": False,
         })
+    _attach_model_fallback(db, vehicles)
     return vehicles

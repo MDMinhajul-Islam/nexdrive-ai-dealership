@@ -49,4 +49,14 @@ Do not create a metadata row before its corresponding Storage object exists.
 
 Migration 11's licensed make/model URL cache is preserved as
 `public.vehicle_model_images`; it is not treated as verified per-vehicle
-photography.
+photography. For vehicles without Storage photos, the API uses this existing
+CarsXE cache as explicitly representative photography, matching year + make +
+model first, then make + model. No make-only or cross-model fallback is used.
+
+The sync job reads server-only `CARSXE_API_KEY` in Dokploy. Run
+`python scripts/sync_vehicle_images.py --scope year-model` in the backend container
+to populate year-specific images; the default model scope remains supported.
+Trim-specific requests/cache are not supported by the current integration.
+Missing cache records or provider failures leave a labeled frontend placeholder;
+they never replace another model's image. Deploy this backend fix after migration
+13; no new migration or frontend configuration is required.
