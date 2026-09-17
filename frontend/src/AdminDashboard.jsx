@@ -18,6 +18,8 @@ function Icon({ name }) {
     chart: 'M4 20V10m6 10V4m6 16v-7m4 7H2',
     logout: 'M10 17l5-5-5-5m5 5H3m14-8h4v16h-4',
     arrow: 'M5 12h14m-5-5 5 5-5 5',
+    menu: 'M4 7h16M4 12h16M4 17h16',
+    close: 'M6 6l12 12M18 6 6 18',
   };
   return <svg viewBox="0 0 24 24" aria-hidden="true"><path d={paths[name]} /></svg>;
 }
@@ -89,13 +91,13 @@ function BookingActions({ row, busy, onApprove, onReject, onDelete }) {
 function Table({ view, rows, busyId, onApprove, onReject, onDelete }) {
   if (!rows.length) return <AdminState type="empty" />;
   if (view === 'Bookings') return <div className="data-table"><table><thead><tr><th>Booking</th><th>Customer</th><th>Vehicle</th><th>Date & time</th><th>Salesperson</th><th>Status</th><th>Actions</th></tr></thead><tbody>
-    {rows.map(row => <tr key={row.appointment_id}><td>{row.appointment_id}</td><td>{row.customer_id}</td><td>{row.vehicle_id}</td><td>{row.appointment_date}<small>{String(row.appointment_time || '').slice(0, 5)}</small></td><td>{row.salesperson_id}</td><td><Status value={row.status} /></td><td><BookingActions row={row} busy={busyId === row.appointment_id} onApprove={onApprove} onReject={onReject} onDelete={onDelete} /></td></tr>)}
+    {rows.map(row => <tr key={row.appointment_id}><td data-label="Booking">{row.appointment_id}</td><td data-label="Customer">{row.customer_id}</td><td data-label="Vehicle">{row.vehicle_id}</td><td data-label="Date & time">{row.appointment_date}<small>{String(row.appointment_time || '').slice(0, 5)}</small></td><td data-label="Salesperson">{row.salesperson_id}</td><td data-label="Status"><Status value={row.status} /></td><td data-label="Actions"><BookingActions row={row} busy={busyId === row.appointment_id} onApprove={onApprove} onReject={onReject} onDelete={onDelete} /></td></tr>)}
   </tbody></table></div>;
   if (view === 'Leads') return <div className="data-table"><table><thead><tr><th>Lead</th><th>Customer</th><th>Status</th><th>Budget</th><th>Temperature</th><th>Salesperson</th><th>Actions</th></tr></thead><tbody>
-    {rows.map(row => <tr key={row.lead_id}><td>{row.lead_id}</td><td>{row.customer_id}</td><td><Status value={row.lead_status} /></td><td>{money(row.budget)}</td><td><Status value={row.lead_temperature} /></td><td>{row.assigned_salesperson}</td><td><button className="admin-delete compact" onClick={() => onDelete(row)} disabled={busyId === row.lead_id}>Delete</button></td></tr>)}
+    {rows.map(row => <tr key={row.lead_id}><td data-label="Lead">{row.lead_id}</td><td data-label="Customer">{row.customer_id}</td><td data-label="Status"><Status value={row.lead_status} /></td><td data-label="Budget">{money(row.budget)}</td><td data-label="Temperature"><Status value={row.lead_temperature} /></td><td data-label="Salesperson">{row.assigned_salesperson}</td><td data-label="Actions"><button className="admin-delete compact" onClick={() => onDelete(row)} disabled={busyId === row.lead_id}>Delete</button></td></tr>)}
   </tbody></table></div>;
   return <div className="data-table"><table><thead><tr><th>Vehicle</th><th>Model</th><th>Condition</th><th>Price</th><th>Status</th><th>Location</th></tr></thead><tbody>
-    {rows.map(row => <tr key={row.vehicle_id}><td>{row.vehicle_id}</td><td><b>{row.year} {row.make} {row.model}</b><small>{row.trim}</small></td><td><Status value={row.condition} /></td><td>{money(row.sale_price)}</td><td><Status value={row.vehicle_status} /></td><td>{row.dealership_location}</td></tr>)}
+    {rows.map(row => <tr key={row.vehicle_id}><td data-label="Vehicle">{row.vehicle_id}</td><td data-label="Model"><b>{row.year} {row.make} {row.model}</b><small>{row.trim}</small></td><td data-label="Condition"><Status value={row.condition} /></td><td data-label="Price">{money(row.sale_price)}</td><td data-label="Status"><Status value={row.vehicle_status} /></td><td data-label="Location">{row.dealership_location}</td></tr>)}
   </tbody></table></div>;
 }
 
@@ -114,6 +116,7 @@ export function AdminDashboard() {
   const [busyId, setBusyId] = useState('');
   const [confirmation, setConfirmation] = useState(null);
   const [confirmationError, setConfirmationError] = useState('');
+  const [menuOpen, setMenuOpen] = useState(false);
   const session = getSession();
 
   const load = useCallback(async () => {
@@ -134,7 +137,13 @@ export function AdminDashboard() {
     return () => window.clearTimeout(timer);
   }, [load]);
 
-  const changeView = nextView => { setView(nextView); setNotice(''); setConfirmation(null); };
+  useEffect(() => {
+    const closeMenu = event => { if (event.key === 'Escape') setMenuOpen(false); };
+    window.addEventListener('keydown', closeMenu);
+    return () => window.removeEventListener('keydown', closeMenu);
+  }, []);
+
+  const changeView = nextView => { setView(nextView); setNotice(''); setConfirmation(null); setMenuOpen(false); };
   const updateBooking = async (row, action) => {
     setBusyId(row.appointment_id); setNotice('');
     try {
@@ -156,5 +165,5 @@ export function AdminDashboard() {
     } catch (requestError) { setConfirmationError(requestError.message); } finally { setBusyId(''); }
   };
   const content = state === 'loading' ? <AdminState type="loading" /> : state === 'error' ? <AdminState type="error" onRetry={load} /> : view === 'Overview' ? <Overview data={summary || {}} changeView={changeView} /> : view === 'Analytics' ? <Analytics data={analytics || {}} /> : <Table view={view} rows={rows} busyId={busyId} onApprove={row => updateBooking(row, 'approve')} onReject={row => updateBooking(row, 'reject')} onDelete={row => { setConfirmation({ kind: view === 'Bookings' ? 'booking' : 'lead', row }); setConfirmationError(''); }} />;
-  return <div className="admin-shell"><aside><div className="admin-brand"><span>N</span><b>NEXDRIVE</b></div><div className="admin-location"><i /><span><small>FLAGSHIP LOCATION</small><b>Plano, Texas</b></span></div><nav>{VIEWS.map(item => <button key={item} className={view === item ? 'active' : ''} onClick={() => changeView(item)}>{item}</button>)}</nav><div className="admin-user"><span>{session?.user?.email?.slice(0, 2).toUpperCase() || 'NE'}</span><div><b>Operations admin</b><small>{session?.user?.email || 'Secured session'}</small></div><button aria-label="Sign out" onClick={() => { clearSession(); window.history.replaceState({}, '', '/admin/login'); window.dispatchEvent(new Event('popstate')); }}><Icon name="logout" /></button></div></aside><main><header><div><span className="kicker">NEXDRIVE OPERATIONS</span><h1>{view === 'Overview' ? 'Command center' : view}</h1></div><div className="live"><i /> Live Supabase</div></header>{notice && <div className="notice" role="status">{notice}<button aria-label="Dismiss notification" onClick={() => setNotice('')}>×</button></div>}{error && state === 'error' && <p className="admin-error-detail">{error}</p>}{content}</main><ConfirmationModal request={confirmation} busy={Boolean(busyId)} error={confirmationError} onCancel={() => setConfirmation(null)} onConfirm={confirmDelete} /></div>;
+  return <div className={`admin-shell ${menuOpen ? 'admin-menu-open' : ''}`}><button className="admin-menu-backdrop" aria-label="Close admin navigation" tabIndex={menuOpen ? 0 : -1} onClick={() => setMenuOpen(false)} /><aside aria-label="Admin navigation"><div className="admin-brand"><span>N</span><b>NEXDRIVE</b><button className="admin-menu-close" aria-label="Close admin navigation" onClick={() => setMenuOpen(false)}><Icon name="close" /></button></div><div className="admin-location"><i /><span><small>FLAGSHIP LOCATION</small><b>Plano, Texas</b></span></div><nav>{VIEWS.map(item => <button key={item} className={view === item ? 'active' : ''} onClick={() => changeView(item)}>{item}</button>)}</nav><div className="admin-user"><span>{session?.user?.email?.slice(0, 2).toUpperCase() || 'NE'}</span><div><b>Operations admin</b><small>{session?.user?.email || 'Secured session'}</small></div><button aria-label="Sign out" onClick={() => { clearSession(); window.history.replaceState({}, '', '/admin/login'); window.dispatchEvent(new Event('popstate')); }}><Icon name="logout" /></button></div></aside><main><header><button className="admin-menu-toggle" aria-label="Open admin navigation" aria-expanded={menuOpen} onClick={() => setMenuOpen(true)}><Icon name="menu" /></button><div className="admin-heading"><span className="kicker">NEXDRIVE OPERATIONS</span><h1>{view === 'Overview' ? 'Command center' : view}</h1></div><div className="live"><i /> Live Supabase</div></header>{notice && <div className="notice" role="status">{notice}<button aria-label="Dismiss notification" onClick={() => setNotice('')}>×</button></div>}{error && state === 'error' && <p className="admin-error-detail">{error}</p>}{content}</main><ConfirmationModal request={confirmation} busy={Boolean(busyId)} error={confirmationError} onCancel={() => setConfirmation(null)} onConfirm={confirmDelete} /></div>;
 }
