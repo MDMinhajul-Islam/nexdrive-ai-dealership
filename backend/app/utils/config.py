@@ -8,6 +8,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 BACKEND_DIR = Path(__file__).resolve().parents[2]
+DEFAULT_RETELL_AGENT_ID = "agent_21b622a1bc23eaf14f2606f458"
 
 
 class Settings(BaseSettings):
@@ -25,7 +26,7 @@ class Settings(BaseSettings):
     carsxe_api_key: str = ""
     # Server-only Retell credential; never expose this value to a client.
     retell_api_key: str = ""
-    retell_agent_id: str = ""
+    retell_agent_id: str = DEFAULT_RETELL_AGENT_ID
     # Shared only by Retell and this backend for calls to /api/tools.
     retell_tool_api_key: str = ""
     retell_web_call_rate_limit_requests: int = Field(default=5, ge=1, le=100)
