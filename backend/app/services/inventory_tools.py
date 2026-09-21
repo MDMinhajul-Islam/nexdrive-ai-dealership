@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from app.utils.timing import timing_data_ctx
+import time
 from app.repositories.inventory import InventoryRepository, InventoryRepositoryError
 from app.schemas.inventory_tools import (
     InventorySearchFilters,
@@ -22,8 +24,13 @@ class InventoryVehicleNotFoundError(LookupError):
 
 def search_inventory(filters: InventorySearchFilters, repository: InventoryRepository) -> InventorySearchResponse:
     try:
+        t0 = time.perf_counter()
         rows = repository.search(filters)
+        timing_data_ctx.get()['db'] += (time.perf_counter() - t0)
+        
+        t1 = time.perf_counter()
         vehicles = [InventorySearchVehicle.model_validate(row) for row in rows]
+        timing_data_ctx.get()['response_build'] += (time.perf_counter() - t1)
     except (InventoryRepositoryError, ValueError):
         raise InventoryToolUnavailableError("Authoritative inventory search failed") from None
     message = ""
