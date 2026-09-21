@@ -14,6 +14,7 @@ from app.schemas.vehicle import VehicleDetails, VehicleImage
 class InventorySearchFilters(BaseModel):
     make: str | None = Field(default=None, min_length=1, max_length=40)
     model: str | None = Field(default=None, min_length=1, max_length=60)
+    trim: str | None = Field(default=None, max_length=60)
     body_type: Literal["SUV", "Sedan", "Truck", "Hatchback"] | None = None
     condition: Literal["New", "Used", "Certified Pre-Owned"] | None = None
     budget_min: int | None = Field(default=None, ge=0, le=100_000)
@@ -32,7 +33,7 @@ class InventorySearchFilters(BaseModel):
     features: list[str] = Field(default_factory=list, max_length=10)
     limit: int = Field(default=5, ge=1, le=20)
 
-    @field_validator("make", "model")
+    @field_validator("make", "model", "trim")
     @classmethod
     def normalize_text(cls, value: str | None) -> str | None:
         t0 = time.perf_counter()
@@ -161,12 +162,6 @@ class InventorySearchResponse(BaseModel):
     count: int
     vehicles: list[InventorySearchVehicle]
     message: str = ""
-    data: dict[str, Any] = Field(default_factory=dict)
-
-    @model_validator(mode="after")
-    def populate_data(self) -> "InventorySearchResponse":
-        self.data = {"count": self.count, "vehicles": self.vehicles}
-        return self
 
 
 class RetellInventorySearchVehicle(BaseModel):
@@ -220,17 +215,18 @@ class RetellInventorySearchResponse(BaseModel):
             timing_data_ctx.get()['response_build'] += (time.perf_counter() - t0)
 
 
+
+class RetellToolVehicleDetailsResponse(BaseModel):
+    success: bool = True
+    source: Literal["database"] = "database"
+    vehicle: RetellInventorySearchVehicle
+    message: str = ""
+
 class ToolVehicleDetailsResponse(BaseModel):
     success: bool = True
     source: Literal["database"] = "database"
     vehicle: VehicleDetails
     message: str = ""
-    data: dict[str, Any] = Field(default_factory=dict)
-
-    @model_validator(mode="after")
-    def populate_data(self) -> "ToolVehicleDetailsResponse":
-        self.data = {"vehicle": self.vehicle}
-        return self
 
 
 class VehicleDetailsRequest(BaseModel):
@@ -250,9 +246,3 @@ class VehicleAvailabilityResponse(BaseModel):
     source: Literal["database"] = "database"
     availability: VehicleAvailability
     message: str = ""
-    data: dict[str, Any] = Field(default_factory=dict)
-
-    @model_validator(mode="after")
-    def populate_data(self) -> "VehicleAvailabilityResponse":
-        self.data = {"availability": self.availability}
-        return self

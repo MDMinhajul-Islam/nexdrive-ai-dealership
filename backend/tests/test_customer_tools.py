@@ -253,7 +253,7 @@ def test_customer_tool_routes():
         )
         assert post_history.status_code == 200
         assert post_history.json() == history.json()
-        assert post_history.json()["data"]["history"] == post_history.json()["history"]
+        
         assert set(post_history.json()["history"]) == {
             "customer", "leads", "appointments",
         }

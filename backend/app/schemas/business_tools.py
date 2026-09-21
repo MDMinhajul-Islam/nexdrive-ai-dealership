@@ -5,6 +5,44 @@ from typing import Any, Literal
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 
+
+class ResolveCustomerRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    first_name: str = Field(min_length=1, max_length=50)
+    last_name: str = Field(min_length=1, max_length=50)
+    phone: str = Field(min_length=10, max_length=20)
+    email: str | None = None
+
+class ResolveCustomerResponse(BaseModel):
+    success: bool = True
+    source: Literal["database"] = "database"
+    created: bool
+    customer_id: str
+    message: str = ""
+
+
+
+
+
+class ResolveCustomerRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    first_name: str = Field(min_length=1, max_length=50)
+    last_name: str = Field(min_length=1, max_length=50)
+    phone: str = Field(min_length=10, max_length=20)
+    email: str | None = None
+
+class ResolveCustomerResponse(BaseModel):
+    success: bool = True
+    source: Literal["database"] = "database"
+    created: bool
+    customer_id: str
+    message: str = ""
+
+
+
+
 class LeadUpsertRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -26,12 +64,6 @@ class LeadResponse(BaseModel):
     created: bool
     lead: dict[str, Any]
     message: str = ""
-    data: dict[str, Any] = Field(default_factory=dict)
-
-    @model_validator(mode="after")
-    def populate_data(self) -> "LeadResponse":
-        self.data = {"created": self.created, "lead": self.lead}
-        return self
 
 
 class BookingRequest(BaseModel):
@@ -66,12 +98,6 @@ class BookingResponse(BaseModel):
     created: bool
     appointment: dict[str, Any]
     message: str = ""
-    data: dict[str, Any] = Field(default_factory=dict)
-
-    @model_validator(mode="after")
-    def populate_data(self) -> "BookingResponse":
-        self.data = {"created": self.created, "appointment": self.appointment}
-        return self
 
 
 class FinancingEstimateRequest(BaseModel):

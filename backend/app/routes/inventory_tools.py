@@ -1,3 +1,4 @@
+from app.schemas.inventory_tools import RetellInventorySearchVehicle
 """Retell-ready read-only inventory tool endpoints."""
 
 from typing import Annotated
@@ -10,7 +11,7 @@ from app.schemas.inventory_tools import (
     InventorySearchFilters,
     RetellInventorySearchResponse,
     VehicleDetailsRequest,
-    ToolVehicleDetailsResponse,
+    RetellToolVehicleDetailsResponse,
     VehicleAvailabilityResponse,
 )
 from app.services.inventory_tools import (
@@ -100,9 +101,9 @@ def _safe_error(exc: Exception) -> ToolAPIError:
     )
 
 
-def _vehicle_details_response(vehicle_id: str, repository: InventoryRepository) -> ToolVehicleDetailsResponse:
+def _vehicle_details_response(vehicle_id: str, repository: InventoryRepository) -> RetellToolVehicleDetailsResponse:
     try:
-        return ToolVehicleDetailsResponse(vehicle=get_vehicle_details(vehicle_id, repository))
+        return RetellToolVehicleDetailsResponse(vehicle=RetellInventorySearchVehicle.model_validate(get_vehicle_details(vehicle_id, repository).model_dump(), from_attributes=True))
     except (InventoryVehicleNotFoundError, InventoryToolUnavailableError) as exc:
         raise _safe_error(exc) from None
 
@@ -135,19 +136,19 @@ def search_inventory_tool(request: Request, filters: InventorySearchFilters, rep
         raise _safe_error(exc) from None
 
 
-@router.get("/get-vehicle-details/{vehicle_id}", response_model=ToolVehicleDetailsResponse, summary="Get authoritative vehicle details")
-def get_vehicle_details_tool(vehicle_id: VehicleId, repository: Repository) -> ToolVehicleDetailsResponse:
+@router.get("/get-vehicle-details/{vehicle_id}", response_model=RetellToolVehicleDetailsResponse, summary="Get authoritative vehicle details")
+def get_vehicle_details_tool(vehicle_id: VehicleId, repository: Repository) -> RetellToolVehicleDetailsResponse:
     return _vehicle_details_response(vehicle_id, repository)
 
 
-@router.get("/get-vehicle-details", response_model=ToolVehicleDetailsResponse, summary="Get authoritative vehicle details by query parameter")
-def get_vehicle_details_query_tool(vehicle_id: VehicleIdQuery, repository: Repository) -> ToolVehicleDetailsResponse:
+@router.get("/get-vehicle-details", response_model=RetellToolVehicleDetailsResponse, summary="Get authoritative vehicle details by query parameter")
+def get_vehicle_details_query_tool(vehicle_id: VehicleIdQuery, repository: Repository) -> RetellToolVehicleDetailsResponse:
     """Retell-friendly alias for clients that supply vehicle_id as a query parameter."""
     return _vehicle_details_response(vehicle_id, repository)
 
 
-@router.post("/get-vehicle-details", response_model=ToolVehicleDetailsResponse, summary="Get authoritative vehicle details by JSON body")
-def get_vehicle_details_post_tool(request: VehicleDetailsRequest, repository: Repository) -> ToolVehicleDetailsResponse:
+@router.post("/get-vehicle-details", response_model=RetellToolVehicleDetailsResponse, summary="Get authoritative vehicle details by JSON body")
+def get_vehicle_details_post_tool(request: VehicleDetailsRequest, repository: Repository) -> RetellToolVehicleDetailsResponse:
     """Retell-friendly alias for clients that send vehicle_id in a JSON body."""
     return _vehicle_details_response(request.vehicle_id, repository)
 

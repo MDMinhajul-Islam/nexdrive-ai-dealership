@@ -74,8 +74,18 @@ def get_test_drive_slots(query: TestDriveSlotQuery, repository: CustomerToolsRep
                         appointment_date=slot_date, appointment_time=cursor.time(),
                     ))
                 cursor += timedelta(minutes=30)
+
     slots.sort(key=lambda slot: (slot.appointment_date, slot.appointment_time, slot.salesperson_id))
-    slots = slots[:query.limit]
+    
+    unique_slots = []
+    seen = set()
+    for slot in slots:
+        k = (slot.appointment_date, slot.appointment_time)
+        if k not in seen:
+            unique_slots.append(slot)
+            seen.add(k)
+    
+    slots = unique_slots[:query.limit]
     message = ""
     if not slots:
         message = (

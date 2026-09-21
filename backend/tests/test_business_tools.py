@@ -321,7 +321,7 @@ def test_lead_route_returns_authoritative_persisted_response(monkeypatch):
         assert response.status_code == 200
         assert response.json() == {
             "success": True, "source": "database", "created": True, "lead": lead,
-            "message": "", "data": {"created": True, "lead": lead},
+            "message": ""
         }
     finally:
         app.dependency_overrides.clear()
@@ -554,8 +554,7 @@ def test_booking_route_returns_authoritative_created_appointment(monkeypatch):
         assert response.status_code == 200
         assert response.json() == {
             "success": True, "source": "database", "created": True,
-            "appointment": appointment, "message": "",
-            "data": {"created": True, "appointment": appointment},
+            "appointment": appointment, "message": ""
         }
     finally:
         app.dependency_overrides.clear()
