@@ -9,7 +9,7 @@ from app.schemas.retell import RetellWebCallRequest, RetellWebCallResponse
 from app.utils.config import Settings, get_settings
 
 
-RETELL_WEB_CALL_URL = "https://api.retellai.com/v3/create-web-call"
+RETELL_WEB_CALL_URL = "https://api.retellai.com/v2/create-web-call"
 RETELL_REQUEST_TIMEOUT_SECONDS = 10.0
 MAX_UPSTREAM_DIAGNOSTIC_LENGTH = 200
 
