@@ -51,6 +51,30 @@ async def request_validation_handler(request: Request, exc: RequestValidationErr
                 "message": "The booking request contains missing or invalid information",
             },
         )
+    if request.url.path == "/api/tools/resolve-customer":
+        err_msg = str(exc)
+        if "email format" in err_msg.lower() or "email" in err_msg.lower():
+            request.state.tool_error_code = "INVALID_EMAIL"
+            return JSONResponse(
+                status_code=422,
+                content={
+                    "success": False,
+                    "error_code": "INVALID_EMAIL",
+                    "retryable": True,
+                    "message": "The provided email address is invalid. Please ask the customer to repeat their email.",
+                },
+            )
+        if "phone" in err_msg.lower():
+            request.state.tool_error_code = "INVALID_PHONE"
+            return JSONResponse(
+                status_code=422,
+                content={
+                    "success": False,
+                    "error_code": "INVALID_PHONE",
+                    "retryable": True,
+                    "message": "The provided phone number is invalid. Please ask the customer to repeat their phone number.",
+                },
+            )
     return await request_validation_exception_handler(request, exc)
 
 

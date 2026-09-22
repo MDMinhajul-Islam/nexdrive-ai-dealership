@@ -7,12 +7,61 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator, model_valida
 
 
 class ResolveCustomerRequest(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="ignore")
 
     first_name: str = Field(min_length=1, max_length=50)
     last_name: str = Field(min_length=1, max_length=50)
     phone: str = Field(min_length=10, max_length=20)
     email: str | None = None
+
+    @model_validator(mode="before")
+    @classmethod
+    def extract_retell_envelope(cls, data: Any) -> Any:
+        if isinstance(data, dict):
+            if "args" in data:
+                return data["args"]
+        return data
+
+    @field_validator("first_name", "last_name", mode="before")
+    @classmethod
+    def clean_name(cls, v: Any) -> Any:
+        if isinstance(v, str):
+            return v.strip()
+        return v
+
+    @field_validator("email", mode="before")
+    @classmethod
+    def clean_email(cls, v: Any) -> Any:
+        import re
+        if not v:
+            return None
+        if not isinstance(v, str):
+            return v
+        email = v.lower()
+        email = re.sub(r'\s+dot\s+', '.', email)
+        email = re.sub(r'\s+at the rate of\s+', '@', email)
+        email = re.sub(r'\s+at\s+', '@', email)
+        email = email.replace('g mail', 'gmail')
+        email = email.replace(' ', '')
+        if '@' not in email or '.' not in email:
+            raise ValueError('Invalid email format after normalization')
+        return email
+
+    @field_validator("phone", mode="before")
+    @classmethod
+    def clean_phone(cls, v: Any) -> Any:
+        import re
+        if not v:
+            return v
+        if not isinstance(v, str):
+            return v
+        p = re.sub(r'\D', '', v)
+        if p.startswith('1') and len(p) == 11:
+            p = p[1:]
+        if len(p) != 10:
+            raise ValueError('Phone number must contain exactly 10 digits')
+        return f"+1-{p[:3]}-{p[3:6]}-{p[6:]}" 
+
 
 class ResolveCustomerResponse(BaseModel):
     success: bool = True
