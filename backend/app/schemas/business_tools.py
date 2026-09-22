@@ -24,37 +24,19 @@ class ResolveCustomerResponse(BaseModel):
 
 
 
-
-class ResolveCustomerRequest(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-
-    first_name: str = Field(min_length=1, max_length=50)
-    last_name: str = Field(min_length=1, max_length=50)
-    phone: str = Field(min_length=10, max_length=20)
-    email: str | None = None
-
-class ResolveCustomerResponse(BaseModel):
-    success: bool = True
-    source: Literal["database"] = "database"
-    created: bool
-    customer_id: str
-    message: str = ""
-
-
-
-
 class LeadUpsertRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     customer_id: str = Field(pattern=r"^CUST-[0-9]{6}$")
     source: Literal["Website", "Inbound Call", "Paid Search", "Referral", "Social Media", "Walk-In", "Vehicle Marketplace"] = "Inbound Call"
-    budget: int = Field(ge=3000, le=100000)
+
+    budget: int | None = Field(default=None, ge=3000, le=100000)
     vehicle_interest: str | None = Field(default=None, pattern=r"^VEH-[0-9]{6}$")
-    purchase_timeline: Literal["Within 7 Days", "Within 30 Days", "1-3 Months", "3-6 Months", "Researching"]
-    financing_needed: bool
-    trade_in: bool
+    purchase_timeline: Literal["Within 7 Days", "Within 30 Days", "1-3 Months", "3-6 Months", "Researching"] | None = None
+    financing_needed: bool | None = None
+    trade_in: bool | None = None
+    assigned_salesperson: str | None = Field(default=None, pattern=r"^SP-[0-9]{3}$")
     test_drive_requested: bool = False
-    assigned_salesperson: str = Field(pattern=r"^SP-[0-9]{3}$")
     notes: str = Field(default="", max_length=1000)
 
 

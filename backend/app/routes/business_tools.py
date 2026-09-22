@@ -72,11 +72,6 @@ def _booking_error(exc: Exception) -> ToolAPIError:
 
 
 
-@router.post("/resolve-customer", response_model=ResolveCustomerResponse, summary="Resolve or create a customer to get their internal ID")
-def resolve_customer_tool(request: ResolveCustomerRequest, client: Client = Depends(get_business_client)) -> ResolveCustomerResponse:
-    try: return resolve_or_create_customer(request, client)
-    except (BusinessToolError, BusinessNotFoundError, BusinessConflictError) as exc: raise _error(exc) from None
-
 
 @router.post("/resolve-customer", response_model=ResolveCustomerResponse, summary="Resolve or create a customer to get their internal ID")
 def resolve_customer_tool(request: ResolveCustomerRequest, client: Client = Depends(get_business_client)) -> ResolveCustomerResponse:
