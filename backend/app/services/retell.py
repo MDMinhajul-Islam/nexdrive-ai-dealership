@@ -112,6 +112,7 @@ async def create_web_call(
 
     payload = {
         "agent_id": resolved_settings.retell_agent_id,
+        "agent_version": "latest_published",
         "retell_llm_dynamic_variables": {
             "customer_id": request.customer_id,
             "assigned_salesperson": request.assigned_salesperson,

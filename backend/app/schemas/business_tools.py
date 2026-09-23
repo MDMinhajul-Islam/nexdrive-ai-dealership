@@ -5,18 +5,87 @@ from typing import Any, Literal
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 
+
+class ResolveCustomerRequest(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
+    first_name: str = Field(min_length=1, max_length=50)
+    last_name: str = Field(min_length=1, max_length=50)
+    phone: str = Field(min_length=10, max_length=20)
+    email: str | None = None
+
+    @model_validator(mode="before")
+    @classmethod
+    def extract_retell_envelope(cls, data: Any) -> Any:
+        if isinstance(data, dict):
+            if "args" in data:
+                return data["args"]
+        return data
+
+    @field_validator("first_name", "last_name", mode="before")
+    @classmethod
+    def clean_name(cls, v: Any) -> Any:
+        if isinstance(v, str):
+            return v.strip()
+        return v
+
+    @field_validator("email", mode="before")
+    @classmethod
+    def clean_email(cls, v: Any) -> Any:
+        import re
+        if not v:
+            return None
+        if not isinstance(v, str):
+            return v
+        email = v.lower()
+        email = re.sub(r'\s+dot\s+', '.', email)
+        email = re.sub(r'\s+at the rate of\s+', '@', email)
+        email = re.sub(r'\s+at\s+', '@', email)
+        email = email.replace('g mail', 'gmail')
+        email = email.replace(' ', '')
+        if '@' not in email or '.' not in email:
+            raise ValueError('Invalid email format after normalization')
+        return email
+
+    @field_validator("phone", mode="before")
+    @classmethod
+    def clean_phone(cls, v: Any) -> Any:
+        import re
+        if not v:
+            return v
+        if not isinstance(v, str):
+            return v
+        p = re.sub(r'\D', '', v)
+        if p.startswith('1') and len(p) == 11:
+            p = p[1:]
+        if len(p) != 10:
+            raise ValueError('Phone number must contain exactly 10 digits')
+        return f"+1-{p[:3]}-{p[3:6]}-{p[6:]}" 
+
+
+class ResolveCustomerResponse(BaseModel):
+    success: bool = True
+    source: Literal["database"] = "database"
+    created: bool
+    customer_id: str
+    message: str = ""
+
+
+
+
 class LeadUpsertRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     customer_id: str = Field(pattern=r"^CUST-[0-9]{6}$")
     source: Literal["Website", "Inbound Call", "Paid Search", "Referral", "Social Media", "Walk-In", "Vehicle Marketplace"] = "Inbound Call"
-    budget: int = Field(ge=3000, le=100000)
+
+    budget: int | None = Field(default=None, ge=3000, le=100000)
     vehicle_interest: str | None = Field(default=None, pattern=r"^VEH-[0-9]{6}$")
-    purchase_timeline: Literal["Within 7 Days", "Within 30 Days", "1-3 Months", "3-6 Months", "Researching"]
-    financing_needed: bool
-    trade_in: bool
+    purchase_timeline: Literal["Within 7 Days", "Within 30 Days", "1-3 Months", "3-6 Months", "Researching"] | None = None
+    financing_needed: bool | None = None
+    trade_in: bool | None = None
+    assigned_salesperson: str | None = Field(default=None, pattern=r"^SP-[0-9]{3}$")
     test_drive_requested: bool = False
-    assigned_salesperson: str = Field(pattern=r"^SP-[0-9]{3}$")
     notes: str = Field(default="", max_length=1000)
 
 
@@ -26,12 +95,6 @@ class LeadResponse(BaseModel):
     created: bool
     lead: dict[str, Any]
     message: str = ""
-    data: dict[str, Any] = Field(default_factory=dict)
-
-    @model_validator(mode="after")
-    def populate_data(self) -> "LeadResponse":
-        self.data = {"created": self.created, "lead": self.lead}
-        return self
 
 
 class BookingRequest(BaseModel):
@@ -66,12 +129,6 @@ class BookingResponse(BaseModel):
     created: bool
     appointment: dict[str, Any]
     message: str = ""
-    data: dict[str, Any] = Field(default_factory=dict)
-
-    @model_validator(mode="after")
-    def populate_data(self) -> "BookingResponse":
-        self.data = {"created": self.created, "appointment": self.appointment}
-        return self
 
 
 class FinancingEstimateRequest(BaseModel):

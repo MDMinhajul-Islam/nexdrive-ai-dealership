@@ -19,12 +19,6 @@ class CustomerHistoryResponse(BaseModel):
     source: Literal["database"] = "database"
     history: CustomerHistory
     message: str = ""
-    data: dict[str, Any] = Field(default_factory=dict)
-
-    @model_validator(mode="after")
-    def populate_data(self) -> "CustomerHistoryResponse":
-        self.data = {"history": self.history}
-        return self
 
 
 class CustomerHistoryRequest(BaseModel):
@@ -70,9 +64,3 @@ class TestDriveSlotsResponse(BaseModel):
     count: int
     slots: list[TestDriveSlot]
     message: str = ""
-    data: dict[str, Any] = Field(default_factory=dict)
-
-    @model_validator(mode="after")
-    def populate_data(self) -> "TestDriveSlotsResponse":
-        self.data = {"count": self.count, "slots": self.slots}
-        return self

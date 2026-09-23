@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from typing import Any, Literal
 
+from app.utils.timing import timing_data_ctx
+import time
 from pydantic import AliasChoices, BaseModel, Field, field_validator, model_validator
 
 from app.schemas.vehicle import VehicleDetails, VehicleImage
@@ -12,6 +14,7 @@ from app.schemas.vehicle import VehicleDetails, VehicleImage
 class InventorySearchFilters(BaseModel):
     make: str | None = Field(default=None, min_length=1, max_length=40)
     model: str | None = Field(default=None, min_length=1, max_length=60)
+    trim: str | None = Field(default=None, max_length=60)
     body_type: Literal["SUV", "Sedan", "Truck", "Hatchback"] | None = None
     condition: Literal["New", "Used", "Certified Pre-Owned"] | None = None
     budget_min: int | None = Field(default=None, ge=0, le=100_000)
@@ -30,31 +33,39 @@ class InventorySearchFilters(BaseModel):
     features: list[str] = Field(default_factory=list, max_length=10)
     limit: int = Field(default=5, ge=1, le=20)
 
-    @field_validator("make", "model")
+    @field_validator("make", "model", "trim")
     @classmethod
     def normalize_text(cls, value: str | None) -> str | None:
-        return " ".join(value.split()) if value is not None else None
+        t0 = time.perf_counter()
+        try:
+            return " ".join(value.split()) if value is not None else None
+        finally:
+            timing_data_ctx.get()['normalization'] += (time.perf_counter() - t0)
 
     @field_validator("body_type", "condition", "drivetrain", "fuel_type", mode="before")
     @classmethod
     def normalize_choice_formatting(cls, value: object) -> object:
-        if not isinstance(value, str):
-            return value
-        choices = {
-            "suv": "SUV", "sedan": "Sedan", "truck": "Truck", "hatchback": "Hatchback",
-            "new": "New", "used": "Used", "certified pre-owned": "Certified Pre-Owned",
-            "certified pre owned": "Certified Pre-Owned", "certified": "Certified Pre-Owned",
-            "cpo": "Certified Pre-Owned", "pre-owned": "Certified Pre-Owned",
-            "preowned": "Certified Pre-Owned",
-            "fwd": "FWD", "front-wheel drive": "FWD", "front wheel drive": "FWD",
-            "rwd": "RWD", "rear-wheel drive": "RWD", "rear wheel drive": "RWD",
-            "awd": "AWD", "all-wheel drive": "AWD", "all wheel drive": "AWD",
-            "4wd": "4WD", "four-wheel drive": "4WD", "four wheel drive": "4WD",
-            "gasoline": "Gasoline", "diesel": "Diesel", "hybrid": "Hybrid",
-            "plug-in hybrid": "Plug-in Hybrid", "electric": "Electric",
-        }
-        normalized = " ".join(value.split()).casefold()
-        return choices.get(normalized, value)
+        t0 = time.perf_counter()
+        try:
+            if not isinstance(value, str):
+                return value
+            choices = {
+                'suv': 'SUV', 'sedan': 'Sedan', 'truck': 'Truck', 'hatchback': 'Hatchback',
+                'new': 'New', 'used': 'Used', 'certified pre-owned': 'Certified Pre-Owned',
+                'certified pre owned': 'Certified Pre-Owned', 'certified': 'Certified Pre-Owned',
+                'cpo': 'Certified Pre-Owned', 'pre-owned': 'Certified Pre-Owned',
+                'preowned': 'Certified Pre-Owned',
+                'fwd': 'FWD', 'front-wheel drive': 'FWD', 'front wheel drive': 'FWD',
+                'rwd': 'RWD', 'rear-wheel drive': 'RWD', 'rear wheel drive': 'RWD',
+                'awd': 'AWD', 'all-wheel drive': 'AWD', 'all wheel drive': 'AWD',
+                '4wd': '4WD', 'four-wheel drive': '4WD', 'four wheel drive': '4WD',
+                'gasoline': 'Gasoline', 'diesel': 'Diesel', 'hybrid': 'Hybrid',
+                'plug-in hybrid': 'Plug-in Hybrid', 'electric': 'Electric',
+            }
+            normalized = ' '.join(value.split()).casefold()
+            return choices.get(normalized, value)
+        finally:
+            timing_data_ctx.get()['normalization'] += (time.perf_counter() - t0)
 
     @field_validator("features", mode="before")
     @classmethod
@@ -64,12 +75,16 @@ class InventorySearchFilters(BaseModel):
     @field_validator("features")
     @classmethod
     def normalize_features(cls, values: list[str]) -> list[str]:
-        normalized = [" ".join(value.split()) for value in values]
-        if any(not value for value in normalized):
-            raise ValueError("Feature names cannot be blank")
-        if len({value.casefold() for value in normalized}) != len(normalized):
-            raise ValueError("Feature names must be unique")
-        return normalized
+        t0 = time.perf_counter()
+        try:
+            normalized = [' '.join(value.split()) for value in values]
+            if any(not value for value in normalized):
+                raise ValueError('Feature names cannot be blank')
+            if len({value.casefold() for value in normalized}) != len(normalized):
+                raise ValueError('Feature names must be unique')
+            return normalized
+        finally:
+            timing_data_ctx.get()['normalization'] += (time.perf_counter() - t0)
 
     @field_validator("limit", mode="before")
     @classmethod
@@ -147,12 +162,6 @@ class InventorySearchResponse(BaseModel):
     count: int
     vehicles: list[InventorySearchVehicle]
     message: str = ""
-    data: dict[str, Any] = Field(default_factory=dict)
-
-    @model_validator(mode="after")
-    def populate_data(self) -> "InventorySearchResponse":
-        self.data = {"count": self.count, "vehicles": self.vehicles}
-        return self
 
 
 class RetellInventorySearchVehicle(BaseModel):
@@ -187,32 +196,37 @@ class RetellInventorySearchResponse(BaseModel):
     @classmethod
     def from_inventory_response(
         cls, response: InventorySearchResponse
-    ) -> "RetellInventorySearchResponse":
-        return cls(
-            success=response.success,
-            source=response.source,
-            count=response.count,
-            vehicles=[
-                RetellInventorySearchVehicle.model_validate(
-                    vehicle, from_attributes=True
-                )
-                for vehicle in response.vehicles
-            ],
-            message=response.message,
-        )
+    ) -> 'RetellInventorySearchResponse':
+        t0 = time.perf_counter()
+        try:
+            return cls(
+                success=response.success,
+                source=response.source,
+                count=response.count,
+                vehicles=[
+                    RetellInventorySearchVehicle.model_validate(
+                        vehicle, from_attributes=True
+                    )
+                    for vehicle in response.vehicles
+                ],
+                message=response.message,
+            )
+        finally:
+            timing_data_ctx.get()['response_build'] += (time.perf_counter() - t0)
 
+
+
+class RetellToolVehicleDetailsResponse(BaseModel):
+    success: bool = True
+    source: Literal["database"] = "database"
+    vehicle: RetellInventorySearchVehicle
+    message: str = ""
 
 class ToolVehicleDetailsResponse(BaseModel):
     success: bool = True
     source: Literal["database"] = "database"
     vehicle: VehicleDetails
     message: str = ""
-    data: dict[str, Any] = Field(default_factory=dict)
-
-    @model_validator(mode="after")
-    def populate_data(self) -> "ToolVehicleDetailsResponse":
-        self.data = {"vehicle": self.vehicle}
-        return self
 
 
 class VehicleDetailsRequest(BaseModel):
@@ -232,9 +246,3 @@ class VehicleAvailabilityResponse(BaseModel):
     source: Literal["database"] = "database"
     availability: VehicleAvailability
     message: str = ""
-    data: dict[str, Any] = Field(default_factory=dict)
-
-    @model_validator(mode="after")
-    def populate_data(self) -> "VehicleAvailabilityResponse":
-        self.data = {"availability": self.availability}
-        return self

@@ -110,8 +110,22 @@ def score_lead(request: LeadUpsertRequest) -> tuple[int, str]:
 
 def _next_id(client: Any, table: str, field: str, prefix: str) -> str:
     result = client.table(table).select(field).order(field, desc=True).limit(1).execute()
-    number = int(result.data[0][field].split("-")[1]) + 1 if result.data else 1
-    return f"{prefix}-{number:06d}"
+    number = int(result.data[0][field].split('-')[1]) + 1 if result.data else 1
+    return f'{prefix}-{number:06d}'
+
+def _insert_with_id_retry(client: Any, table: str, field: str, prefix: str, payload: dict[str, Any]) -> dict[str, Any]:
+    for _ in range(10):
+        new_id = _next_id(client, table, field, prefix)
+        payload[field] = new_id
+        try:
+            return client.table(table).insert(payload).execute().data[0]
+        except Exception as e:
+            error_str = str(e).lower()
+            if "23505" in error_str or "duplicate key" in error_str or "unique constraint" in error_str:
+                continue
+            raise BusinessToolError(f"Insert failed on {table}") from e
+    raise BusinessConflictError(f"Failed to generate unique id for {table}", retryable=True)
+
 
 
 def _rpc_result(client: Any, function_name: str, payload: dict[str, Any]) -> dict[str, Any]:
@@ -141,6 +155,22 @@ def _raise_atomic_error(result: dict[str, Any]) -> None:
         )
     raise BusinessConflictError(message, code, bool(result.get("retryable", False)))
 
+
+
+def resolve_or_create_customer(request: ResolveCustomerRequest, client: Any) -> ResolveCustomerResponse:
+    existing = client.table("customers").select("customer_id").eq("synthetic_phone", request.phone).limit(1).execute().data
+    if existing:
+        return ResolveCustomerResponse(created=False, customer_id=existing[0]["customer_id"])
+    
+    payload = {
+        "first_name": request.first_name,
+        "last_name": request.last_name,
+        "synthetic_phone": request.phone,
+        "synthetic_email": request.email or "",
+        "created_at": datetime.utcnow().isoformat()
+    }
+    result = _insert_with_id_retry(client, "customers", "customer_id", "CUST", payload)
+    return ResolveCustomerResponse(created=True, customer_id=result["customer_id"])
 
 def create_or_update_lead(request: LeadUpsertRequest, client: Any) -> LeadResponse:
     try:
@@ -197,8 +227,8 @@ def create_or_update_lead(request: LeadUpsertRequest, client: Any) -> LeadRespon
             result = client.table("leads").update(payload).eq("lead_id", lead_id).execute().data[0]
             created = False
         else:
-            payload.update({"lead_id": _next_id(client, "leads", "lead_id", "LEAD"), "lead_status": "New", "created_at": datetime.utcnow().isoformat()})
-            result = client.table("leads").insert(payload).execute().data[0]
+            payload.update({"lead_status": "New", "created_at": datetime.utcnow().isoformat()})
+            result = _insert_with_id_retry(client, "leads", "lead_id", "LEAD", payload)
             created = True
         logger.info("lead_upsert success=%s created=%s lead_id=%s", True, created, result["lead_id"])
         return LeadResponse(created=created, lead=result)
@@ -272,8 +302,8 @@ def create_test_drive(request: BookingRequest, client: Any) -> BookingResponse:
                 "The requested appointment time is no longer available"
             )
         payload = request.model_dump(mode="json")
-        payload.update({"appointment_id": _next_id(client, "appointments", "appointment_id", "APT"), "appointment_type": "Test Drive", "status": "Confirmed", "created_by": "Voice Agent", "created_at": datetime.utcnow().isoformat()})
-        result = client.table("appointments").insert(payload).execute().data[0]
+        payload.update({"appointment_type": "Test Drive", "status": "Confirmed", "created_by": "Voice Agent", "created_at": datetime.utcnow().isoformat()})
+        result = _insert_with_id_retry(client, "appointments", "appointment_id", "APT", payload)
         logger.info("booking_create success=True appointment_id=%s", result["appointment_id"])
         return BookingResponse(created=True, appointment=result)
     except (BusinessNotFoundError, BusinessConflictError): raise

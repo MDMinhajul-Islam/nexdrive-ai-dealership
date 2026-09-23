@@ -393,3 +393,63 @@ def test_vehicle_availability_post_route_returns_sanitized_database_error(monkey
         assert "provider details" not in response.text
     finally:
         app.dependency_overrides.clear()
+
+
+def test_search_inventory_timing_logging(repository, caplog):
+    import logging
+    from fastapi.testclient import TestClient
+    from app.main import app
+    from app.routes.inventory_tools import get_inventory_repository
+    
+    caplog.set_level(logging.INFO, logger="nexdrive.inventory.timing")
+    app.dependency_overrides[get_inventory_repository] = lambda: repository
+    try:
+        response = TestClient(app, headers={"X-Retell-Tool-Key": "test-retell-tool-key"}).post(
+            "/api/tools/search-inventory",
+            json={"body_type": "SUV", "features": ["Backup Camera"]},
+        )
+        assert response.status_code == 200
+        
+        log_messages = [record.message for record in caplog.records if "search_inventory timing" in record.message]
+        assert len(log_messages) == 1
+        log_str = log_messages[0]
+        
+        assert "total_ms=" in log_str
+        assert "validation_ms=" in log_str
+        assert "normalization_ms=" in log_str
+        assert "db_ms=" in log_str
+        assert "response_build_ms=" in log_str
+        assert "count=" in log_str
+    finally:
+        app.dependency_overrides.clear()
+
+def test_search_inventory_timing_logging_error(repository, monkeypatch, caplog):
+    import logging
+    from fastapi.testclient import TestClient
+    from app.main import app
+    from app.routes.inventory_tools import get_inventory_repository
+    from app.services.inventory_tools import InventoryToolUnavailableError
+    from app.routes import inventory_tools as inventory_tool_routes
+    
+    def unavailable(*_args):
+        raise InventoryToolUnavailableError("private database diagnostics")
+        
+    caplog.set_level(logging.INFO, logger="nexdrive.inventory.timing")
+    app.dependency_overrides[get_inventory_repository] = lambda: repository
+    monkeypatch.setattr(inventory_tool_routes, "search_inventory", unavailable)
+    
+    try:
+        response = TestClient(app, headers={"X-Retell-Tool-Key": "test-retell-tool-key"}).post(
+            "/api/tools/search-inventory",
+            json={"make": "Toyota"}
+        )
+        assert response.status_code == 503
+        
+        log_messages = [record.message for record in caplog.records if "search_inventory timing" in record.message]
+        assert len(log_messages) == 1
+        log_str = log_messages[0]
+        
+        assert "total_ms=" in log_str
+        assert "failed_stage=database" in log_str
+    finally:
+        app.dependency_overrides.clear()

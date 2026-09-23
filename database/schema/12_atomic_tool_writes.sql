@@ -28,7 +28,7 @@ BEGIN
     IF v_customer_id IS NULL OR v_customer_id !~ '^CUST-[0-9]{6}$' THEN
         RETURN jsonb_build_object('success', false, 'error_code', 'INVALID_CUSTOMER_ID', 'message', 'Customer ID is invalid');
     END IF;
-    IF v_salesperson_id IS NULL OR v_salesperson_id !~ '^SP-[0-9]{3}$' THEN
+    IF v_salesperson_id IS NOT NULL AND v_salesperson_id !~ '^SP-[0-9]{3}$' THEN
         RETURN jsonb_build_object('success', false, 'error_code', 'INVALID_SALESPERSON_ID', 'message', 'Salesperson ID is invalid');
     END IF;
     IF v_vehicle_id IS NOT NULL AND v_vehicle_id !~ '^VEH-[0-9]{6}$' THEN
@@ -45,10 +45,12 @@ BEGIN
             RETURN jsonb_build_object('success', false, 'error_code', 'VEHICLE_NOT_FOUND', 'message', 'Vehicle not found');
         END IF;
     END IF;
-    PERFORM 1 FROM public.salespeople
-        WHERE salesperson_id = v_salesperson_id AND active = true FOR SHARE;
-    IF NOT FOUND THEN
-        RETURN jsonb_build_object('success', false, 'error_code', 'SALESPERSON_NOT_FOUND', 'message', 'Salesperson is unavailable');
+    IF v_salesperson_id IS NOT NULL THEN
+        PERFORM 1 FROM public.salespeople
+            WHERE salesperson_id = v_salesperson_id AND active = true FOR SHARE;
+        IF NOT FOUND THEN
+            RETURN jsonb_build_object('success', false, 'error_code', 'SALESPERSON_NOT_FOUND', 'message', 'Salesperson is unavailable');
+        END IF;
     END IF;
 
     PERFORM pg_advisory_xact_lock(hashtextextended('nexdrive:lead:' || v_customer_id, 0));
@@ -62,18 +64,15 @@ BEGIN
     IF FOUND THEN
         UPDATE public.leads
         SET source = CASE WHEN p_request ? 'source' THEN p_request->>'source' ELSE source END,
-            budget = (p_request->>'budget')::INTEGER,
+            budget = CASE WHEN p_request ? 'budget' THEN (p_request->>'budget')::INTEGER ELSE budget END,
             vehicle_interest = CASE WHEN p_request ? 'vehicle_interest' THEN v_vehicle_id ELSE vehicle_interest END,
-            purchase_timeline = p_request->>'purchase_timeline',
-            financing_needed = (p_request->>'financing_needed')::BOOLEAN,
-            trade_in = (p_request->>'trade_in')::BOOLEAN,
-            lead_score = (p_request->>'lead_score')::SMALLINT,
-            lead_temperature = p_request->>'lead_temperature',
-            assigned_salesperson = v_salesperson_id,
-            notes = CASE
-                WHEN NULLIF(BTRIM(p_request->>'notes'), '') IS NULL THEN notes
-                ELSE p_request->>'notes'
-            END,
+            purchase_timeline = CASE WHEN p_request ? 'purchase_timeline' THEN p_request->>'purchase_timeline' ELSE purchase_timeline END,
+            financing_needed = CASE WHEN p_request ? 'financing_needed' THEN (p_request->>'financing_needed')::BOOLEAN ELSE financing_needed END,
+            trade_in = CASE WHEN p_request ? 'trade_in' THEN (p_request->>'trade_in')::BOOLEAN ELSE trade_in END,
+            lead_score = CASE WHEN p_request ? 'lead_score' THEN (p_request->>'lead_score')::SMALLINT ELSE lead_score END,
+            lead_temperature = CASE WHEN p_request ? 'lead_temperature' THEN p_request->>'lead_temperature' ELSE lead_temperature END,
+            assigned_salesperson = CASE WHEN p_request ? 'assigned_salesperson' THEN v_salesperson_id ELSE assigned_salesperson END,
+            notes = CASE WHEN p_request ? 'notes' THEN p_request->>'notes' ELSE notes END,
             next_followup_date = CURRENT_DATE,
             updated_at = NOW()
         WHERE lead_id = v_lead.lead_id

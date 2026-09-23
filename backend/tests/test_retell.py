@@ -72,6 +72,7 @@ def test_create_web_call_sends_trusted_configuration_and_dynamic_variables():
     assert captured["authorization"] == f"Bearer {TEST_API_KEY}"
     assert captured["body"] == {
         "agent_id": "agent-test",
+            "agent_version": "latest_published",
         "retell_llm_dynamic_variables": {
             "customer_id": "CUST-000005",
             "assigned_salesperson": "SP-001",

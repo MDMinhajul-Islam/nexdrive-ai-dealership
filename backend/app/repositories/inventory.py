@@ -91,7 +91,7 @@ class SupabaseInventoryRepository:
                 return []
             columns = f"{VEHICLE_COLUMNS},vehicle_features(features(name))"
             query = self.client.table("vehicles").select(columns).eq("vehicle_status", "Available")
-            text_filters = {"make": filters.make, "model": filters.model}
+            text_filters = {"make": filters.make, "model": filters.model, "trim": filters.trim}
             for field, value in text_filters.items():
                 if value is not None:
                     query = query.ilike(field, value)
