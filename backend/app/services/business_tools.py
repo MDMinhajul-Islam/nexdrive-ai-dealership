@@ -161,16 +161,42 @@ def resolve_or_create_customer(request: ResolveCustomerRequest, client: Any) -> 
     existing = client.table("customers").select("customer_id").eq("synthetic_phone", request.phone).limit(1).execute().data
     if existing:
         return ResolveCustomerResponse(created=False, customer_id=existing[0]["customer_id"])
-    
+
     payload = {
         "first_name": request.first_name,
         "last_name": request.last_name,
         "synthetic_phone": request.phone,
-        "synthetic_email": request.email or "",
-        "created_at": datetime.utcnow().isoformat()
+        "synthetic_email": request.email if request.email else None,
+        "created_at": datetime.utcnow().isoformat(),
     }
-    result = _insert_with_id_retry(client, "customers", "customer_id", "CUST", payload)
-    return ResolveCustomerResponse(created=True, customer_id=result["customer_id"])
+
+    for _ in range(10):
+        new_id = _next_id(client, "customers", "customer_id", "CUST")
+        payload["customer_id"] = new_id
+        try:
+            result = client.table("customers").insert(payload).execute().data[0]
+            return ResolveCustomerResponse(created=True, customer_id=result["customer_id"])
+        except Exception as exc:
+            error_str = str(exc).lower()
+            is_unique_violation = (
+                "23505" in error_str
+                or "duplicate key" in error_str
+                or "unique constraint" in error_str
+            )
+            if not is_unique_violation:
+                raise BusinessToolError("Insert failed on customers") from exc
+            if "synthetic_phone" in error_str:
+                found = (
+                    client.table("customers")
+                    .select("customer_id")
+                    .eq("synthetic_phone", request.phone)
+                    .limit(1)
+                    .execute()
+                    .data
+                )
+                if found:
+                    return ResolveCustomerResponse(created=False, customer_id=found[0]["customer_id"])
+    raise BusinessConflictError("Failed to generate unique id for customers", retryable=True)
 
 def create_or_update_lead(request: LeadUpsertRequest, client: Any) -> LeadResponse:
     try:
