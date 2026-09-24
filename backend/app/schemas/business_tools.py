@@ -133,6 +133,35 @@ class BookingRequest(BaseModel):
     appointment_time: time
     notes: str = Field(default="", max_length=1000)
 
+    @model_validator(mode="before")
+    @classmethod
+    def extract_retell_envelope(cls, data: Any) -> Any:
+        if isinstance(data, dict):
+            if "args" in data:
+                if "name" not in data:
+                    raise ValueError(
+                        "Malformed Retell wrapper: 'args' present without 'name'"
+                    )
+                if data["name"] != "create_test_drive":
+                    raise ValueError(
+                        f"Invalid function name in wrapper: expected 'create_test_drive', got '{data['name']}'"
+                    )
+                if not isinstance(data["args"], dict):
+                    raise ValueError("Malformed Retell wrapper: 'args' must be a dictionary")
+                return data["args"]
+            if "call" in data and "name" in data:
+                if data["name"] != "create_test_drive":
+                    raise ValueError(
+                        f"Invalid function name in wrapper: expected 'create_test_drive', got '{data['name']}'"
+                    )
+                raise ValueError("Malformed Retell wrapper: missing 'args'")
+            if "call" in data or "name" in data:
+                raise ValueError(
+                    "Ambiguous payload: contains Retell envelope fields mixed "
+                    "with direct fields or incomplete wrapper"
+                )
+        return data
+
     @field_validator("appointment_date")
     @classmethod
     def reject_past_appointment_date(cls, value: date) -> date:

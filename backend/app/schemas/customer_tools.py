@@ -50,6 +50,35 @@ class TestDriveSlotDiscoveryRequest(TestDriveSlotQuery):
 
     vehicle_id: str = Field(pattern=r"^VEH-[0-9]{6}$")
 
+    @model_validator(mode="before")
+    @classmethod
+    def extract_retell_envelope(cls, data: Any) -> Any:
+        if isinstance(data, dict):
+            if "args" in data:
+                if "name" not in data:
+                    raise ValueError(
+                        "Malformed Retell wrapper: 'args' present without 'name'"
+                    )
+                if data["name"] != "get_test_drive_slots":
+                    raise ValueError(
+                        f"Invalid function name in wrapper: expected 'get_test_drive_slots', got '{data['name']}'"
+                    )
+                if not isinstance(data["args"], dict):
+                    raise ValueError("Malformed Retell wrapper: 'args' must be a dictionary")
+                return data["args"]
+            if "call" in data and "name" in data:
+                if data["name"] != "get_test_drive_slots":
+                    raise ValueError(
+                        f"Invalid function name in wrapper: expected 'get_test_drive_slots', got '{data['name']}'"
+                    )
+                raise ValueError("Malformed Retell wrapper: missing 'args'")
+            if "call" in data or "name" in data:
+                raise ValueError(
+                    "Ambiguous payload: contains Retell envelope fields mixed "
+                    "with direct fields or incomplete wrapper"
+                )
+        return data
+
 
 class TestDriveSlot(BaseModel):
     salesperson_id: str
